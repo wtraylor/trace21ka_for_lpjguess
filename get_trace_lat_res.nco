@@ -1,0 +1,6 @@
+// NCO script to get the latitude gridcell resolution for a TraCE-21ka file
+// rounded to have clean values
+
+*precision=4; // precision is hardcoded here, would need to be changed in other script files too
+lat@resolution=trunc((lat(1)-lat(0)) * 10^precision)/10^precision;
+print(lat@resolution, "%f");
