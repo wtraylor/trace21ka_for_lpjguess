@@ -11,13 +11,15 @@ function print_use {
 echo
 echo "**** TraCE-21ka for LPJ-GUESS ****"
 echo "This is a script to prepare TraCE-21ka monthly paleoclimate files for LPJ-GUESS:"
-echo -e "\t– Crop files to given region and time frame."
+echo -e "\t– Crop files to given region and place them into the folder for cropped files."
 echo -e "\t– Calculate total precipitation (PRECT) from convective (PRECC) and large-scale (PRECL) precipitation."
 echo -e "\t– Concatenate files to one netCDF file for each precipitation, temperature, and insolation."
-echo -e "\t– Change metadata (attributes ›units‹ and ›standard_name‹) in the produced files to comply with LPJ-GUESS."
+echo -e "\t- Crop the concatenated files to given time frame."
 echo -e "\t– Adjust time to calendar years."
-echo -e "\t– Adjust latitude values to ‘nicer’ values (i.e. truncating the tail of odd decimal values)."
+echo -e "\t– Change metadata in the produced files to comply with LPJ-GUESS."
+echo -e "\t– Adjust latitude values to ‘nicer’ values (i.e. truncating the long tail of odd decimal values)."
 echo -e "\t– Create gridcell list using ICE-5G data to exclude ocean and/or glaciers from simulation."
+echo -e "\t- Create a CO₂ text file."
 echo -e "\t– Generate an .ins file for LPJ-GUESS with the correct paths and variable names."
 echo
 echo "System requirements:"
