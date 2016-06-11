@@ -38,14 +38,13 @@ export LATITUDE_2=80.0
 export ICE5G_DIR="$HOME/guess_data/ice5g/"
 
 # Directory with TraCE21ka monthly netCDF files 
-# for variables 0
 export TRACE_GLOBAL_DIR="${HOME}/guess_data/trace/global/"
 export TRACE_CROPPED_DIR="$HOME/guess_data/trace/cropped/"
 export TRACE_LPJ_DIR="$HOME/guess_data/input/trace/"
 
 # Directory with script files for TraCE processing
 # Have all the script files there!
-export SCRIPT_DIR="$HOME/Masterarbeit/data_processing/trace_processing/"
+export SCRIPT_DIR="$HOME/Masterarbeit/data_processing/trace_for_guess/"
 
 # File with soil data (will be written into the ins script, otherwise not needed
 export LPJ_FILE_CRU="$HOME/guess_data/input/cru_1901_2006.bin"
@@ -130,6 +129,17 @@ export TRACE_START_CALENDAR_YEAR="-20050" # First entry in TraCE dataset [years 
 export CF_UNIT_TIME="days since ${TRACE_START_CALENDAR_YEAR}-1-1 0:0:0"
 export CF_CALENDAR="365_day" # All years are 365 days long; equivalent to "noleap"	
 
+
+################################################################################
+### VARIABLES FOR OTHER SCRIPTS OF TRACE PROCESSING
+### not used for prepare_trace_for_lpj.sh
+################################################################################
+export TRACE_ANALYSIS_DIR="$HOME/guess_data/trace/analysis/" 
+export TRACE_TMAX_TIMELINE=${TRACE_ANALYSIS_DIR}"trace_TMAX_timeline.nc"
+export TRACE_TMIN_TIMELINE=${TRACE_ANALYSIS_DIR}"trace_TMIN_timeline.nc"
+export TRACE_TMAX_MAP=${TRACE_ANALYSIS_DIR}"trace_TMAX_map.nc"
+export TRACE_TMIN_MAP=${TRACE_ANALYSIS_DIR}"trace_TMIN_map.nc"
+export TRACE_TREFHT_1990="$HOME/guess_data/trace/trace.36.400BP-1990CE.cam2.h0.TREFHT.2160101-2204012.nc" # modern temperatures
 
 ################################################################################
 # Set the flag that the environment variables are set
