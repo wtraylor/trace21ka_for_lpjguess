@@ -7,6 +7,9 @@
 #' @date 2016-05-09
 ################################################################################
 
+
+
+################################################################################
 #' Read data from an original TraCE-21k file into a RasterLayer object
 #' 
 #' If month is specified it is assumed to be monthly data, otherwise not.
@@ -20,16 +23,17 @@
 #' @param filename Filename of TraCE file containing the given point in time
 #' @return A RasterLayer object (5° resolution)
 read_trace_raster <- function(
+	filename,
+	var,
 	year,
 	month=1,
-	var,
-	ext,
-	filename
+	ext
 ){
 	is_monthly <- !missing(month)
 	## Check parameters
-	if (!missing(year) && !is.numeric(year))
-		stop("year must be numeric.")
+	if (!missing(year))
+		if (!is.numeric(year))
+			stop("year must be numeric.")
 	if (!missing(month)) {
 		if (!is.numeric(month))
 			stop("month must be numeric.")
@@ -89,11 +93,13 @@ read_trace_raster <- function(
 	## 	-> read the whole world (neg. count)
 	## Last dimension is time. From other dimensions first index is used.
 	ndims <- nc$var[[var]]$ndims
-	start <- c(1, 1, rep(1, ndims-3), time_index)
-	count  <- rep(1, ndims-3)
+	count  <- rep(1, ndims)
+	start  <- rep(1, ndims)
+	if (ndims>2) { # if there is a time dimension
+		start[ndims] <- time_index
+	}
 	count[1] <- -1 # whole longitude
 	count[2] <- -1 # whole latitude
-	count[ndims] <- 1 # only one point in time
 	
 	## Read all the values (matrix object) and convert them to a RasterLayer object
 	raster_obj <- raster( 
@@ -125,10 +131,14 @@ read_trace_raster <- function(
 
 	## Set metadata
 	names(raster_obj) <- paste(
-		nc$var[[var]]$longname, 
-		"in", 
-		nc$dim$time$vals[time_index],
-		nc$dim$time$unit
+		nc$var[[var]]$longname,
+		ifelse(
+			ndims>2, # with time dimension
+			paste("in", 
+			nc$dim$time$vals[time_index],
+			nc$dim$time$unit),
+			"" # no time dimension
+		)
 	)
 	
 	## Close the file
@@ -141,6 +151,7 @@ read_trace_raster <- function(
 }
 
 
+################################################################################
 #' Read the NetCDF file that has been converted to LPJ-Guess input
 read_trace_lpj_raster <- function(
 	var,
@@ -222,6 +233,7 @@ read_trace_lpj_raster <- function(
 	return(raster_obj)
 }
 
+################################################################################
 #' Convert the CMIP precipitation flux unit m/s to mm/day.
 #' 
 #' \url{https://bb.cgd.ucar.edu/precipitation-units}:
@@ -231,9 +243,50 @@ read_trace_lpj_raster <- function(
 prec_flux_to_mm_per_day <- function(x){
 	return(x * 1000 * 24 * 3600)
 }
+prec_flux_to_mm_per_year <- function(x){
+	prec_flux_to_mm_per_day(x)*365
+}
 
+################################################################################
 #' Convert "days since -20050-1-1 0:0:0" to calendar years (relative to AD)
 trace_days_to_calendar_year <- function(x){
 	trace_start_calendar_year <- -20050
 	return( trunc(x/365.0 + trace_start_calendar_year))
+}
+
+
+################################################################################
+#' Mask a TraCE-21ka netCDF file with glaciers and oceans (zero values)
+mask_trace_nc_file <- function(
+	filename,
+	var
+){
+	original_raster <- read_trace_raster(
+		filename=filename,
+		var=var
+	)
+	mask <- read_ice5g_mask(original_raster, year=ice5g_mask_year)
+	
+	# merk raster stack to one raster layer 
+	mask <- raster::calc(mask, max)
+	
+	# make oceans and glaciers to 0 and valid gridcells to 1
+	mask <- raster::calc(mask, is.na)
+
+	# make all masked gridcells 0 by using prod() as function
+	masked_raster <- raster::overlay(
+		x=original_raster,
+		y=mask,
+		fun=prod
+	)
+
+	masked_raster <- raster::t(masked_raster)
+	masked_raster <- raster::flip(masked_raster, direction='y')
+
+	# Now write to file
+	nc <- nc_open(filename, write=TRUE)
+	ncvar_put(nc, var, vals=rep(as.array(masked_raster), nc$dim$time$len))
+
+
+	nc_close(nc)
 }

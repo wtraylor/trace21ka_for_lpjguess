@@ -29,10 +29,10 @@ require(raster)
 #' @param dir Directory of ICE-5G files, with trailing '/'.
 #' @return A RasterLayer object (1° resolution)
 read_ice5g_raster <- function(
-	year,
+	year=ice5g_mask_year,
 	var,
 	ext,
-	dir
+	dir=dir_ice5g 
 ){
 	## Check parameters
 	if (missing(year))

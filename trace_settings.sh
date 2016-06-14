@@ -12,12 +12,12 @@
 ################################################################################
 # make sure first year is chronologically before last year!
 # The whole TraCE-21ka dataset stretches from 22000 years BP to 0 BP (=1950 AD)
-export FIRSTYEAR=16200 # BP [22000,0]
-export LASTYEAR=16000 # BP [22000,0]
+export FIRSTYEAR=22000 # BP [22000,0]
+export LASTYEAR=11000 # BP [22000,0]
 
 # The year for which sea level and glacier data is read from ICE-5G to 
 # produce gridcell list
-export ICE5G_MASK_YEAR=$FIRSTYEAR # must be in between 0 and 21000 
+export ICE5G_MASK_YEAR=21000 # must be in between 0 and 21000 
 
 export ICE5G_MASK_OCEANS="TRUE" # whether to exclude ICE5G water from gridcells
 export ICE5G_MASK_GLACIERS="FALSE" # whether to exclude ICE5G glaciers from gridcells
@@ -26,7 +26,7 @@ export ICE5G_MASK_GLACIERS="FALSE" # whether to exclude ICE5G glaciers from grid
 # The decimal points are important for ncks hyperslabbing (cropping)
 export LONGITUDE_1=130.0
 export LONGITUDE_2=230.0
-export LATITUDE_1=40.0
+export LATITUDE_1=50.0
 export LATITUDE_2=80.0
 
 
@@ -81,8 +81,6 @@ export CO2_REFERENCE_FILE=$LPJ_FILE_TREFHT
 # The text file to write the CO₂ values into
 export LPJ_FILE_CO2="${TRACE_LPJ_DIR}co2_${FIRSTYEAR}-${LASTYEAR}BP.txt"
 
-# Output directory for the LPJ-GUESS ins file, otherwise not needed
-export LPJ_OUTPUT_DIR="$HOME/guess_data/output/"
 
 ################################################################################
 ### VARIABLES AND ATTRIBUTES
@@ -135,11 +133,32 @@ export CF_CALENDAR="365_day" # All years are 365 days long; equivalent to "nolea
 ### not used for prepare_trace_for_lpj.sh
 ################################################################################
 export TRACE_ANALYSIS_DIR="$HOME/guess_data/trace/analysis/" 
-export TRACE_TMAX_TIMELINE=${TRACE_ANALYSIS_DIR}"trace_TMAX_timeline.nc"
-export TRACE_TMIN_TIMELINE=${TRACE_ANALYSIS_DIR}"trace_TMIN_timeline.nc"
+export TRACE_TIMELINE=${TRACE_ANALYSIS_DIR}"trace_timeline.nc"
 export TRACE_TMAX_MAP=${TRACE_ANALYSIS_DIR}"trace_TMAX_map.nc"
 export TRACE_TMIN_MAP=${TRACE_ANALYSIS_DIR}"trace_TMIN_map.nc"
-export TRACE_TREFHT_1990="$HOME/guess_data/trace/trace.36.400BP-1990CE.cam2.h0.TREFHT.2160101-2204012.nc" # modern temperatures
+export TRACE_PREC_MAP=${TRACE_ANALYSIS_DIR}"trace_PRECT_map.nc"
+
+export TRACE_TREFHT_CONCAT=${TRACE_ANALYSIS_DIR}"TREFHT_concat.nc"
+export TRACE_PRECT_CONCAT=${TRACE_ANALYSIS_DIR}"PRECT_concat.nc"
+export TRACE_SOLIN_CONCAT=${TRACE_ANALYSIS_DIR}"SOLIN_concat.nc"
+
+# modern temperatures:
+export TRACE_TREFHT_1990="$HOME/guess_data/trace/trace.36.400BP-1990CE.cam2.h0.TREFHT.2160101-2204012.nc" 
+# modern precipitation:
+export TRACE_PRECT_1990="$HOME/guess_data/trace/trace.36.400BP-1990CE.cam2.h0.PRECT.2160101-2204012.nc" 
+
+
+# Record index of first summer month (0=January)
+export TMAX_MONTH_INDEX=6 # July
+# Record index of first winter month (0=January)
+export TMIN_MONTH_INDEX=0 # January
+
+# Sample locations:
+export LAT_ALASKA=65.0 
+export LON_ALASKA=200.0
+
+# Output directory of the simulation
+export LPJ_OUTPUT_DIR="$HOME/guess_data/output/"
 
 ################################################################################
 # Set the flag that the environment variables are set
