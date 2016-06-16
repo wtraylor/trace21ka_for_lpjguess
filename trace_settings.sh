@@ -134,6 +134,7 @@ export CF_CALENDAR="365_day" # All years are 365 days long; equivalent to "nolea
 ################################################################################
 export TRACE_ANALYSIS_DIR="$HOME/guess_data/trace/analysis/" 
 export TRACE_TIMELINE=${TRACE_ANALYSIS_DIR}"trace_timeline.nc"
+export TRACE_MODERN=${TRACE_ANALYSIS_DIR}"trace_modern.nc"
 export TRACE_TMAX_MAP=${TRACE_ANALYSIS_DIR}"trace_TMAX_map.nc"
 export TRACE_TMIN_MAP=${TRACE_ANALYSIS_DIR}"trace_TMIN_map.nc"
 export TRACE_PREC_MAP=${TRACE_ANALYSIS_DIR}"trace_PRECT_map.nc"
@@ -153,9 +154,13 @@ export TMAX_MONTH_INDEX=6 # July
 # Record index of first winter month (0=January)
 export TMIN_MONTH_INDEX=0 # January
 
-# Sample locations:
-export LAT_ALASKA=65.0 
+# Sample locations (with decimal point!):
 export LON_ALASKA=200.0
+export LAT_ALASKA=65.0 
+export LON_CHERSKY=161.73 # PLEISTOCENE PARK
+export LAT_CHERSKY=68.38
+export LON_SEWARD=164.0
+export LAT_SEWARD=65.0 # SEWARD PENINSULA
 
 # Output directory of the simulation
 export LPJ_OUTPUT_DIR="$HOME/guess_data/output/"
