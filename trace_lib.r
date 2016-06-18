@@ -131,14 +131,7 @@ read_trace_raster <- function(
 
 	## Set metadata
 	names(raster_obj) <- paste(
-		nc$var[[var]]$longname,
-		ifelse(
-			ndims>2, # with time dimension
-			paste("in", 
-			nc$dim$time$vals[time_index],
-			nc$dim$time$unit),
-			"" # no time dimension
-		)
+		nc$var[[var]]$longname
 	)
 	
 	## Close the file

@@ -95,7 +95,7 @@ export LPJ_VAR_TREFHT="TREFHT"
 # Variable standard_names in the output files for LPJ-GUESS
 # Don't change these because the CF input module of LPJ-GUESS needs the 
 # exact string match.
-export CF_STANDARD_NAME_SOLIN="surface_net_downward_shortwave_flux"
+export CF_STANDARD_NAME_SOLIN="surface_downwelling_shortwave_flux_in_air"
 export CF_STANDARD_NAME_TREFHT="air_temperature"
 export CF_STANDARD_NAME_PRECT="precipitation_flux"
 export CF_STANDARD_NAME_LAT="latitude"
@@ -135,8 +135,6 @@ export CF_CALENDAR="365_day" # All years are 365 days long; equivalent to "nolea
 export TRACE_ANALYSIS_DIR="$HOME/guess_data/trace/analysis/" 
 export TRACE_TIMELINE=${TRACE_ANALYSIS_DIR}"trace_timeline.nc"
 export TRACE_MODERN=${TRACE_ANALYSIS_DIR}"trace_modern.nc"
-export TRACE_TMAX_MAP=${TRACE_ANALYSIS_DIR}"trace_TMAX_map.nc"
-export TRACE_TMIN_MAP=${TRACE_ANALYSIS_DIR}"trace_TMIN_map.nc"
 export TRACE_PREC_MAP=${TRACE_ANALYSIS_DIR}"trace_PRECT_map.nc"
 
 export TRACE_TREFHT_CONCAT=${TRACE_ANALYSIS_DIR}"TREFHT_concat.nc"
@@ -147,20 +145,6 @@ export TRACE_SOLIN_CONCAT=${TRACE_ANALYSIS_DIR}"SOLIN_concat.nc"
 export TRACE_TREFHT_1990="$HOME/guess_data/trace/trace.36.400BP-1990CE.cam2.h0.TREFHT.2160101-2204012.nc" 
 # modern precipitation:
 export TRACE_PRECT_1990="$HOME/guess_data/trace/trace.36.400BP-1990CE.cam2.h0.PRECT.2160101-2204012.nc" 
-
-
-# Record index of first summer month (0=January)
-export TMAX_MONTH_INDEX=6 # July
-# Record index of first winter month (0=January)
-export TMIN_MONTH_INDEX=0 # January
-
-# Sample locations (with decimal point!):
-export LON_ALASKA=200.0
-export LAT_ALASKA=65.0 
-export LON_CHERSKY=161.73 # PLEISTOCENE PARK
-export LAT_CHERSKY=68.38
-export LON_SEWARD=164.0
-export LAT_SEWARD=65.0 # SEWARD PENINSULA
 
 # Output directory of the simulation
 export LPJ_OUTPUT_DIR="$HOME/guess_data/output/"
