@@ -59,11 +59,12 @@ read_trace_raster <- function(
 	## Open the file
 	nc <- nc_open(filename)
 	
-	time_min <- min(nc$dim$time$vals)
-	time_max <- max(nc$dim$time$vals)
-	print(paste("Time range of dataset:", time_min,"–",time_max, nc$dim$time$unit))
 	
 	if (!missing(year)) {
+		time_min <- min(nc$dim$time$vals)
+		time_max <- max(nc$dim$time$vals)
+		print(paste("Time range of dataset:", time_min,"–",time_max, nc$dim$time$unit))
+		
 		## In the netCDF files time is in negative ka BP and the month a fraction
 		time <- -(year + (month-1)/12)/1000
 		## Check if time is in range of the dataset
