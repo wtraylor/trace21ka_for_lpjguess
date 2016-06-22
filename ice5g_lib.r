@@ -150,30 +150,35 @@ read_ice5g_glaciermask <- function( ... ){
 #' The center of each gridcell of input raster map will be checked against
 #' the ICE-5G data.
 #' @param r The raster map to mask. Gridcells of the returned
-#' raster object will match this.
+#' raster object will match this. If NULL, no rescaling happens.
 #' @param ... Passed on to read_ice5g_raster
 #' @return RasterBricks object with layers "ocean" and "glacier" with values 1
 #' for water/glaciers and NA for none.
-read_ice5g_mask <- function( r, ...
+read_ice5g_mask <- function( r=NULL, ...
 ){
-	if (missing(r)) stop("parameter r missing")
-	
-	ice5g_raster <- raster::brick(list(r,r))
-	names(ice5g_raster) <- c("ocean", "glacier")
+	## read the raster 
 	landmask <- read_ice5g_landmask( ... )
 	glaciermask <- read_ice5g_glaciermask( ... )
-	for (i in 1:raster::ncell(ice5g_raster)){
-		coords <- raster::xyFromCell(ice5g_raster, i)
-		ice5g_raster[["ocean"]][i] <- ifelse(
-			is.na( raster::extract(landmask, raster::cellFromXY(landmask, coords))),
-			NA, #is land
-			1 #is ocean
-		)
-		ice5g_raster[["glacier"]][i] <- ifelse(
-			is.na( raster::extract(glaciermask, raster::cellFromXY(glaciermask, coords))),
-			NA, # unglaciated
-			1 #is glacier
-		)
-	}
+	
+	
+	if (!is.null(r)) {
+		ice5g_raster <- raster::brick(list(landmask,glaciermask))
+	}else {
+		ice5g_raster <- raster::brick(list(r,r))
+		for (i in 1:raster::ncell(ice5g_raster)){
+			coords <- raster::xyFromCell(ice5g_raster, i)
+			ice5g_raster[["ocean"]][i] <- ifelse(
+				is.na( raster::extract(landmask, raster::cellFromXY(landmask, coords))),
+				NA, #is land
+				1 #is ocean
+			)
+			ice5g_raster[["glacier"]][i] <- ifelse(
+				is.na( raster::extract(glaciermask, raster::cellFromXY(glaciermask, coords))),
+				NA, # unglaciated
+				1 #is glacier
+			)
+		}
+	} 
+	names(ice5g_raster) <- c("ocean", "glacier")
 	return(ice5g_raster)
 }
