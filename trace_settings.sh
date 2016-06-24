@@ -135,7 +135,8 @@ export CF_CALENDAR="365_day" # All years are 365 days long; equivalent to "nolea
 export TRACE_ANALYSIS_DIR="$HOME/guess_data/trace/analysis/" 
 export TRACE_TIMELINE=${TRACE_ANALYSIS_DIR}"trace_timeline.nc"
 export TRACE_MODERN=${TRACE_ANALYSIS_DIR}"trace_modern.nc"
-export TRACE_PREC_MAP=${TRACE_ANALYSIS_DIR}"trace_PRECT_map.nc"
+export TRACE_PREC_MAP_LGM=${TRACE_ANALYSIS_DIR}"trace_PRECT_map_LGM.nc"
+export TRACE_TEMP_MAP_LGM=${TRACE_ANALYSIS_DIR}"trace_TREFHT_map_LGM.nc"
 
 export TRACE_TREFHT_CONCAT=${TRACE_ANALYSIS_DIR}"TREFHT_concat.nc"
 export TRACE_PRECT_CONCAT=${TRACE_ANALYSIS_DIR}"PRECT_concat.nc"

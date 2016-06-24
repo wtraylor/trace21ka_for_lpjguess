@@ -371,7 +371,7 @@ for var in ${LPJ_VAR[@]}; do
 	echo -e "\t->Original time range: $(print_time_range $IN)"
 	echo -en "\t->Retrieving time dimension indices...  "
 	# get the time indices (starting with 1) of the file
-	S=$(Rscript ${SCRIPT_DIR}get_trace_time_indices.r $IN)
+	S=$(Rscript ${SCRIPT_DIR}get_trace_time_indices.r $IN $FIRSTYEAR $LASTYEAR)
 	if [[ "$S" != "" ]]; then
 		TIME_START=${S% *} # first index: prefix in front of space
 		TIME_STOP=${S##* } # last index: suffix after space

@@ -10,8 +10,9 @@ library(ncdf4)
 args <- commandArgs(trailingOnly = TRUE)
 
 filename <- args[1]
-firstyear <- as.numeric(Sys.getenv("FIRSTYEAR")) # pos. year BP
-lastyear <- as.numeric(Sys.getenv("LASTYEAR")) # pos. year BP
+firstyear <- as.numeric(args[2])  # pos. year BP
+lastyear <- as.numeric(args[3]) # pos. year BP
+
 
 nc <- nc_open(filename)
 
