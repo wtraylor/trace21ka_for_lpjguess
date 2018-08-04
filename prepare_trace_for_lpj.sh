@@ -85,8 +85,8 @@ REQUIRED_SCRIPTS=(
 	"get_trace_lat_res.nco"
 )
 for cmd in ${REQUIRED_SCRIPTS[@]}; do
-	if [[ ! -f "${SCRIPT_DIR}$cmd" ]]; then
-		echo "R script ${SCRIPT_DIR}$cmd not found."; 
+	if [[ ! -f "$SCRIPT_DIR/$cmd" ]]; then
+		echo "R script $SCRIPT_DIR/$cmd not found."; 
 		exit $EXIT_FAILURE
 	fi
 done
@@ -115,7 +115,7 @@ for var in ${TRACE_VAR[@]}; do
 	eval "unset ORIGINAL_FILES_$var"
 	echo "Searching for input files with variable ›$var‹..."
 	
-	eval "ORIGINAL_FILES_$var=\$(find ${TRACE_GLOBAL_DIR}trace*${var}*12.nc  2>/dev/null)"
+	eval "ORIGINAL_FILES_$var=\$(find $TRACE_GLOBAL_DIR/trace*${var}*12.nc  2>/dev/null)"
 	eval "FILES=\${ORIGINAL_FILES_${var}[@]}"
 	if [[ ${#FILES} -eq 0 ]]; then
 		echo "No TraCE-21ka input files for variable $var found in »$TRACE_GLOBAL_DIR«"
@@ -369,7 +369,7 @@ for var in ${LPJ_VAR[@]}; do
 	echo -e "\t->Original time range: $(print_time_range $IN)"
 	echo -en "\t->Retrieving time dimension indices...  "
 	# get the time indices (starting with 1) of the file
-	S=$(Rscript ${SCRIPT_DIR}get_trace_time_indices.r $IN $FIRSTYEAR $LASTYEAR)
+	S=$(Rscript $SCRIPT_DIR/get_trace_time_indices.r $IN $FIRSTYEAR $LASTYEAR)
 	if [[ "$S" != "" ]]; then
 		TIME_START=${S% *} # first index: prefix in front of space
 		TIME_STOP=${S##* } # last index: suffix after space
@@ -441,10 +441,10 @@ for var in ${LPJ_VAR[@]}; do
 		echo -e "\tCleaning trailing end of odd numbers from latitude:"
 		# Find out the first latitude value and resolution
 		if [ -z ${FIRST_LAT+x} ] ; then # if FIRST_LAT is still undefined
-			eval "FIRST_LAT=\$(ncap2 --append --script-file \"${SCRIPT_DIR}get_trace_first_lat.nco\" \"${FILENAME}\")"
+			eval "FIRST_LAT=\$(ncap2 --append --script-file \"$SCRIPT_DIR/get_trace_first_lat.nco\" \"${FILENAME}\")"
 			echo -e "\tFirst latitude value for all files is $FIRST_LAT"
 			
-			eval "LAT_RES=\$(ncap2 --append --script-file \"${SCRIPT_DIR}get_trace_lat_res.nco\" \"${FILENAME}\")"
+			eval "LAT_RES=\$(ncap2 --append --script-file \"$SCRIPT_DIR/get_trace_lat_res.nco\" \"${FILENAME}\")"
 			echo -e "\tLatitude resolution for all files is $LAT_RES"
 			
 		fi
@@ -456,7 +456,7 @@ for var in ${LPJ_VAR[@]}; do
 		-a first,lat,o,d,\"\${FIRST_LAT}\" \
 		\"${FILENAME}\""
 		# Reset all latitude values
-		eval "ncap2 --append --script-file \"${SCRIPT_DIR}trunc_trace_lat.nco\" \"${FILENAME}\""
+		eval "ncap2 --append --script-file \"$SCRIPT_DIR/trunc_trace_lat.nco\" \"${FILENAME}\""
 		
 	else
 		echo "Expected file »$FILENAME« does not exist."
@@ -473,8 +473,8 @@ echo
 echo "**************** CREATE CO₂ FILE ******************"
 if [ -f "$CO2_REFERENCE_FILE" ]; then
 	echo "Creating CO₂ file"
-	echo "Starting R script »${SCRIPT_DIR}create_trace_co2.r«..."
-	Rscript "${SCRIPT_DIR}create_trace_co2.r" 2>/dev/null
+	echo "Starting R script »$SCRIPT_DIR/create_trace_co2.r«..."
+	Rscript "$SCRIPT_DIR/create_trace_co2.r" 2>/dev/null
 else
 	echo "Reference file for CO₂ values does not exist: »$CO2_REFERENCE_FILE«"
 fi
@@ -494,8 +494,8 @@ echo
 echo "**************** CREATE GRIDCELL LIST ******************"
 if [ -f "$GRIDLIST_REFERENCE_FILE" ]; then
 	echo "Creating gridcell list"
-	echo "Starting R script »${SCRIPT_DIR}create_ice5g_gridlist.r«..."
-	Rscript "${SCRIPT_DIR}create_ice5g_gridlist.r" 2>/dev/null
+	echo "Starting R script »$SCRIPT_DIR/create_ice5g_gridlist.r«..."
+	Rscript "$SCRIPT_DIR/create_ice5g_gridlist.r" 2>/dev/null
 else
 	echo "Reference file for gridlist does not exist: »$GRIDLIST_REFERENCE_FILE«"
 fi
