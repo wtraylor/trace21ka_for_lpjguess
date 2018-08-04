@@ -14,7 +14,8 @@ export FIRSTYEAR=22000 # BP [22000,0]
 export LASTYEAR=11000 # BP [22000,0]
 
 # The year for which sea level and glacier data is read from ICE-5G to
-# produce gridcell list
+# produce gridcell list.
+# *All* files will be masked with the data of this time point.
 export ICE5G_MASK_YEAR=21000 # must be in between 0 and 21000
 
 export ICE5G_MASK_OCEANS="TRUE" # whether to exclude ICE5G water from gridcells
@@ -29,7 +30,7 @@ export LATITUDE_2=80.0
 
 
 #####################################################################
-# DIRECTORIES AND FILE LOCATIONS
+# INPUT
 #####################################################################
 
 # Directory with ICE5G netCDF files
@@ -37,21 +38,33 @@ export ICE5G_DIR="$HOME/guess_data/ice5g/"
 
 # Directory with TraCE21ka monthly netCDF files
 export TRACE_GLOBAL_DIR="${HOME}/guess_data/trace/global/"
+
+#####################################################################
+# OUTPUT
+#####################################################################
+
+# Directory for cropped NetCDF files (files can be removed later).
 export TRACE_CROPPED_DIR="$HOME/guess_data/trace/cropped/"
+
+# Directory for the files ready for LPJ-GUESS.
 export TRACE_LPJ_DIR="$HOME/guess_data/input/trace/"
+
+# File with soil data (will be written into the ins script, otherwise
+# not needed
+export LPJ_FILE_CRU="$HOME/guess_data/input/cru_1901_2006.bin"
+
+# .ins file for LPJ-GUESS, containing the file paths.
+export LPJ_FILE_INS="$TRACE_LPJ_DIR/trace_files.ins"
+
+#####################################################################
+# OPTIONAL SETTINGS
+#####################################################################
+# Only change the following settings if there is an apparent need for
+# it (e.g. if you changed the names of the downloaded TraCE files).
 
 # Directory with script files for TraCE processing: This is the directory
 # where this script resides.
 export SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
-
-# File with soil data (will be written into the ins script, otherwise not needed
-export LPJ_FILE_CRU="$HOME/guess_data/input/cru_1901_2006.bin"
-
-# directory with .ins files for LPJ-GUESS
-export LPJ_INS_DIR="$HOME/guess/ins/"
-# .ins file for LPJ-GUESS defining the filenames
-export LPJ_FILE_INS=${LPJ_INS_DIR}"trace_files.ins"
-
 
 # Names for the Outpt netCDF files
 export LPJ_FILE_SOLIN="${TRACE_LPJ_DIR}lpj_trace21ka_insolation_${FIRSTYEAR}-${LASTYEAR}BP.nc"
