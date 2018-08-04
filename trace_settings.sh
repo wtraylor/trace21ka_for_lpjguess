@@ -10,8 +10,8 @@
 #####################################################################
 # make sure first year is chronologically before last year!
 # The whole TraCE-21ka dataset stretches from 22000 years BP to 0 BP (=1950 AD)
-export FIRSTYEAR=22000 # BP [22000,0]
-export LASTYEAR=11000 # BP [22000,0]
+export FIRSTYEAR=20000 # BP [22000,0]
+export LASTYEAR=18000 # BP [22000,0]
 
 # The year for which sea level and glacier data is read from ICE-5G to
 # produce gridcell list.
@@ -34,24 +34,24 @@ export LATITUDE_2=80.0
 #####################################################################
 
 # Directory with ICE5G netCDF files
-export ICE5G_DIR="$HOME/guess_data/ice5g/"
+export ICE5G_DIR="$HOME/data/ice5g"
 
 # Directory with TraCE21ka monthly netCDF files
-export TRACE_GLOBAL_DIR="${HOME}/guess_data/trace/global/"
+export TRACE_GLOBAL_DIR="${HOME}/data/drivers/trace"
 
 #####################################################################
 # OUTPUT
 #####################################################################
 
 # Directory for cropped NetCDF files (files can be removed later).
-export TRACE_CROPPED_DIR="$HOME/guess_data/trace/cropped/"
+export TRACE_CROPPED_DIR="/tmp/trace_cropped"
 
 # Directory for the files ready for LPJ-GUESS.
-export TRACE_LPJ_DIR="$HOME/guess_data/input/trace/"
+export TRACE_LPJ_DIR="$HOME/drivers/trace/beringia_20ka_18ka"
 
 # File with soil data (will be written into the ins script, otherwise
 # not needed
-export LPJ_FILE_CRU="$HOME/guess_data/input/cru_1901_2006.bin"
+export LPJ_FILE_CRU="$HOME/data/drivers/cru_1901_2006.bin"
 
 # .ins file for LPJ-GUESS, containing the file paths.
 export LPJ_FILE_INS="$TRACE_LPJ_DIR/trace_files.ins"
