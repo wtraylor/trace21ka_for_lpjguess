@@ -127,30 +127,3 @@ export TRACE_START_CALENDAR_YEAR="-20050" # First entry in TraCE dataset [years 
 export CF_UNIT_TIME="days since ${TRACE_START_CALENDAR_YEAR}-1-1 0:0:0"
 export CF_CALENDAR="365_day" # All years are 365 days long; equivalent to "noleap"	
 
-
-################################################################################
-### VARIABLES FOR OTHER SCRIPTS OF TRACE PROCESSING
-### not used for prepare_trace_for_lpj.sh
-################################################################################
-export TRACE_ANALYSIS_DIR="$HOME/guess_data/trace/analysis/" 
-export TRACE_TIMELINE=${TRACE_ANALYSIS_DIR}"trace_timeline.nc"
-export TRACE_MODERN=${TRACE_ANALYSIS_DIR}"trace_modern.nc"
-export TRACE_PREC_MAP_LGM=${TRACE_ANALYSIS_DIR}"trace_PRECT_map_LGM.nc"
-export TRACE_TEMP_MAP_LGM=${TRACE_ANALYSIS_DIR}"trace_TREFHT_map_LGM.nc"
-
-export TRACE_TREFHT_CONCAT=${TRACE_ANALYSIS_DIR}"TREFHT_concat.nc"
-export TRACE_PRECT_CONCAT=${TRACE_ANALYSIS_DIR}"PRECT_concat.nc"
-export TRACE_SOLIN_CONCAT=${TRACE_ANALYSIS_DIR}"SOLIN_concat.nc"
-
-# modern temperatures:
-export TRACE_TREFHT_1990="$HOME/guess_data/trace/trace.36.400BP-1990CE.cam2.h0.TREFHT.2160101-2204012.nc" 
-# modern precipitation:
-export TRACE_PRECT_1990="$HOME/guess_data/trace/trace.36.400BP-1990CE.cam2.h0.PRECT.2160101-2204012.nc" 
-
-# Output directory of the simulation
-export LPJ_OUTPUT_DIR="$HOME/guess_data/output/"
-
-################################################################################
-# Set the flag that the environment variables are set
-
-export TRACE_VARIABLES_SET="TRUE"
