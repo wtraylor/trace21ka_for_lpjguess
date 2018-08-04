@@ -13,9 +13,9 @@
 export FIRSTYEAR=22000 # BP [22000,0]
 export LASTYEAR=11000 # BP [22000,0]
 
-# The year for which sea level and glacier data is read from ICE-5G to 
+# The year for which sea level and glacier data is read from ICE-5G to
 # produce gridcell list
-export ICE5G_MASK_YEAR=21000 # must be in between 0 and 21000 
+export ICE5G_MASK_YEAR=21000 # must be in between 0 and 21000
 
 export ICE5G_MASK_OCEANS="TRUE" # whether to exclude ICE5G water from gridcells
 export ICE5G_MASK_GLACIERS="FALSE" # whether to exclude ICE5G glaciers from gridcells
@@ -35,7 +35,7 @@ export LATITUDE_2=80.0
 # Directory with ICE5G netCDF files
 export ICE5G_DIR="$HOME/guess_data/ice5g/"
 
-# Directory with TraCE21ka monthly netCDF files 
+# Directory with TraCE21ka monthly netCDF files
 export TRACE_GLOBAL_DIR="${HOME}/guess_data/trace/global/"
 export TRACE_CROPPED_DIR="$HOME/guess_data/trace/cropped/"
 export TRACE_LPJ_DIR="$HOME/guess_data/input/trace/"
@@ -91,7 +91,7 @@ export LPJ_VAR_PRECT="PRECT"
 export LPJ_VAR_TREFHT="TREFHT"
 
 # Variable standard_names in the output files for LPJ-GUESS
-# Don't change these because the CF input module of LPJ-GUESS needs the 
+# Don't change these because the CF input module of LPJ-GUESS needs the
 # exact string match.
 export CF_STANDARD_NAME_SOLIN="surface_downwelling_shortwave_flux_in_air"
 export CF_STANDARD_NAME_TREFHT="air_temperature"
@@ -110,7 +110,7 @@ export CF_UNIT_LON="degrees_east"
 #####################################################################
 
 # A note on calendar and time:
-# TraCE-21ka uses decimal negative ka BP (thousand years before present, i.e. 
+# TraCE-21ka uses decimal negative ka BP (thousand years before present, i.e.
 # 1950) values as time.
 # The CF standard requires days as unit.
 # LPJ-GUESS follows ISO 8601, asking for a calendar year, i.e. relative to
@@ -123,5 +123,5 @@ export TIME_SCRIPT="time=trunc((time+22.0)*1000*365)"
 
 export TRACE_START_CALENDAR_YEAR="-20050" # First entry in TraCE dataset [years AD]
 export CF_UNIT_TIME="days since ${TRACE_START_CALENDAR_YEAR}-1-1 0:0:0"
-export CF_CALENDAR="365_day" # All years are 365 days long; equivalent to "noleap"	
+export CF_CALENDAR="365_day" # All years are 365 days long; equivalent to "noleap"
 
