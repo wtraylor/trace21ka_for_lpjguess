@@ -42,9 +42,9 @@ export TRACE_GLOBAL_DIR="${HOME}/guess_data/trace/global/"
 export TRACE_CROPPED_DIR="$HOME/guess_data/trace/cropped/"
 export TRACE_LPJ_DIR="$HOME/guess_data/input/trace/"
 
-# Directory with script files for TraCE processing
-# Have all the script files there!
-export SCRIPT_DIR="$HOME/Masterarbeit/data_processing/trace_for_guess/"
+# Directory with script files for TraCE processing: This is the directory
+# where this script resides.
+export SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
 # File with soil data (will be written into the ins script, otherwise not needed
 export LPJ_FILE_CRU="$HOME/guess_data/input/cru_1901_2006.bin"
