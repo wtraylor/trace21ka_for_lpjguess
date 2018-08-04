@@ -28,6 +28,7 @@ echo -e "\t  https://www.earthsystemgrid.org/dataset/ucar.cgd.ccsm3.trace.html"
 echo -e "\t– Have ICE-5G data downloaded (if gridcells shall be masked with them): "
 echo -e "\t  https://pmip2.lsce.ipsl.fr/design/ice5g/"
 echo -e "\t– Have all variables set up in trace_settings.sh"
+echo -e "\t  (same directory as this script)"
 echo -e "\t– nco must be installed: http://nco.sourceforge.net/"
 echo -e "\t– R must be installed: http://r-project.org/"
 echo -e "\t  required packages: ncdf4, raster"
@@ -56,18 +57,15 @@ print_use
 #                  CHECK SYSTEM REQUIREMENTS ETC.          #####################
 ################################################################################
 
+THIS_SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
-TRACE_SETTINGS_SCRIPT="./trace_settings.sh"
-if ( type -P $TRACE_SETTINGS_SCRIPT &>/dev/null ); then
+TRACE_SETTINGS_SCRIPT="$THIS_SCRIPT_DIR/trace_settings.sh"
+if [ -f "$TRACE_SETTINGS_SCRIPT" &>/dev/null ] ; then
 	echo "Found $TRACE_SETTINGS_SCRIPT. Executing it to set environment variables..."
-	. $TRACE_SETTINGS_SCRIPT
-fi
-
-if [[ "$TRACE_VARIABLES_SET" != "TRUE" ]]; then
-	echo "Make sure you have set the environment variables in trace_settings.sh"
-	echo "e.g. by executing  ». ./trace_settings.sh« before in this shell"
-	echo "exiting"
-	exit 0
+	source $TRACE_SETTINGS_SCRIPT
+else
+  echo "Could not find file 'trace_settings.sh' in the script directory."
+  exit 1
 fi
 
 echo "Settings from environment variables:"

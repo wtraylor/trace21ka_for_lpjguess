@@ -18,8 +18,6 @@ Procedure
 
 - Customize all variables in `trace_settings.sh`.
 
-- Make sure you have those environment variables available in your bash session by executing `source ./trace_settings.sh` or executing it on login by adding trace_settings.sh in `~/.profile`.
-
 - Then run `./prepare_trace_for_lpj.sh`.
 
 Note
