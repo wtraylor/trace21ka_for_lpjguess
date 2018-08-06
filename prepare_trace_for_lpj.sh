@@ -131,7 +131,7 @@ done
 unset ICE5G_FILES
 if [ $ICE5G_MASK_GLACIERS = "TRUE" -o $ICE5G_MASK_OCEANS = "TRUE" ]
 then
-	ICE5G_FILES=$(find ${ICE5G_DIR}"ice5g_v1.2_"*"k_1deg.nc" 2>/dev/null)
+	ICE5G_FILES=$(find "${ICE5G_DIR}" -iname 'ice5g_v1.2_*k_1deg.nc' 2>/dev/null)
 	if [[ ${#ICE5G_FILES} -eq 0 ]]; then
 		echo "No ICE-5G files found in »${ICE5G_DIR}«"
 		echo "Please download them from https://pmip2.lsce.ipsl.fr/design/ice5g/"
