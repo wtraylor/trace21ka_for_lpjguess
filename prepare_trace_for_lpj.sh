@@ -211,7 +211,7 @@ for var in ${TRACE_VAR[@]}; do
 	for IN in ${FILES[@]}; do
 		echo "»$IN«"
 		# Output filename is similar to input file name
-		OUT=${TRACE_CROPPED_DIR}${IN##*/} 
+		OUT=${TRACE_CROPPED_DIR}/${IN##*/} 
 		eval "CROPPED_FILES_$var+=($OUT)"
 		
 		if [ -f "$OUT" ]; then
@@ -256,10 +256,10 @@ do
 	# the corresponding PRECC file should look like this:
 	# replace all substrings 'PRECL' with 'PRECC'
 	PRECC_FILENAME=${PRECL_FILENAME//"PRECL"/"PRECC"}
-	PRECC_FILEPATH=${TRACE_CROPPED_DIR}$PRECC_FILENAME
+	PRECC_FILEPATH=${TRACE_CROPPED_DIR}/$PRECC_FILENAME
 	# the output filename
 	PRECT_FILENAME=${PRECL_FILENAME//"PRECL"/"PRECT"} 
-	PRECT_FILEPATH=${TRACE_CROPPED_DIR}$PRECT_FILENAME
+	PRECT_FILEPATH=${TRACE_CROPPED_DIR}/$PRECT_FILENAME
 	
 	echo "PRECT file:»$PRECT_FILEPATH«"
 	if [[ -f "$PRECT_FILEPATH" ]]; then
