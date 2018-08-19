@@ -37,7 +37,7 @@ export LATITUDE_2=80.0
 export ICE5G_DIR="$HOME/data/ice5g"
 
 # Directory with TraCE21ka monthly netCDF files
-export TRACE_GLOBAL_DIR="${HOME}/data/drivers/trace"
+export TRACE_GLOBAL_DIR="${HOME}/data/trace"
 
 #####################################################################
 # OUTPUT
@@ -67,16 +67,16 @@ export LPJ_FILE_INS="$TRACE_LPJ_DIR/trace_files.ins"
 export SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 
 # Names for the Outpt netCDF files
-export LPJ_FILE_SOLIN="${TRACE_LPJ_DIR}lpj_trace21ka_insolation_${FIRSTYEAR}-${LASTYEAR}BP.nc"
-export LPJ_FILE_PRECT="${TRACE_LPJ_DIR}lpj_trace21ka_precipitation_${FIRSTYEAR}-${LASTYEAR}BP.nc"
-export LPJ_FILE_TREFHT="${TRACE_LPJ_DIR}lpj_trace21ka_temperature_${FIRSTYEAR}-${LASTYEAR}BP.nc"
+export LPJ_FILE_SOLIN="${TRACE_LPJ_DIR}/lpj_trace21ka_insolation_${FIRSTYEAR}-${LASTYEAR}BP.nc"
+export LPJ_FILE_PRECT="${TRACE_LPJ_DIR}/lpj_trace21ka_precipitation_${FIRSTYEAR}-${LASTYEAR}BP.nc"
+export LPJ_FILE_TREFHT="${TRACE_LPJ_DIR}/lpj_trace21ka_temperature_${FIRSTYEAR}-${LASTYEAR}BP.nc"
 
 
 # The netCDF file to read the list of gridcells from
 export GRIDLIST_REFERENCE_FILE=$LPJ_FILE_TREFHT
 
 # Compose name for gridcells file
-LPJ_FILE_GRIDLIST="${TRACE_LPJ_DIR}trace21ka_gridlist"
+LPJ_FILE_GRIDLIST="${TRACE_LPJ_DIR}/trace21ka_gridlist"
 # Input files for LPJ-GUESS = Output files of TraCE processing
 if [ $ICE5G_MASK_GLACIERS = "TRUE" -o $ICE5G_MASK_OCEANS = "TRUE" ]; then
 	LPJ_FILE_GRIDLIST+="_ice5g_"$ICE5G_MASK_YEAR"BP"
@@ -90,7 +90,7 @@ export LPJ_FILE_GRIDLIST
 export CO2_REFERENCE_FILE=$LPJ_FILE_TREFHT
 
 # The text file to write the CO₂ values into
-export LPJ_FILE_CO2="${TRACE_LPJ_DIR}co2_${FIRSTYEAR}-${LASTYEAR}BP.txt"
+export LPJ_FILE_CO2="${TRACE_LPJ_DIR}/co2_${FIRSTYEAR}-${LASTYEAR}BP.txt"
 
 
 #####################################################################
