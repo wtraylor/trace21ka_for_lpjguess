@@ -4,13 +4,17 @@ Prepare TraCE-21ka monthly climate data as input for LPJ-GUESS
 This set of bash and R scripts cuts out a region and time slice of the TraCE-21ka output and creates NetCDF files as well as grid list, CO₂ and instruction (ins) text files that can be used as input for the LPJ-GUESS 3.1 CF input module.
 Read the comments in the script files for further details.
 
+Prerequisites
+-------------
+
+- Linux bash
+
+- nco: [http://nco.sourceforge.net/]()
+
+- R: [http://r-project.org/]() (with the [https://rstudio.github.io/packrat/](`packrat`) package)
+
 Procedure
 ---------
-
-- Make sure you have all necessary software installed: 
-	- bash
-    - nco: [http://nco.sourceforge.net/]()
-    - R: [http://r-project.org/]() (with packages `ncdf4`, `raster`, `rgdal`)
 
 - Download the TraCE-21ka monthly datasets for the CCSM3 variables `PRECC`, `PRECL`, `TREFHT`, and `INSOL` for your time period from [https://www.earthsystemgrid.org/dataset/ucar.cgd.ccsm3.trace.html]().
 
