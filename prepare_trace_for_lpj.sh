@@ -42,7 +42,7 @@ function print_time_range {
 ################################################################################
 ########        PREPARATION OF VARIABLES                      #################
 ################################################################################
-# Generally we iterate over the list of netCDF-Variables (SOLIN etc) 
+# Generally we iterate over the list of netCDF-Variables (SOLIN etc)
 # Bash variables referring to these are created with a suffix like ORIGINAL_FILES_SOLIN
 
 # Variable names in the TraCE input files (don’t customize this)
@@ -77,7 +77,7 @@ echo -e "\tMask oceans from gridcell list: $ICE5G_MASK_OCEANS"
 
 ## We assume that all custom scripts are in the same directory $SCRIPT_DIR
 REQUIRED_SCRIPTS=(
-	"get_trace_time_indices.r" 
+	"get_trace_time_indices.r"
 	"create_ice5g_gridlist.r"
 	"create_trace_co2.r"
 	"trunc_trace_lat.nco"
@@ -86,7 +86,7 @@ REQUIRED_SCRIPTS=(
 )
 for cmd in ${REQUIRED_SCRIPTS[@]}; do
 	if [[ ! -f "$SCRIPT_DIR/$cmd" ]]; then
-		echo "R script $SCRIPT_DIR/$cmd not found."; 
+		echo "R script $SCRIPT_DIR/$cmd not found.";
 		exit $EXIT_FAILURE
 	fi
 done
@@ -100,7 +100,7 @@ REQUIRED_CMDS=(
 )
 for cmd in ${REQUIRED_CMDS[@]}; do
 	if ( ! type -P $cmd &>/dev/null ); then
-		echo "command $cmd found, please install it" 
+		echo "command $cmd found, please install it"
 		exit $EXIT_FAILURE
 	fi
 done
@@ -114,7 +114,7 @@ done
 for var in ${TRACE_VAR[@]}; do
 	eval "unset ORIGINAL_FILES_$var"
 	echo "Searching for input files with variable ›$var‹..."
-	
+
 	eval "ORIGINAL_FILES_$var=\$(find $TRACE_GLOBAL_DIR/trace*${var}*12.nc  2>/dev/null)"
 	eval "FILES=\${ORIGINAL_FILES_${var}[@]}"
 	if [[ ${#FILES} -eq 0 ]]; then
@@ -148,11 +148,11 @@ fi
 ########        PREPARATION OF FILES AND DIRECTORIES          #################
 ################################################################################
 
-# 
+#
 # unset DELETE
 # # find cropped files from previous runs
 # DELETE+=($(find ${TRACE_CROPPED_DIR} -type f -name *.nc 2>/dev/null))
-# 
+#
 # # All output files
 # LPJ_FILES=($LPJ_FILE_SOLIN \
 # $LPJ_FILE_PRECT \
@@ -163,7 +163,7 @@ fi
 # for f in ${LPJ_FILES[@]}; do
 # 	[ -f $f ] && DELETE+=($f)
 # done
-# 
+#
 # if [ ! ${#DELETE[@]} -eq 0 ]; then
 # 	echo "Deleting existing files:"
 # 	for f in ${DELETE[@]}; do
@@ -179,7 +179,7 @@ fi
 # 	for f in ${DELETE[@]}; do
 # 		rm -fr "$f"
 # 	done
-# 	echo 
+# 	echo
 # fi
 
 echo
@@ -195,7 +195,7 @@ echo
 
 
 ################################################################################
-# CROP REGION 
+# CROP REGION
 # crop all files with .nc ending from the the original TraCE-21ka folder
 # and put them into the cropped folder (overwriting existing files)
 ################################################################################
@@ -211,9 +211,9 @@ for var in ${TRACE_VAR[@]}; do
 	for IN in ${FILES[@]}; do
 		echo "»$IN«"
 		# Output filename is similar to input file name
-		OUT=${TRACE_CROPPED_DIR}/${IN##*/} 
+		OUT=${TRACE_CROPPED_DIR}/${IN##*/}
 		eval "CROPPED_FILES_$var+=($OUT)"
-		
+
 		if [ -f "$OUT" ]; then
 			echo -e "\tOutput file »$OUT« already exists."
 			read -p "Overwrite it? [y/n]" -n 1 -r
@@ -223,11 +223,11 @@ for var in ${TRACE_VAR[@]}; do
 			fi
 		fi
 		# $OUT does not exist yet
-		echo -e "\t->Cropping..."		
+		echo -e "\t->Cropping..."
 		ncks -O -d lon,${LONGITUDE_1},${LONGITUDE_2} -d lat,${LATITUDE_1},${LATITUDE_2} "$IN" "$OUT"
-		
+
 		[ -f "$OUT" ] && echo -e "\t->Written to:»$OUT«"
-		
+
 	done
 	echo
 done
@@ -252,15 +252,15 @@ unset CROPPED_FILES_PRECT
 for PRECL_FILEPATH in ${CROPPED_FILES_PRECL[@]}
 do
 	PRECL_FILENAME=${PRECL_FILEPATH##*/} # extract the filename
-	
+
 	# the corresponding PRECC file should look like this:
 	# replace all substrings 'PRECL' with 'PRECC'
 	PRECC_FILENAME=${PRECL_FILENAME//"PRECL"/"PRECC"}
 	PRECC_FILEPATH=${TRACE_CROPPED_DIR}/$PRECC_FILENAME
 	# the output filename
-	PRECT_FILENAME=${PRECL_FILENAME//"PRECL"/"PRECT"} 
+	PRECT_FILENAME=${PRECL_FILENAME//"PRECL"/"PRECT"}
 	PRECT_FILEPATH=${TRACE_CROPPED_DIR}/$PRECT_FILENAME
-	
+
 	echo "PRECT file:»$PRECT_FILEPATH«"
 	if [[ -f "$PRECT_FILEPATH" ]]; then
 		echo -en "\t->File already exists. Overwrite it? [y/n]"
@@ -271,14 +271,14 @@ do
 			continue
 		fi
 	fi
-	
+
 	if [[ -f "$PRECC_FILEPATH" ]] # if the corresponding PRECC file exists
-	then 
+	then
 		echo -e "\tPRECC:»$PRECC_FILENAME«"
 		echo -e "\tPRECL:»$PRECL_FILENAME«"
-		
+
 		# For ncbo to be able to add PRECC+PRECL, the variable names
-		# of both input files need to match. That’s why we 
+		# of both input files need to match. That’s why we
 		# change it in the PRECC file to 'PRECL'.
 		echo -e "\tRenaming variable PRECC in »$PRECC_FILENAME« to PRECL to perform calculation."
 		ncrename -v PRECC,PRECL $PRECC_FILEPATH 1>/dev/null
@@ -286,20 +286,20 @@ do
 		echo -e "\tCreating new PRECT file: »$PRECT_FILENAME«..."
 		# Create the PRECT file (-O is overwrite mode)
 		ncbo -O --op_typ='+' "$PRECL_FILEPATH" "$PRECC_FILEPATH" "$PRECT_FILEPATH"
-		
+
 		if [[ -f "$PRECT_FILEPATH" ]]; then
 			CROPPED_FILES_PRECT+=($PRECT_FILEPATH)
-			
+
 			echo -e "\tRenaming its variable to ›PRECT‹..."
 			# And set variable name and description
 			ncrename -v PRECL,PRECT "$PRECT_FILEPATH" 1>/dev/null
-			# ncatted: -O: force overwrite existing file; 
+			# ncatted: -O: force overwrite existing file;
 			# 		   -a: attribute change description
-			# 		   	  -> att_nm, var_nm, mode, att_type, att_val 
+			# 		   	  -> att_nm, var_nm, mode, att_type, att_val
 			# 		   	  -> mode = modify; att_type = character (string)
 			echo -e "\tSetting its attribute ›long_name‹..."
 			ncatted -O -a long_name,PRECT,m,c,"Total (convective and large-scale) precipitation rate (liq + ice)" "$PRECT_FILEPATH"
-			
+
 		else
 			echo -e "\tError, file $PRECT_FILENAME not created."
 		fi
@@ -309,14 +309,14 @@ do
 	else
 		echo "Missing file for PRECC that corresponds to the PRECL file »$PRECL_FILENAME«. Expected »$PRECC_FILENAME«"
 	fi
-done 
+done
 
 unset CROPPED_FILES_PRECC
 unset CROPPED_FILES_PRECL
 
 
 ################################################################################
-# CONCATENATE 
+# CONCATENATE
 ################################################################################
 echo
 echo "**************** CONCATENATE ******************"
@@ -325,7 +325,7 @@ for var in ${LPJ_VAR[@]}; do
 	eval "IN=\${CROPPED_FILES_${var}[@]}" # input files
 
 	eval "OUT=\${LPJ_FILE_$var}"
-	
+
 	if [[ -f "$OUT" ]]; then
 		echo "Output file for variable $var already exists: »$OUT«"
 		echo -e "\tTime range:$(print_time_range $OUT)"
@@ -336,13 +336,13 @@ for var in ${LPJ_VAR[@]}; do
 			continue
 		fi
 	fi
-		
+
 	if [[ "${#IN[@]}" > 0 ]]; then
 		echo "Concatenating all cropped files for variable $var..."
 		for f in ${IN[@]}; do
 			echo -e "\t»$f«"
 		done
-		
+
 		ncrcat -O --dimension time,0, ${IN[@]} "$OUT"
 		if [[ -f "$OUT" ]]; then
 			echo -e "\t-> File created: »$OUT«"
@@ -356,7 +356,7 @@ for var in ${LPJ_VAR[@]}; do
 done
 
 ################################################################################
-# CROP TIME 
+# CROP TIME
 ################################################################################
 echo
 echo "**************** CROP TIME ******************"
@@ -374,7 +374,7 @@ for var in ${LPJ_VAR[@]}; do
 		TIME_START=${S% *} # first index: prefix in front of space
 		TIME_STOP=${S##* } # last index: suffix after space
 		echo "START:$TIME_START  STOP:$TIME_STOP"
-		
+
 		echo -e "\t->Cropping time hyperslab..."
 		# hyperslab indexing starts with 0
 		ncks -O -d time,${TIME_START},${TIME_STOP} "$IN" "$IN"
@@ -403,11 +403,11 @@ for var in ${LPJ_VAR[@]}; do
 		echo "»${FILENAME}«"
 
 		# Change unit and standard_name
-		# ncatted: -O: force overwrite existing file; 
+		# ncatted: -O: force overwrite existing file;
 		# 		   -a: attribute change description
-		# 		   	  -> att_nm, var_nm, mode, att_type, att_val 
+		# 		   	  -> att_nm, var_nm, mode, att_type, att_val
 		# 		   	  -> mode = overwrite (o); att_type = character (string)
-		
+
 		echo -e "\tChanging attributes to conform to CF standard..."
 		eval "ncatted -O \
 		-a standard_name,$var,o,c,\"\${CF_STANDARD_NAME_$var}\" \
@@ -419,34 +419,34 @@ for var in ${LPJ_VAR[@]}; do
 		-a units,lat,o,c,\"${CF_UNIT_LAT}\"\
 		-a standard_name,lat,o,c,\"${CF_STANDARD_NAME_LAT}\" \
 		\"${FILENAME}\""
-		
+
 		# Change variable name
 		eval "LPJ_VAR=\${LPJ_VAR_$var}"
 		if [ "$var" != "$LPJ_VAR" ]; then
 			eval "echo -e \"\tChanging variable name from $var to \${LPJ_VAR_$var}...\""
 			eval "ncrename -O -v \"$var\",\"\${LPJ_VAR_$var}\" \"${FILENAME}\""
 		fi
-		
+
 		# Adjust the time dimension
 		# 	--append: Overwrite existing time dimension
 		echo -e "\tRecalculating time..."
 		eval "ncap2 --append --script \"${TIME_SCRIPT}\" \"${FILENAME}\""
-		
-		
+
+
 		## THIS CLEANING OF THE LATITUDE VALUES IS REALLY JUST A BAD, QUICK
 		## AND DIRTY FIX!!
 		## ACTUALLY THIS SCRIPT SHOULD RESAMPLE THE WHOLE FILE TO A GIVEN RESOLUTION...
 		## BUT I DON’T WANT TO PUT EFFORT INTO IT AT THIS POINT.
-		
+
 		echo -e "\tCleaning trailing end of odd numbers from latitude:"
 		# Find out the first latitude value and resolution
 		if [ -z ${FIRST_LAT+x} ] ; then # if FIRST_LAT is still undefined
 			eval "FIRST_LAT=\$(ncap2 --append --script-file \"$SCRIPT_DIR/get_trace_first_lat.nco\" \"${FILENAME}\")"
 			echo -e "\tFirst latitude value for all files is $FIRST_LAT"
-			
+
 			eval "LAT_RES=\$(ncap2 --append --script-file \"$SCRIPT_DIR/get_trace_lat_res.nco\" \"${FILENAME}\")"
 			echo -e "\tLatitude resolution for all files is $LAT_RES"
-			
+
 		fi
 		echo -e "\tResetting latitude..."
 		# write first latitude and resolution into other files to read them in the
@@ -457,7 +457,7 @@ for var in ${LPJ_VAR[@]}; do
 		\"${FILENAME}\""
 		# Reset all latitude values
 		eval "ncap2 --append --script-file \"$SCRIPT_DIR/trunc_trace_lat.nco\" \"${FILENAME}\""
-		
+
 	else
 		echo "Expected file »$FILENAME« does not exist."
 	fi
@@ -487,7 +487,7 @@ echo
 
 
 ################################################################################
-# CREATE GRIDCELL LIST 
+# CREATE GRIDCELL LIST
 # (see R file for details)
 ################################################################################
 echo
@@ -517,7 +517,7 @@ echo "Writing LPJ-GUESS instruction file with file paths and variables to »${LP
 echo \
 "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! INSTRUCTION FILE FOR LPJ-GUESS USING TRACE-21KA CLIMATE DRIVING DATA
-! This file has been generated by the script ›prepare_trace_for_lpj.sh‹ 
+! This file has been generated by the script ›prepare_trace_for_lpj.sh‹
 ! at $(date)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
