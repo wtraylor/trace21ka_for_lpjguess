@@ -3,7 +3,7 @@
 ## See bash script for info on time and calendar
 ################################################################
 
-source(paste0(Sys.getenv("SCRIPT_DIR"),"trace_lib.r"))
+source(file.path(Sys.getenv("SCRIPT_DIR"),"trace_lib.r"))
 
 ## Convert decimal numbers from TraCE file into ppmv as LPJ-GUESS needs it
 to_ppmv <- function(x){

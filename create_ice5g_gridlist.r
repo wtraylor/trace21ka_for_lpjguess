@@ -26,7 +26,7 @@ mask_ocean <- Sys.getenv("ICE5G_MASK_OCEANS")=="TRUE"
 require (ncdf4) # reading netcdf files
 
 if (mask_ocean || mask_glaciers){
-	source(paste0(Sys.getenv("SCRIPT_DIR"), "ice5g_lib.r"))
+	source(file.path(Sys.getenv("SCRIPT_DIR"), "ice5g_lib.r"))
 }
 
 ## Name of the output gridcell file

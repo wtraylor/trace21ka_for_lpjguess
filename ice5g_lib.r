@@ -57,7 +57,8 @@ read_ice5g_raster <- function(
 		time <- time - (time %% 0.5) + 0.5*round(2*(time %% 0.5))
 	}
 	## Open the file
-	filename <- paste(dir,"ice5g_v1.2_", sprintf("%1.1f", time), "k_1deg.nc", sep="")
+	filename <- file.path(dir,
+                        paste0("ice5g_v1.2_", sprintf("%1.1f", time), "k_1deg.nc"))
 	nc <- nc_open(filename)
 	
 	
