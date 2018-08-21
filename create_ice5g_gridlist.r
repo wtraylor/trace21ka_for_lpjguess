@@ -41,7 +41,7 @@ nc <- nc_open(reference_nc_filename)
 
 ## read the ice5g data 
 if (mask_ocean){
-	landmask <- read_ice5g_landmask( year=year, dir=dir_ice5g)
+	oceanmask <- read_ice5g_oceanmask( year=year, dir=dir_ice5g)
 }
 if (mask_glaciers){
 	glaciermask <- read_ice5g_glaciermask( year=year, dir=dir_ice5g)
@@ -55,12 +55,12 @@ for (rlon in 1:length(nc$dim$lon$vals)){
 		## exclude the gridcell if it’s on water
 		if (mask_ocean){
 			exclude_cell <- exclude_cell || is.na(
-				raster::extract(landmask, cellFromXY(landmask, c(lon,lat)))
+				raster::extract(oceanmask, cellFromXY(oceanmask, c(lon,lat)))
 			)
 		}
 		## exclude the gridcell if it’s glaciated
 		if (mask_glaciers){
-			exclude_cell <- exclude_cell || is.na(
+			exclude_cell <- exclude_cell || !is.na(
 				raster::extract(glaciermask, cellFromXY(glaciermask, c(lon,lat)))
 			)
 		}
