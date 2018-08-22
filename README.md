@@ -16,7 +16,9 @@ Prerequisites
 Procedure
 ---------
 
-- Download the TraCE-21ka monthly datasets for the CCSM3 variables `PRECC`, `PRECL`, `TREFHT`, and `INSOL` for your time period from [https://www.earthsystemgrid.org/dataset/ucar.cgd.ccsm3.trace.html]().
+- Download the TraCE-21ka monthly datasets for the CCSM3 variables `PRECC`, `PRECL`, `TREFHT`, and `INSOL` for your time period from [earthsystemgrid.org](https://www.earthsystemgrid.org/dataset/ucar.cgd.ccsm3.trace.html).
+Only download those files for the time frame that you are actually interested in.
+Having more files in the source directory for this script will lead to much extra calculation time because _all_ files will be concatenated.
 
 - If you want to create a grid list file without the grid cells on glaciers or ocean, download also the ICE-5G dataset from: [https://pmip2.lsce.ipsl.fr/design/ice5g/]().
 
