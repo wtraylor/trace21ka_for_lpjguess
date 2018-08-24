@@ -300,6 +300,12 @@ do
 			echo -e "\tSetting its attribute ›long_name‹..."
 			ncatted -O -a long_name,PRECT,m,c,"Total (convective and large-scale) precipitation rate (liq + ice)" "$PRECT_FILEPATH"
 
+      echo -e "\tConverting from ms to kg/(m²s)..."
+      # Convert unit of precipitation flux from m/s to kg/(m²s):
+      # m/s = m³/(m²/s) = 1000 kg/(m²s)
+      # Because water has a density of 1 kg/l = 1000 kg/m³.
+      ncap2 -O -s 'PRECT=1000*PRECT' "$PRECT_FILEPATH" "$PRECT_FILEPATH"
+
 		else
 			echo -e "\tError, file $PRECT_FILENAME not created."
 		fi
