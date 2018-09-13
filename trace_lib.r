@@ -54,7 +54,7 @@ read_trace_raster <- function(
 			"https://www.earthsystemgrid.org/dataset/ucar.cgd.ccsm3.trace.html")
 		)
 	else
-		print(paste0("Opening TraCE file »", filename,"«"))
+		message("Opening TraCE file »", filename,"«")
 	
 	## Open the file
 	nc <- nc_open(filename)
@@ -63,7 +63,8 @@ read_trace_raster <- function(
 	if (!missing(year)) {
 		time_min <- min(nc$dim$time$vals)
 		time_max <- max(nc$dim$time$vals)
-		print(paste("Time range of dataset:", time_min,"–",time_max, nc$dim$time$unit))
+		message("Time range of dataset: ", time_min," to ",time_max,
+            " ", nc$dim$time$unit)
 		
 		## In the netCDF files time is in negative ka BP and the month a fraction
 		time <- -(year + (month-1)/12)/1000
@@ -81,13 +82,11 @@ read_trace_raster <- function(
 	}
 	
 	
-	print(paste("Record index for time is", time_index))
-	print(
-		paste(
-			"Extent of file:",
-			"longitude:",min(nc$dim$lon$vals),"–",max(nc$dim$lon$vals),
-			"latitude:",min(nc$dim$lat$vals),"–",max(nc$dim$lat$vals)
-	))
+	message("Record index for time is ", time_index)
+	message("Extent of file: ",
+			"longitude: ",min(nc$dim$lon$vals)," to ",max(nc$dim$lon$vals),
+			"latitude: ",min(nc$dim$lat$vals)," to ",max(nc$dim$lat$vals)
+	)
 	
 	## Set up data range to read
 	## First two dimensions are longitude (lon) and latitude (lat) 
@@ -158,25 +157,24 @@ read_trace_lpj_raster <- function(
 	if (!file.exists(filename))
 		stop(paste0( "File \"", filename,"\" ", "does not exist. ") )
 	else
-		print(paste0("Opening file »", filename,"«"))
+		message("Opening file »", filename,"«")
 	
 	## Open the file
 	nc <- nc_open(filename)
 	
 	time_min <- min(nc$dim$time$vals)
 	time_max <- max(nc$dim$time$vals)
-	print(paste("Time range of dataset:", time_min,"–",time_max, nc$dim$time$unit))
+	message("Time range of dataset: ", time_min," to ",time_max, nc$dim$time$unit)
 	
 
 	time_index <- 1 # use first entry	
 	
-	print(paste("Record index for time is", time_index))
-	print(
-		paste(
-			"Extent of file:",
-			"longitude:",min(nc$dim$lon$vals),"–",max(nc$dim$lon$vals),
-			"latitude:",min(nc$dim$lat$vals),"–",max(nc$dim$lat$vals)
-	))
+	message("Record index for time is ", time_index)
+  message(
+			"Extent of file: ",
+			"longitude: ",min(nc$dim$lon$vals)," to ",max(nc$dim$lon$vals),
+			"latitude: ",min(nc$dim$lat$vals)," to ",max(nc$dim$lat$vals)
+	)
 	
 	## Set up data range to read
 	## First two dimensions are longitude (lon) and latitude (lat) 
