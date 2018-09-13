@@ -38,8 +38,14 @@ echo -e "\t  required packages: ncdf4, raster"
 echo
 }
 
+function grep_time {
+  while read input; do
+    echo $input | grep --only-matching --perl-regexp '(?<=time = )-?[1-9,.]+'
+  done
+}
+
 function print_time_range {
-	echo -n "$(ncks --units -H -v time -d time,0,0 $1) – $(ncks --units -H -v time -d time,-1,-1 $1)"
+	echo -n "$(ncks --units -H -v time -d time,0,0 $1 | grep_time) to $(ncks --units -H -v time -d time,-1,-1 $1 | grep_time)"
 }
 
 ################################################################################
@@ -108,7 +114,9 @@ for cmd in ${REQUIRED_CMDS[@]}; do
 	fi
 done
 
-
+echo
+echo "Restoring R packages with packrat..."
+Rscript -e 'packrat::restore()'
 
 ################################################################################
 ########        SEARCH FOR INPUT FILES                        #################
