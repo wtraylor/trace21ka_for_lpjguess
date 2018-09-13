@@ -11,7 +11,7 @@ Prerequisites
 
 - nco: [http://nco.sourceforge.net/]()
 
-- R: [http://r-project.org/]() (with the [https://rstudio.github.io/packrat/](`packrat`) package)
+- R: [http://r-project.org/]()
 
 Procedure
 ---------
