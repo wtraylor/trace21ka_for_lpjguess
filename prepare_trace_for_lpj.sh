@@ -62,6 +62,7 @@ LPJ_VAR=("SOLIN" "PRECT" "TREFHT") # needed as output
 ################################################################################
 print_use
 
+
 ################################################################################
 #                  CHECK SYSTEM REQUIREMENTS ETC.          #####################
 ################################################################################
@@ -117,6 +118,27 @@ done
 echo
 echo "Restoring R packages with packrat..."
 Rscript -e 'packrat::restore()'
+
+################################################################################
+#                  CHECK VARIABLE SETTINGS                 #####################
+################################################################################
+
+if [ "$(echo $LONGITUDE_1 | grep -o '\.')" != "." ]; then
+  echo "Variable LONGITUDE_1 ($LONGITUDE_1) needs a decimal point."
+  exit 1
+fi
+if [ "$(echo $LONGITUDE_2 | grep -o '\.')" != "." ]; then
+  echo "Variable LONGITUDE_2 ($LONGITUDE_2) needs a decimal point."
+  exit 1
+fi
+if [ "$(echo $LATITUDE_1 | grep -o '\.')" != "." ]; then
+  echo "Variable LATITUDE_1 ($LATITUDE_1) needs a decimal point."
+  exit 1
+fi
+if [ "$(echo $LATITUDE_2 | grep -o '\.')" != "." ]; then
+  echo "Variable LATITUDE_2 ($LATITUDE_2) needs a decimal point."
+  exit 1
+fi
 
 ################################################################################
 ########        SEARCH FOR INPUT FILES                        #################
