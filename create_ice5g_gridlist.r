@@ -35,8 +35,13 @@ if (file.exists(output_filename)) {
 	file.remove(output_filename)
 }
 
+if (!dir.exists(dir_ice5g))
+  stop("ICE-5G directory does not exist: ", dir_ice5g)
+
 ## Raster object with gridcells
 # use first entry of time, we are only interested in the matrix of gc
+if (!file.exists(reference_nc_filename))
+  stop("Reference NetCDF file not found: ", reference_nc_filename)
 nc <- nc_open(reference_nc_filename)
 
 ## read the ice5g data 

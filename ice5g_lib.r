@@ -59,6 +59,10 @@ read_ice5g_raster <- function(
 	## Open the file
 	filename <- file.path(dir,
                         paste0("ice5g_v1.2_", sprintf("%04.1f", time), "k_1deg.nc"))
+  if (!file.exists(filename)){
+    print("ICE-5G file does not exist: ", filename)
+    stop()
+  }
 	nc <- nc_open(filename)
 	
 	
