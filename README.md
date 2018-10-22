@@ -6,8 +6,7 @@ Requirements
 
 - A _make_ implementation, e.g. `gmake`.
 
-- Python. 
-<!-- TODO: which version? -->
+- Python 3.7.0 or later
 
 On Ubuntu run `sudo apt install make`
 
