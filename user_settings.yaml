@@ -1,0 +1,12 @@
+# User-defined settings for preparing TraCE-21ka paleoclimate data for LPJ-GUESS
+#
+
+# Geographic extent of study area
+region:
+  # Longitude: 0° to 360° E
+  lon: [130, 230]
+  # Latitude: -90° to +90° N
+  lat: [50, 80]
+
+# Time frame of interest. In negative thousand calendar years before present (-kaBP).
+timeframe: [ -21, -15]

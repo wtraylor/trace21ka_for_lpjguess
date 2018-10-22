@@ -1,0 +1,36 @@
+# Hard-coded settings.
+# Don’t change this unless you know what you are doing.
+#
+
+# NetCDF attributes as they shall appear in the output files.
+nc_attributes:
+  # TODO: cloud cover
+  lat:
+    long_name: 'latitude'
+    standard_name: 'latitude'
+    units: 'degrees_north'
+  lon:
+    long_name: 'longitude'
+    standard_name: 'longitude'
+    units: 'degrees_east'
+  prec:
+    long_name: 'Monthly precipitation amount'
+    standard_name: 'precipitation_amount'
+    units: 'kg m-2'
+  radiation:
+    long_name: 'Mean daily surface incident shortwave radiation'
+    standard_name: 'surface_downwelling_shortwave_flux'
+    units: 'W m-2'
+  temp:
+    long_name: 'Near surface air temperature at 2m'
+    standard_name: 'air_temperature'
+    units: 'K'
+  time:
+    long_name: 'time'
+    standard_name: 'time'
+    units: '' # TODO
+    calendar: '' # TODO
+  wet_days:
+    long_name: 'wet_days'
+    standard_name: 'number_of_days_with_lwe_thickness_of_precipitation_amount_above_threshold'
+    units: 'count'
