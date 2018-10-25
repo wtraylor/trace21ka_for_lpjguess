@@ -23,7 +23,7 @@ Requirements
 
 - `wget`
 
-- A working internet connection for the automatic download of [Miniconda](https://conda.io/miniconda.html).
+- A working internet connection for the automatic download of [Miniconda](https://conda.io/miniconda.html) and Python packages.
 
 On Ubuntu run `sudo apt install make wget`
 
