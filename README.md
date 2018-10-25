@@ -1,6 +1,19 @@
 Prepare TraCE-21ka monthly data as LPJ-GUESS drivers
 ====================================================
 
+Introduction
+------------
+
+This script bundle downscales and bias-corrects the monthly TraCE-21ka paleoclimate dataset (He 2011) and prepares NetCDF files that are readable as driving data by LPJ-GUESS.
+Bias-correction is based on the CRUNCEP 5 dataset of modern monthly climate between 1900 and 2013 in 0.5°x0.5° grid cell resolution.<!--TODO: Citation-->
+
+<!--TODO:
+- Algorithm for downscaling
+- Why downscaling? ⇒ generate orthographical details
+- How to interpret the high resolution: Anything that’s not elevation is an artefact.
+- How are changing coast lines handled?
+-->
+
 Requirements
 ------------
 
@@ -54,9 +67,16 @@ Design Questions
 
 - Is it good to bias-correct precipitation with a simple quotient? ⇒ Compare Lorenz et al. (2016)
 
+- Shall we install dependencies (nco, cdo, xarray, ...) locally or assume a system-wide installation?
+
 Authors
 -------
 
 Main author: [Wolfgang Traylor](mailto:wolfgang.pappa@senckenberg.de)
 
 Thanks to: Christian Werner, Matthew Forrest
+
+References
+----------
+
+- He, Feng. 2011. “Simulating Transient Climate Evolution of the Last Deglaciation with Ccsm 3.” PhD thesis, University of Wisconsin-Madison.
