@@ -17,11 +17,18 @@ Bias-correction is based on the CRUNCEP 5 dataset of modern monthly climate betw
 Requirements
 ------------
 
+- A Linux terminal on a 64bit machine.
+
 - A _make_ implementation, e.g. `gmake`.
 
-- Python 3.7.0 or later
+- `wget`
 
-On Ubuntu run `sudo apt install make`
+- A working internet connection for the automatic download of [Miniconda](https://conda.io/miniconda.html).
+
+On Ubuntu run `sudo apt install make wget`
+
+Python and all other necessary software ([nco](http://nco.sourceforge.net/), [cdo](https://code.mpimet.mpg.de/projects/cdo)) are installed through Miniconda automatically and run from local binaries.
+This way, no system-wide installations are required.
 
 How to Use
 ----------
@@ -31,10 +38,17 @@ How to Use
 2) Customize `settings.yaml` to your own needs.
 
 3) Run `make` from within this directory (where `Makefile` resides).
+Only run `make` from an interactive shell.
 
 By default, the script expects the files in the subdirectory `trace_original`.
 You can copy your downloaded files there or create a symbolic link (on Linux: `ln -sv /path/to/trace trace_original` within this directory).
 You can also supply the path as an argument: `make TRACE_ORIG=/path/to/trace`
+
+File Structure
+--------------
+
+- `cruncep/`: Monthly means of the CRUNCEP5 data set from 1900 to 2013.
+  **TODO:** Citation, where doe the data come from exactly?
 
 Project Outline
 ---------------

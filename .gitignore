@@ -1,3 +1,6 @@
 # The default directory for the original TraCE-21ka files (as folder and as symbolic link):
 trace_original
 trace_original/
+
+/Miniconda3-latest-Linux-x86_64.sh
+/miniconda3/
