@@ -35,8 +35,8 @@ if [ ! -x "$PIP" ]; then
 	exit 1
 fi
 
-# Add any new python dependencies here (space-separated:
-PYTHON_PACKAGES="xarray"
+# Add any new python dependencies here (space-separated):
+PYTHON_PACKAGES="xarray pyyaml"
 
 green 'Installing Python packages: '
 # Insert line breaks into package list
