@@ -21,6 +21,8 @@ fi
 # Delete old installation
 rm --recursive --force "$CONDA_PREFIX"
 
+# TODO: Use specific version and not latest version.
+# TODO: Download 32 on 32-bit architectures.
 CONDA_INSTALLER='Miniconda3-latest-Linux-x86_64.sh'
 
 green 'Downloading latest Miniconda release for 64bit Linux...'
