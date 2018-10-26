@@ -2,5 +2,8 @@
 trace_original
 trace_original/
 
+heap
+heap/
+
 /Miniconda3-latest-Linux-x86_64.sh
 /miniconda3/

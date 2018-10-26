@@ -44,6 +44,12 @@ By default, the script expects the files in the subdirectory `trace_original`.
 You can copy your downloaded files there or create a symbolic link (on Linux: `ln -sv /path/to/trace trace_original` within this directory).
 You can also supply a custom path in `options.yaml`.
 
+There will be some temporary files produced.
+They are stored in the “heap” directory.
+It defaults to `heap/` in the root of the Git repository, which is created when needed.
+You can specify it in the `Makefile` or as a parameter to the call `make HEAP=/path/to/heap`.
+Note that there should be enough free space available.
+
 File Structure
 --------------
 

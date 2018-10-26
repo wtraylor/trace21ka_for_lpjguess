@@ -1,4 +1,9 @@
-miniconda3/bin/conda miniconda3/bin/pip :
+# The directory for storing intermediary files.
+# There should be some space there...
+HEAP ?= "heap"
+
+###############################################################################
+
 	@scripts/install_miniconda.sh
 
 miniconda3/bin/ncremap : miniconda3/bin/conda
