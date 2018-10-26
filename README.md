@@ -42,7 +42,7 @@ Only run `make` from an interactive shell.
 
 By default, the script expects the files in the subdirectory `trace_original`.
 You can copy your downloaded files there or create a symbolic link (on Linux: `ln -sv /path/to/trace trace_original` within this directory).
-You can also supply the path as an argument: `make TRACE_ORIG=/path/to/trace`
+You can also supply a custom path in `user_settings.yaml`.
 
 File Structure
 --------------
