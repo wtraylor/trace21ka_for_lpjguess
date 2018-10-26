@@ -4,6 +4,10 @@ HEAP ?= "heap"
 
 ###############################################################################
 
+# The python executable
+PYTHON = miniconda3/bin/python
+
+miniconda3/bin/conda miniconda3/bin/pip $(PYTHON):
 	@scripts/install_miniconda.sh
 
 miniconda3/bin/ncremap : miniconda3/bin/conda
