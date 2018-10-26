@@ -1,4 +1,32 @@
-# Hard-coded settings.
+###############################################################################
+###############################################################################
+# USER SETTINGS
+#
+# User-defined settings for preparing TraCE-21ka paleoclimate data for
+# LPJ-GUESS
+#
+
+# Paths, either absolute or relative to the root of the Git repository.
+# ("~" for home directory and environment variables are allowed.)
+
+trace_orig: "trace_original" # Directory of original TraCE files.
+
+# Geographic extent of study area.
+region:
+  # Longitude: 0° to 360° E
+  lon: [130, 230]
+  # Latitude: -90° to +90° N
+  lat: [50, 80]
+
+# Time frame of interest. In negative thousand calendar years before present
+# (-kaBP).
+timeframe: [ -21, -15]
+
+
+###############################################################################
+###############################################################################
+# HARD-CODED SETTINGS.
+#
 # Don’t change this unless you know what you are doing.
 #
 
