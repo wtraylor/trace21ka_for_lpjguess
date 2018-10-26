@@ -34,3 +34,8 @@ nc_attributes:
     long_name: 'wet_days'
     standard_name: 'number_of_days_with_lwe_thickness_of_precipitation_amount_above_threshold'
     units: 'count'
+
+# File names of the monthly TraCE-21ka of modern time.
+modern_trace_files:
+  FSDS: 'trace.36.400BP-1990CE.cam2.h0.FSDS.2160101-2204012.nc'
+  TREFHT: 'trace.36.400BP-1990CE.cam2.h0.TREFHT.2160101-2204012.nc'
