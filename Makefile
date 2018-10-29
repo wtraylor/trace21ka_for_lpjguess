@@ -1,6 +1,6 @@
 # The directory for storing intermediary files.
 # There should be some space there...
-HEAP ?= "heap"
+export HEAP ?= heap
 
 ###############################################################################
 
@@ -17,4 +17,6 @@ miniconda3/bin/ncremap : miniconda3/bin/conda
 miniconda3/lib/python3.7/site-packages/xarray : miniconda3/bin/pip
 	@scripts/install_python_packages.sh
 
-# TODO: add rule for scripts/downscale_trace_file.sh
+$(HEAP)/modern_monthly_avg_TREFHT.nc $(HEAP)/modern_monthly_avg_FSDS.nc: scripts/aggregate_modern_trace.py $(PYTHON)
+	@$(PYTHON) scripts/aggregate_modern_trace.py
+

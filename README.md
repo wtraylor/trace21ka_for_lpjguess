@@ -55,6 +55,7 @@ File Structure
 
 - `cruncep/`: Monthly means of the CRUNCEP5 data set from 1900 to 2013.
   **TODO:** Citation, where doe the data come from exactly?
+- `heap/`: Automatically created directory for temporary files. Can be customized.
 
 Project Outline
 ---------------
