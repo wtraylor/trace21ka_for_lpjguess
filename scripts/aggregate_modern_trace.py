@@ -76,7 +76,7 @@ for f in files:
 for f in files:
     print("Aggregating monthly averages from file '%s'." % files[f])
     dataset = get_monthly_means(files[f])
-    out_file = "modern_monthly_avg_" + f + ".nc"
+    out_file = "modern_trace_" + f + ".nc"
     out_file = os.path.join(heap, out_file)
     print("Writing file '%s'." % out_file)
     dataset.to_netcdf(out_file)
