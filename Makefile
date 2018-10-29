@@ -37,7 +37,7 @@ GRID_TEMPL = cruncep/temperature.nc
 # ERWG interpolation algorithm for downscaling.
 REGRID_ALG = bilinear
 
-$(HEAP)/modern_trace_FSDS_regrid.nc $(GRID_TEMPL) : $(HEAP)/modern_trace_FSDS.nc $(BIN)/ncremap
+$(HEAP)/modern_trace_FSDS_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_FSDS.nc $(BIN)/ncremap
 	@echo "Downscaling modern FSDS file..."
 	@env PATH="$(BIN):$(PATH)" \
 		ncremap \
@@ -46,7 +46,7 @@ $(HEAP)/modern_trace_FSDS_regrid.nc $(GRID_TEMPL) : $(HEAP)/modern_trace_FSDS.nc
 		--input_file="$(HEAP)/modern_trace_FSDS.nc" \
 		--output_file="$(HEAP)/modern_trace_FSDS_regrid.nc"
 
-$(HEAP)/modern_trace_PRECT_regrid.nc $(GRID_TEMPL) : $(HEAP)/modern_trace_PRECT.nc $(BIN)/ncremap
+$(HEAP)/modern_trace_PRECT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_PRECT.nc $(BIN)/ncremap
 	@echo "Downscaling modern PRECT file..."
 	@env PATH="$(BIN):$(PATH)" \
 		ncremap \
@@ -55,7 +55,7 @@ $(HEAP)/modern_trace_PRECT_regrid.nc $(GRID_TEMPL) : $(HEAP)/modern_trace_PRECT.
 		--input_file="$(HEAP)/modern_trace_PRECT.nc" \
 		--output_file="$(HEAP)/modern_trace_PRECT_regrid.nc"
 
-$(HEAP)/modern_trace_TREFHT_regrid.nc $(GRID_TEMPL) : $(HEAP)/modern_trace_TREFHT.nc $(BIN)/ncremap
+$(HEAP)/modern_trace_TREFHT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_TREFHT.nc $(BIN)/ncremap
 	@echo "Downscaling modern TREFHT file..."
 	@env PATH="$(BIN):$(PATH)" \
 		ncremap \
