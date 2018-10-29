@@ -57,6 +57,7 @@ File Structure
   **TODO:** Citation, where doe the data come from exactly?
 - `heap/`: Automatically created directory for temporary files. Can be customized.
 - `scripts/`:
+    + `add_modern_monthly_PRECC_PRECL.sh`: Add the CCSM3 precipitation variables `PRECC` and `PRECL` to `PRECT`.
     + `aggregate_modern_trace.py`: Create monthly means of the TraCE-21ka output of most recent times and write it to NetCDF files in the heap.
     + `install_miniconda.sh`: Download and install [Miniconda](https://conda.io/miniconda.html) in the subdirectory `miniconda3/`.
     + `install_nco.sh`: Install [NCO](http://nco.sourceforge.net/) locally through `conda`.

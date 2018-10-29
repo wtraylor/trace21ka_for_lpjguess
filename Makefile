@@ -28,9 +28,5 @@ $(HEAP)/modern_monthly_avg_TREFHT.nc $(HEAP)/modern_monthly_avg_FSDS.nc $(HEAP)/
 	@$(PYTHON) scripts/aggregate_modern_trace.py
 
 $(HEAP)/modern_monthly_avg_PRECT.nc : $(HEAP)/modern_monthly_avg_PRECL $(HEAP)/modern_monthly_avg_PRECC $(BIN)/ncbo $(BIN)/ncrename $(BIN)/ncatted
-	@echo "Adding modern PRECC and PRECL to PRECT."
-	ncbo --overwrite --op_typ='add' $(HEAP)/modern_monthly_avg_PRECL.nc $(HEAP)/modern_monthly_avg_PRECC.nc $(HEAP)/modern_monthly_avg_PRECT.nc
-	@echo "Renaming the variable to 'PRECT'."
-	ncrename --variable PRECL,PRECT $(HEAP)/modern_monthly_avg_PRECT.nc
-	@echo "Updating the 'long_name' attribute."
-	ncatted --overwrite --attribute long_name,PRECT,m,c,"Total (convective and large-scale) precipitation rate (liq + ice)" $(HEAP)/modern_monthly_avg_PRECT.nc
+	@env PATH="$(BIN):$(PATH)" \
+		scripts/add_modern_monthly_PRECC_PRECL.sh
