@@ -7,3 +7,6 @@ heap/
 
 /Miniconda3-latest-Linux-x86_64.sh
 /miniconda3/
+
+# Temporary file created by `ncremap`
+PET0.RegridWeightGen.Log
