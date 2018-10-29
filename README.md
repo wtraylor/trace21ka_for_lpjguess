@@ -56,6 +56,11 @@ File Structure
 - `cruncep/`: Monthly means of the CRUNCEP5 data set from 1900 to 2013.
   **TODO:** Citation, where doe the data come from exactly?
 - `heap/`: Automatically created directory for temporary files. Can be customized.
+- `scripts/`:
+    + `aggregate_modern_trace.py`: Create monthly means of the TraCE-21ka output of most recent times and write it to NetCDF files in the heap.
+    + `install_miniconda.sh`: Download and install [Miniconda](https://conda.io/miniconda.html) in the subdirectory `miniconda3/`.
+    + `install_nco.sh`: Install [NCO](http://nco.sourceforge.net/) locally through `conda`.
+    + `install_python_packages.sh`: Install all necessary Python packages locally in `miniconda3/` using `pip`.
 
 Project Outline
 ---------------
