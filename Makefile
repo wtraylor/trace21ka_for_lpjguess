@@ -14,11 +14,14 @@ miniconda3/bin/conda miniconda3/bin/pip $(PYTHON):
 miniconda3/bin/ncatted miniconda3/bin/ncbo miniconda3/bin/ncremap miniconda3/bin/ncrename: miniconda3/bin/conda
 	@scripts/install_nco.sh
 
-# Add new python packages here as targets
-miniconda3/lib/python3.7/site-packages/xarray/ miniconda3/lib/python3.7/site-packages/yaml/: miniconda3/bin/pip
+# Directory for Python packages.
+PYPKG = miniconda3/lib/python3.7/site-packages/
+
+# Add new python packages here as targets.
+$(PYPKG)/xarray/ $(PYPKG)/yaml/: miniconda3/bin/pip
 	@scripts/install_python_packages.sh
 
-$(HEAP)/modern_monthly_avg_TREFHT.nc $(HEAP)/modern_monthly_avg_FSDS.nc $(HEAP)/modern_monthly_avg_PRECL.nc $(HEAP)/modern_monthly_avg_PRECC.nc : scripts/aggregate_modern_trace.py $(PYTHON)
+$(HEAP)/modern_monthly_avg_TREFHT.nc $(HEAP)/modern_monthly_avg_FSDS.nc $(HEAP)/modern_monthly_avg_PRECL.nc $(HEAP)/modern_monthly_avg_PRECC.nc : scripts/aggregate_modern_trace.py $(PYTHON) $(PYPKG)/xarray $(PYPKG)/yaml
 	@$(PYTHON) scripts/aggregate_modern_trace.py
 
 $(HEAP)/modern_monthly_avg_PRECT.nc : $(HEAP)/modern_monthly_avg_PRECL $(HEAP)/modern_monthly_avg_PRECC miniconda3/bin/ncbo miniconda3/bin/ncrename miniconda3/bin/ncatted
