@@ -1,8 +1,6 @@
 #!/bin/python
 
-import numpy as np
 import os
-import pandas as pd
 import sys
 import xarray as xr
 import yaml
