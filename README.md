@@ -67,7 +67,7 @@ File Structure
 Project Outline
 ---------------
 
-- [ ] Calculate monthly bias for all grid cells against modern CRUNCEP.
+- [x] Calculate monthly bias for all grid cells against modern CRUNCEP.
 - [ ] Calculate `PRECT` as `PRECC + PRECL`.
 - [ ] Crop TraCE data to specified region.
 - [ ] Split dataset into 100 years files.
