@@ -4,27 +4,30 @@ export HEAP ?= heap
 
 ###############################################################################
 
-# The python executable
-PYTHON = miniconda3/bin/python
+# The directory of binaries in the local Miniconda installation
+BIN = miniconda3/bin/
 
-miniconda3/bin/conda miniconda3/bin/pip $(PYTHON):
+# The python executable
+PYTHON = $(BIN)/python
+
+$(BIN)/conda $(BIN)/pip $(PYTHON):
 	@scripts/install_miniconda.sh
 
 # Add all needed NCO binaries here as targets.
-miniconda3/bin/ncatted miniconda3/bin/ncbo miniconda3/bin/ncremap miniconda3/bin/ncrename: miniconda3/bin/conda
+$(BIN)/ncatted $(BIN)/ncbo $(BIN)/ncremap $(BIN)/ncrename: $(BIN)/conda
 	@scripts/install_nco.sh
 
 # Directory for Python packages.
 PYPKG = miniconda3/lib/python3.7/site-packages/
 
 # Add new python packages here as targets.
-$(PYPKG)/xarray/ $(PYPKG)/yaml/: miniconda3/bin/pip
+$(PYPKG)/xarray/ $(PYPKG)/yaml/: $(BIN)/pip
 	@scripts/install_python_packages.sh
 
 $(HEAP)/modern_monthly_avg_TREFHT.nc $(HEAP)/modern_monthly_avg_FSDS.nc $(HEAP)/modern_monthly_avg_PRECL.nc $(HEAP)/modern_monthly_avg_PRECC.nc : scripts/aggregate_modern_trace.py $(PYTHON) $(PYPKG)/xarray $(PYPKG)/yaml
 	@$(PYTHON) scripts/aggregate_modern_trace.py
 
-$(HEAP)/modern_monthly_avg_PRECT.nc : $(HEAP)/modern_monthly_avg_PRECL $(HEAP)/modern_monthly_avg_PRECC miniconda3/bin/ncbo miniconda3/bin/ncrename miniconda3/bin/ncatted
+$(HEAP)/modern_monthly_avg_PRECT.nc : $(HEAP)/modern_monthly_avg_PRECL $(HEAP)/modern_monthly_avg_PRECC $(BIN)/ncbo $(BIN)/ncrename $(BIN)/ncatted
 	@echo "Adding modern PRECC and PRECL to PRECT."
 	ncbo --overwrite --op_typ='add' $(HEAP)/modern_monthly_avg_PRECL.nc $(HEAP)/modern_monthly_avg_PRECC.nc $(HEAP)/modern_monthly_avg_PRECT.nc
 	@echo "Renaming the variable to 'PRECT'."
