@@ -69,3 +69,8 @@ modern_trace_files:
   PRECC: 'trace.36.400BP-1990CE.cam2.h0.PRECC.2160101-2204012.nc'
   PRECL: 'trace.36.400BP-1990CE.cam2.h0.PRECL.2160101-2204012.nc'
   TREFHT: 'trace.36.400BP-1990CE.cam2.h0.TREFHT.2160101-2204012.nc'
+
+# Variables in the CRUNCEP NetCDF files as they correspond to the TraCE-21ka
+# variables.
+cru_vars:
+  TREFHT: 'Temperature'

@@ -66,3 +66,11 @@ $(HEAP)/modern_trace_TREFHT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_TREFH
 		--template_file="$(GRID_TEMPL)" \
 		--input_file="$(HEAP)/modern_trace_TREFHT.nc" \
 		--output_file="$(HEAP)/modern_trace_TREFHT_regrid.nc"
+
+$(HEAP)/bias_PRECT.nc : $(HEAP)/modern_trace_PRECT_regrid $(XARRAY) $(PYTHON)
+	@echo "Calculating bias for variable 'PRECT'."
+	@$(PYTHON) scripts/calculate_bias.py "PRECT"
+
+$(HEAP)/bias_TREFHT.nc : $(HEAP)/modern_trace_TREFHT_regrid $(XARRAY) $(PYTHON)
+	@echo "Calculating bias for variable 'TREFHT'."
+	@$(PYTHON) scripts/calculate_bias.py "TREFHT"
