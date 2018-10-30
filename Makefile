@@ -26,7 +26,7 @@ $(BIN)/conda $(BIN)/pip $(PYTHON):
 	@scripts/install_miniconda.sh
 
 # Add all needed NCO binaries here as targets.
-$(BIN)/ncatted $(BIN)/ncbo $(BIN)/ncremap $(BIN)/ncrename: $(BIN)/conda
+$(BIN)/ncatted $(BIN)/ncbo $(BIN)/ncks $(BIN)/ncremap $(BIN)/ncrename : $(BIN)/conda
 	@scripts/install_nco.sh
 
 # Add new python packages here as targets.
@@ -99,3 +99,28 @@ $(HEAP)/bias_TREFHT.nc : $(HEAP)/modern_trace_TREFHT_regrid $(XARRAY) $(PYTHON) 
 
 trace_orig : $(PYTHON) $(YAML) options.yaml
 	@$(PYTHON) scripts/symlink_trace_orig.py
+
+TREFHT = trace.01.22000-20001BP.cam2.h0.TREFHT.0000101-0200012.nc \
+				 trace.02.20000-19001BP.cam2.h0.TREFHT.0200101-0300012.nc
+
+# All original TraCE files. TODO: Add rest of the files.
+ALL_ORIG = $(TREFHT)
+
+###############################################################################
+## CROPPING
+###############################################################################
+
+$(HEAP)/cropped :
+	@mkdir $(HEAP)/cropped
+
+# This target depends on all original TraCE files being cropped in the folder
+# '$(HEAP)/cropped/'.
+.PHONY: crop
+crop : $(patsubst %, $(HEAP)/cropped/%, $(ALL_ORIG))
+	@echo "Cropping finished."
+
+# For each original TraCE file there is a rule to create the corresponding
+# cropped NetCDF file (with the same name) in $(HEAP)/cropped.
+$(HEAP)/cropped/%.nc : trace_orig/%.nc $(HEAP)/cropped scripts/crop_file.py $(BIN)/ncks
+	@$(PYTHON) scripts/crop_file.py $< $@
+
