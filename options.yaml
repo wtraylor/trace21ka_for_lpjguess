@@ -9,7 +9,7 @@
 # Paths, either absolute or relative to the root of the Git repository.
 # ("~" for home directory and environment variables are allowed.)
 
-trace_orig: "trace_original" # Directory of original TraCE files.
+trace_orig: "~/data/drivers/trace/" # Directory of original TraCE files.
 
 # Geographic extent of study area.
 region:

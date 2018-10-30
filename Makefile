@@ -37,7 +37,7 @@ $(XARRAY) $(YAML): $(BIN)/pip
 ## AGGREGATE MODERN TRACE DATA
 ###############################################################################
 
-$(HEAP)/modern_trace_TREFHT.nc $(HEAP)/modern_trace_FSDS.nc $(HEAP)/modern_trace_PRECL.nc $(HEAP)/modern_trace_PRECC.nc : scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
+$(HEAP)/modern_trace_TREFHT.nc $(HEAP)/modern_trace_FSDS.nc $(HEAP)/modern_trace_PRECL.nc $(HEAP)/modern_trace_PRECC.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
 	@$(PYTHON) scripts/aggregate_modern_trace.py
 
 $(HEAP)/modern_trace_PRECT.nc : $(HEAP)/modern_trace_PRECL $(HEAP)/modern_trace_PRECC $(BIN)/ncbo $(BIN)/ncrename $(BIN)/ncatted
@@ -92,3 +92,10 @@ $(HEAP)/bias_PRECT.nc : $(HEAP)/modern_trace_PRECT_regrid $(XARRAY) $(PYTHON) $(
 $(HEAP)/bias_TREFHT.nc : $(HEAP)/modern_trace_TREFHT_regrid $(XARRAY) $(PYTHON) $(YAML) options.yaml
 	@echo "Calculating bias for variable 'TREFHT'."
 	@$(PYTHON) scripts/calculate_bias.py "TREFHT"
+
+###############################################################################
+## SYMLINK ORIGINAL TRACE FILES
+###############################################################################
+
+trace_orig : $(PYTHON) $(YAML) options.yaml
+	@$(PYTHON) scripts/symlink_trace_orig.py

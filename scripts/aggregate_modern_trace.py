@@ -13,8 +13,6 @@ def drop_superfluous_trace_vars(data):
                      "nscur", "nsteph", "ntrk", "ntrm", "ntrn", "time_written",
                      "wnummax"])
 
-ncFile = "~/data/drivers/trace/trace.05.18400-17501BP.cam2.h0.TREFHT.0360101-0450012.nc"
-
 def get_monthly_means(trace_file):
     """
     Aggregate TraCE-21ka file over time to have only 12 data points per cell.
@@ -42,14 +40,8 @@ def get_monthly_means(trace_file):
 # Find relevant TraCE files of the modern time in a directory.
 # The file names are defined in the YAML options.
 
-opts = yaml.load(open("options.yaml"))
-trace_orig = opts["trace_orig"]
-trace_orig = os.path.abspath(trace_orig)
-trace_orig = os.path.expanduser(trace_orig)
-trace_orig = os.path.expandvars(trace_orig)
-if not os.path.exists(trace_orig):
-    print("Directory with original TraCE files doesn’t seem to exist:")
-    print(trace_orig)
+if not os.path.exists("trace_orig"):
+    print("Directory 'trace_orig' doesn’t seem to exist.")
     sys.exit(1)
 
 # Retrieve directory to dump temporary files.
@@ -65,12 +57,12 @@ if not os.path.exists(heap):
 # Check if all original TraCE files are present.
 files = opts["modern_trace_files"]
 for f in files:
-    if files[f] not in os.listdir(trace_orig):
+    if files[f] not in os.listdir("trace_orig"):
         print("Couldn’t find TraCE file with modern monthly data for "
               "variable %s:\n %s" % (f, files[f]))
         sys.exit(1)
     else:
-        files[f] = os.path.join(trace_orig, files[f])
+        files[f] = os.path.join("trace_orig", files[f])
 
 # Calculate averages and write new NetCDF files to heap directory.
 for f in files:
