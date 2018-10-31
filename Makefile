@@ -29,6 +29,11 @@ $(BIN)/conda $(BIN)/pip $(PYTHON):
 $(BIN)/ncatted $(BIN)/ncbo $(BIN)/ncks $(BIN)/ncremap $(BIN)/ncrename : $(BIN)/conda
 	@scripts/install_nco.sh
 
+$(BIN)/cdo : $(BIN)/conda
+	@echo
+	@echo "Installing CDO locally with Miniconda..."
+	@$(BIN)/conda install -c conda-forge cdo
+
 # Add new python packages here as targets.
 $(XARRAY) $(YAML): $(BIN)/pip
 	@scripts/install_python_packages.sh
@@ -133,3 +138,16 @@ crop : $(patsubst %, $(HEAP)/cropped/%, $(ALL_ORIG))
 $(HEAP)/cropped/%.nc : trace_orig/%.nc $(HEAP)/cropped scripts/crop_file.py $(BIN)/ncks
 	@$(PYTHON) scripts/crop_file.py $< $@
 
+###############################################################################
+## SPLIT INTO 100 YEARS FILES
+###############################################################################
+
+$(HEAP)/split :
+	@mkdir $(HEAP)/split
+
+# Create 100 years files (1200 time steps, 12*100 months) for each cropped file.
+# The split files are saved in a folder of the original file name (without .nc
+# suffix), labeled 000000.nc, 000001.nc, 000002.nc, etc.
+$(HEAP)/split/% : $(HEAP)/cropped/%.nc $(HEAP)/split $(BIN)/cdo
+	@env PATH="$(BIN):$(PATH)" \
+		cdo splitsel,1200 $< $@/
