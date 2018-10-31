@@ -1,9 +1,10 @@
 #!/bin/python
 
+# The one and only command line argument is the TraCE variable.
+
 import os
 import sys
 import xarray as xr
-import yaml
 
 
 def drop_superfluous_trace_vars(data):
@@ -39,9 +40,13 @@ def get_monthly_means(trace_file):
     data = data.groupby('time').mean('time')
     return data
 
+# Read command line argument: the TraCE variable.
+if len(sys.argv) != 2:
+    print("Please provide the TraCE variable as one command line argument.")
+    sys.exit(1)
+var = sys.argv[1]
 
 # Find relevant TraCE files of the modern time in a directory.
-# The file names are defined in the YAML options.
 
 if not os.path.exists("trace_orig"):
     print("Directory 'trace_orig' doesn’t seem to exist.")
@@ -57,22 +62,18 @@ if not os.path.exists(heap):
     print("Creating heap directory: %s" % heap)
     os.mkdir(heap)
 
-# Check if all original TraCE files are present.
-opts = yaml.load(open("options.yaml"))
-files = opts["modern_trace_files"]
-for f in files:
-    if files[f] not in os.listdir("trace_orig"):
-        print("Couldn’t find TraCE file with modern monthly data for "
-              "variable %s:\n %s" % (f, files[f]))
-        sys.exit(1)
-    else:
-        files[f] = os.path.join("trace_orig", files[f])
+# Compose file name of modern TraCE data.
+file_name = "trace.36.400BP-1990CE.cam2.h0.%s.2160101-2204012.nc" % var
+file_name = os.path.abspath(os.path.join("trace_orig", file_name))
+if not os.path.isfile(file_name):
+    print("Couldn’t find TraCE file with modern monthly data for "
+          "variable %s:\n '%s'" % (var, file_name))
+    sys.exit(1)
 
 # Calculate averages and write new NetCDF files to heap directory.
-for f in files:
-    print("Aggregating monthly averages from file '%s'." % files[f])
-    dataset = get_monthly_means(files[f])
-    out_file = "modern_trace_" + f + ".nc"
-    out_file = os.path.join(heap, out_file)
-    print("Writing file '%s'." % out_file)
-    dataset.to_netcdf(out_file)
+print("Aggregating monthly averages from file '%s'." % file_name)
+dataset = get_monthly_means(file_name)
+out_file = "modern_trace_" + var + ".nc"
+out_file = os.path.join(heap, out_file)
+print("Writing file '%s'." % out_file)
+dataset.to_netcdf(out_file)

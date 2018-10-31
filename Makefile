@@ -50,10 +50,19 @@ ALL_ORIG = $(TREFHT)
 ## AGGREGATE MODERN TRACE DATA
 ###############################################################################
 
-$(HEAP)/modern_trace_TREFHT.nc $(HEAP)/modern_trace_FSDS.nc $(HEAP)/modern_trace_PRECL.nc $(HEAP)/modern_trace_PRECC.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
-	@$(PYTHON) scripts/aggregate_modern_trace.py
+$(HEAP)/modern_trace_TREFHT.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
+	@$(PYTHON) scripts/aggregate_modern_trace.py TREFHT
 
-$(HEAP)/modern_trace_PRECT.nc : $(HEAP)/modern_trace_PRECL $(HEAP)/modern_trace_PRECC $(BIN)/ncbo $(BIN)/ncrename $(BIN)/ncatted
+$(HEAP)/modern_trace_FSDS.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
+	@$(PYTHON) scripts/aggregate_modern_trace.py FSDS
+
+$(HEAP)/modern_trace_PRECL.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
+	@$(PYTHON) scripts/aggregate_modern_trace.py PRECL
+
+$(HEAP)/modern_trace_PRECC.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
+	@$(PYTHON) scripts/aggregate_modern_trace.py PRECC
+
+$(HEAP)/modern_trace_PRECT.nc : $(HEAP)/modern_trace_PRECL.nc $(HEAP)/modern_trace_PRECC.nc $(BIN)/ncbo $(BIN)/ncrename $(BIN)/ncatted
 	@env PATH="$(BIN):$(PATH)" \
 		scripts/add_modern_monthly_PRECC_PRECL.sh
 
