@@ -65,7 +65,7 @@ Project Outline
 
 - [x] Calculate monthly bias for all grid cells against modern CRUNCEP.
 - [ ] Calculate `PRECT` as `PRECC + PRECL`.
-- [ ] Crop TraCE data to specified region.
+- [x] Crop TraCE data to specified region.
 - [ ] Split dataset into 100 years files.
 - [ ] Downscale TraCE dataset to 0.5° grid resolution.
 - [ ] Mask oceans and glaciers, based on ICE-5G.
