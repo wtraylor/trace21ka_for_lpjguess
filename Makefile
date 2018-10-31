@@ -34,6 +34,19 @@ $(XARRAY) $(YAML): $(BIN)/pip
 	@scripts/install_python_packages.sh
 
 ###############################################################################
+## SYMLINK ORIGINAL TRACE FILES
+###############################################################################
+
+trace_orig : $(PYTHON) $(YAML) options.yaml
+	@$(PYTHON) scripts/symlink_trace_orig.py
+
+TREFHT = trace.01.22000-20001BP.cam2.h0.TREFHT.0000101-0200012.nc \
+				 trace.02.20000-19001BP.cam2.h0.TREFHT.0200101-0300012.nc
+
+# All original TraCE files. TODO: Add rest of the files.
+ALL_ORIG = $(TREFHT)
+
+###############################################################################
 ## AGGREGATE MODERN TRACE DATA
 ###############################################################################
 
@@ -92,19 +105,6 @@ $(HEAP)/bias_PRECT.nc : $(HEAP)/modern_trace_PRECT_regrid $(XARRAY) $(PYTHON) $(
 $(HEAP)/bias_TREFHT.nc : $(HEAP)/modern_trace_TREFHT_regrid $(XARRAY) $(PYTHON) $(YAML) options.yaml
 	@echo "Calculating bias for variable 'TREFHT'."
 	@$(PYTHON) scripts/calculate_bias.py "TREFHT"
-
-###############################################################################
-## SYMLINK ORIGINAL TRACE FILES
-###############################################################################
-
-trace_orig : $(PYTHON) $(YAML) options.yaml
-	@$(PYTHON) scripts/symlink_trace_orig.py
-
-TREFHT = trace.01.22000-20001BP.cam2.h0.TREFHT.0000101-0200012.nc \
-				 trace.02.20000-19001BP.cam2.h0.TREFHT.0200101-0300012.nc
-
-# All original TraCE files. TODO: Add rest of the files.
-ALL_ORIG = $(TREFHT)
 
 ###############################################################################
 ## CROPPING
