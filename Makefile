@@ -47,9 +47,9 @@ $(CDO) : $(BIN)/conda
 	@$(BIN)/conda install -c conda-forge cdo
 	@touch --no-create $(CDO)
 
-# Add new python packages here as targets.
+# Add new python packages here as targets and as arguments to `pip`.
 $(XARRAY) $(YAML): $(BIN)/pip
-	@scripts/install_python_packages.sh
+	@$(BIN)/pip install xarray pyyaml
 	@touch --no-create $(XARRAY) $(YAML)
 
 ###############################################################################
