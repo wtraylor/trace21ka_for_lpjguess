@@ -6,14 +6,17 @@ export HEAP ?= heap
 ## VARIABLES
 ###############################################################################
 
+# The root directory of the Miniconda installation.
+MINICONDA = miniconda3
+
 # The directory of binaries in the local Miniconda installation
-BIN = miniconda3/bin/
+BIN = $(MINICONDA)/bin/
 
 # The python executable
 PYTHON = $(BIN)/python
 
 # Directory for Python packages.
-PYPKG = miniconda3/lib/python3.7/site-packages/
+PYPKG = $(MINICONDA)/lib/python3.7/site-packages/
 # Individual Python packages. The '__init__.py' file is used as a proxy for
 # whole package to check if it’s installed.
 XARRAY = $(PYPKG)/xarray/__init__.py
@@ -30,8 +33,22 @@ NCO = $(BIN)/ncremap
 # up-to-date even if the installation command doesn’t change them (because
 # they are already installed.
 
-$(BIN)/conda $(BIN)/pip $(PYTHON):
-	@scripts/install_miniconda.sh
+# TODO: Use specific version and not latest version.
+# TODO: Download 32 on 32-bit architectures.
+CONDA_INSTALLER = Miniconda3-latest-Linux-x86_64.sh
+
+$(CONDA_INSTALLER) :
+	@echo
+	@echo "Downloading Miniconda install script..."
+	@wget "https://repo.continuum.io/miniconda/$(CONDA_INSTALLER)"
+	@touch --no-create $(CONDA_INSTALLER)
+
+# Miniconda installer command line arguments:
+# -p PREFIX    install prefix, defaults to $PREFIX, must not contain spaces.
+$(BIN)/conda $(BIN)/pip $(PYTHON): $(CONDA_INSTALLER)
+	@echo
+	@echo "Installing Miniconda to '$(MINICONDA)'..."
+	@sh "$(CONDA_INSTALLER)" -p "$(MINICONDA)"
 	@touch --no-create $(BIN)/conda $(BIN)/pip $(PYTHON)
 
 # Add all needed NCO binaries here as targets.
@@ -49,6 +66,8 @@ $(CDO) : $(BIN)/conda
 
 # Add new python packages here as targets and as arguments to `pip`.
 $(XARRAY) $(YAML): $(BIN)/pip
+	@echo
+	@echo "Installing Python packages with PIP..."
 	@$(BIN)/pip install xarray pyyaml
 	@touch --no-create $(XARRAY) $(YAML)
 
