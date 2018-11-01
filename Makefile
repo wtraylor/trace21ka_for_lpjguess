@@ -89,18 +89,23 @@ ALL_ORIG = $(TREFHT)
 ###############################################################################
 
 $(HEAP)/modern_trace_TREFHT.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
+	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py TREFHT
 
 $(HEAP)/modern_trace_FSDS.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
+	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py FSDS
 
 $(HEAP)/modern_trace_PRECL.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
+	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py PRECL
 
 $(HEAP)/modern_trace_PRECC.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
+	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py PRECC
 
 $(HEAP)/modern_trace_PRECT.nc : $(HEAP)/modern_trace_PRECL.nc $(HEAP)/modern_trace_PRECC.nc $(NCO)
+	@echo
 	@env PATH="$(BIN):$(PATH)" \
 		scripts/add_modern_monthly_PRECC_PRECL.sh
 
@@ -115,6 +120,7 @@ GRID_TEMPL = cruncep/temperature.nc
 REGRID_ALG = bilinear
 
 $(HEAP)/modern_trace_FSDS_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_FSDS.nc $(NCO)
+	@echo
 	@echo "Downscaling modern FSDS file..."
 	@env PATH="$(BIN):$(PATH)" \
 		ncremap \
@@ -124,6 +130,7 @@ $(HEAP)/modern_trace_FSDS_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_FSDS.nc
 		--output_file="$(HEAP)/modern_trace_FSDS_regrid.nc"
 
 $(HEAP)/modern_trace_PRECT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_PRECT.nc $(NCO)
+	@echo
 	@echo "Downscaling modern PRECT file..."
 	@env PATH="$(BIN):$(PATH)" \
 		ncremap \
@@ -133,6 +140,7 @@ $(HEAP)/modern_trace_PRECT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_PRECT.
 		--output_file="$(HEAP)/modern_trace_PRECT_regrid.nc"
 
 $(HEAP)/modern_trace_TREFHT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_TREFHT.nc $(NCO)
+	@echo
 	@echo "Downscaling modern TREFHT file..."
 	@env PATH="$(BIN):$(PATH)" \
 		ncremap \
@@ -146,11 +154,13 @@ $(HEAP)/modern_trace_TREFHT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_TREFH
 ###############################################################################
 
 $(HEAP)/bias_PRECT.nc : $(HEAP)/modern_trace_PRECT_regrid $(XARRAY) $(PYTHON) $(YAML) options.yaml
-	@echo "Calculating bias for variable 'PRECT'."
+	@echo
+	@echo "Calculating bias for variable 'PRECT'..."
 	@$(PYTHON) scripts/calculate_bias.py "PRECT"
 
 $(HEAP)/bias_TREFHT.nc : $(HEAP)/modern_trace_TREFHT_regrid $(XARRAY) $(PYTHON) $(YAML) options.yaml
-	@echo "Calculating bias for variable 'TREFHT'."
+	@echo
+	@echo "Calculating bias for variable 'TREFHT'..."
 	@$(PYTHON) scripts/calculate_bias.py "TREFHT"
 
 ###############################################################################
@@ -166,6 +176,8 @@ crop : $(patsubst %, $(HEAP)/cropped/%, $(ALL_ORIG))
 # For each original TraCE file there is a rule to create the corresponding
 # cropped NetCDF file (with the same name) in $(HEAP)/cropped.
 $(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py $(NCO) $(PYTHON) $(YAML)
+	@echo
+	@echo "Cropping file '$<'..."
 	@mkdir --parents $(HEAP)/cropped
 	@$(PYTHON) scripts/crop_file.py $< $@
 
@@ -177,6 +189,8 @@ $(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py $(NCO) $(PYTHON) $(Y
 # The split files are saved in a folder of the original file name (without .nc
 # suffix), labeled 000000.nc, 000001.nc, 000002.nc, etc.
 $(HEAP)/split/% : $(HEAP)/cropped/%.nc $(HEAP)/split $(CDO)
+	@echo
+	@echo "Splitting file '$@' into 100-years slices."
 	@mkdir --parents $@
 	@env PATH="$(BIN):$(PATH)" \
 		cdo splitsel,1200 $< $@/
