@@ -188,7 +188,7 @@ $(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py $(NCO) $(PYTHON) $(Y
 # Create 100 years files (1200 time steps, 12*100 months) for each cropped file.
 # The split files are saved in a folder of the original file name (without .nc
 # suffix), labeled 000000.nc, 000001.nc, 000002.nc, etc.
-$(HEAP)/split/% : $(HEAP)/cropped/%.nc $(HEAP)/split $(CDO)
+$(HEAP)/split/% : $(HEAP)/cropped/%.nc $(CDO)
 	@echo
 	@echo "Splitting file '$@' into 100-years slices."
 	@mkdir --parents $@
