@@ -165,7 +165,7 @@ crop : $(patsubst %, $(HEAP)/cropped/%, $(ALL_ORIG))
 
 # For each original TraCE file there is a rule to create the corresponding
 # cropped NetCDF file (with the same name) in $(HEAP)/cropped.
-$(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py $(NCO)
+$(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py $(NCO) $(PYTHON) $(YAML)
 	@mkdir --parents $(HEAP)/cropped
 	@$(PYTHON) scripts/crop_file.py $< $@
 
