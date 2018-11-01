@@ -75,7 +75,7 @@ $(XARRAY) $(YAML): $(BIN)/pip
 ## SYMLINK ORIGINAL TRACE FILES
 ###############################################################################
 
-trace_orig : $(PYTHON) $(YAML) options.yaml
+trace_orig : scripts/symlink_trace_orig.py $(PYTHON) $(YAML) options.yaml
 	@$(PYTHON) scripts/symlink_trace_orig.py
 
 TREFHT = trace.01.22000-20001BP.cam2.h0.TREFHT.0000101-0200012.nc \
@@ -104,7 +104,7 @@ $(HEAP)/modern_trace_PRECC.nc : trace_orig/ scripts/aggregate_modern_trace.py $(
 	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py PRECC
 
-$(HEAP)/modern_trace_PRECT.nc : $(HEAP)/modern_trace_PRECL.nc $(HEAP)/modern_trace_PRECC.nc $(NCO)
+$(HEAP)/modern_trace_PRECT.nc : $(HEAP)/modern_trace_PRECL.nc $(HEAP)/modern_trace_PRECC.nc $(NCO) scripts/add_modern_monthly_PRECC_PRECL.sh
 	@echo
 	@env PATH="$(BIN):$(PATH)" \
 		scripts/add_modern_monthly_PRECC_PRECL.sh
@@ -153,12 +153,12 @@ $(HEAP)/modern_trace_TREFHT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_TREFH
 ## CALCULATE BIAS
 ###############################################################################
 
-$(HEAP)/bias_PRECT.nc : $(HEAP)/modern_trace_PRECT_regrid $(XARRAY) $(PYTHON) $(YAML) options.yaml
+$(HEAP)/bias_PRECT.nc : $(HEAP)/modern_trace_PRECT_regrid scripts/calculate_bias.py $(XARRAY) $(PYTHON) $(YAML) options.yaml
 	@echo
 	@echo "Calculating bias for variable 'PRECT'..."
 	@$(PYTHON) scripts/calculate_bias.py "PRECT"
 
-$(HEAP)/bias_TREFHT.nc : $(HEAP)/modern_trace_TREFHT_regrid $(XARRAY) $(PYTHON) $(YAML) options.yaml
+$(HEAP)/bias_TREFHT.nc : $(HEAP)/modern_trace_TREFHT_regrid scripts/calculate_bias.py $(XARRAY) $(PYTHON) $(YAML) options.yaml
 	@echo
 	@echo "Calculating bias for variable 'TREFHT'..."
 	@$(PYTHON) scripts/calculate_bias.py "TREFHT"
@@ -175,7 +175,7 @@ crop : $(patsubst %, $(HEAP)/cropped/%, $(ALL_ORIG))
 
 # For each original TraCE file there is a rule to create the corresponding
 # cropped NetCDF file (with the same name) in $(HEAP)/cropped.
-$(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py $(NCO) $(PYTHON) $(YAML)
+$(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py $(NCO) $(PYTHON) $(YAML) options.yaml
 	@echo
 	@echo "Cropping file '$<'..."
 	@mkdir --parents $(HEAP)/cropped
