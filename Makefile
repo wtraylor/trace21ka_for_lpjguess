@@ -124,9 +124,6 @@ $(HEAP)/bias_TREFHT.nc : $(HEAP)/modern_trace_TREFHT_regrid $(XARRAY) $(PYTHON) 
 ## CROPPING
 ###############################################################################
 
-$(HEAP)/cropped :
-	@mkdir $(HEAP)/cropped
-
 # This target depends on all original TraCE files being cropped in the folder
 # '$(HEAP)/cropped/'.
 .PHONY: crop
@@ -135,19 +132,18 @@ crop : $(patsubst %, $(HEAP)/cropped/%, $(ALL_ORIG))
 
 # For each original TraCE file there is a rule to create the corresponding
 # cropped NetCDF file (with the same name) in $(HEAP)/cropped.
-$(HEAP)/cropped/%.nc : trace_orig/%.nc $(HEAP)/cropped scripts/crop_file.py $(BIN)/ncks
+$(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py $(BIN)/ncks
+	@mkdir --parents $(HEAP)/cropped
 	@$(PYTHON) scripts/crop_file.py $< $@
 
 ###############################################################################
 ## SPLIT INTO 100 YEARS FILES
 ###############################################################################
 
-$(HEAP)/split :
-	@mkdir $(HEAP)/split
-
 # Create 100 years files (1200 time steps, 12*100 months) for each cropped file.
 # The split files are saved in a folder of the original file name (without .nc
 # suffix), labeled 000000.nc, 000001.nc, 000002.nc, etc.
 $(HEAP)/split/% : $(HEAP)/cropped/%.nc $(HEAP)/split $(BIN)/cdo
+	@mkdir --parents $@
 	@env PATH="$(BIN):$(PATH)" \
 		cdo splitsel,1200 $< $@/
