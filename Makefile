@@ -177,7 +177,6 @@ crop : $(patsubst %, $(HEAP)/cropped/%, $(ALL_ORIG))
 # cropped NetCDF file (with the same name) in $(HEAP)/cropped.
 $(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py $(NCO) $(PYTHON) $(YAML) options.yaml
 	@echo
-	@echo "Cropping file '$<'..."
 	@mkdir --parents $(HEAP)/cropped
 	@$(PYTHON) scripts/crop_file.py $< $@
 
