@@ -14,29 +14,43 @@ PYTHON = $(BIN)/python
 
 # Directory for Python packages.
 PYPKG = miniconda3/lib/python3.7/site-packages/
-# Individual Python packages.
-XARRAY = $(PYPKG)/xarray
-YAML = $(PYPKG)/yaml
+# Individual Python packages. The '__init__.py' file is used as a proxy for
+# whole package to check if it’s installed.
+XARRAY = $(PYPKG)/xarray/__init__.py
+YAML = $(PYPKG)/yaml/__init__.py
+
+CDO = $(BIN)/cdo
+NCO = $(BIN)/ncremap
 
 ###############################################################################
 ## INSTALLATION
 ###############################################################################
 
+# We `touch` the installed files (the Make targets) so that they are marked as
+# up-to-date even if the installation command doesn’t change them (because
+# they are already installed.
+
 $(BIN)/conda $(BIN)/pip $(PYTHON):
 	@scripts/install_miniconda.sh
+	@touch --no-create $(BIN)/conda $(BIN)/pip $(PYTHON)
 
 # Add all needed NCO binaries here as targets.
-$(BIN)/ncatted $(BIN)/ncbo $(BIN)/ncks $(BIN)/ncremap $(BIN)/ncrename : $(BIN)/conda
-	@scripts/install_nco.sh
+$(NCO) : $(BIN)/conda
+	@echo
+	@echo "Installing NCO locally with Miniconda..."
+	@$(BIN)/conda install -c conda-forge nco
+	@touch --no-create $(NCO)
 
-$(BIN)/cdo : $(BIN)/conda
+$(CDO) : $(BIN)/conda
 	@echo
 	@echo "Installing CDO locally with Miniconda..."
 	@$(BIN)/conda install -c conda-forge cdo
+	@touch --no-create $(CDO)
 
 # Add new python packages here as targets.
 $(XARRAY) $(YAML): $(BIN)/pip
 	@scripts/install_python_packages.sh
+	@touch --no-create $(XARRAY) $(YAML)
 
 ###############################################################################
 ## SYMLINK ORIGINAL TRACE FILES
@@ -67,7 +81,7 @@ $(HEAP)/modern_trace_PRECL.nc : trace_orig/ scripts/aggregate_modern_trace.py $(
 $(HEAP)/modern_trace_PRECC.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
 	@$(PYTHON) scripts/aggregate_modern_trace.py PRECC
 
-$(HEAP)/modern_trace_PRECT.nc : $(HEAP)/modern_trace_PRECL.nc $(HEAP)/modern_trace_PRECC.nc $(BIN)/ncbo $(BIN)/ncrename $(BIN)/ncatted
+$(HEAP)/modern_trace_PRECT.nc : $(HEAP)/modern_trace_PRECL.nc $(HEAP)/modern_trace_PRECC.nc $(NCO)
 	@env PATH="$(BIN):$(PATH)" \
 		scripts/add_modern_monthly_PRECC_PRECL.sh
 
@@ -81,7 +95,7 @@ GRID_TEMPL = cruncep/temperature.nc
 # ERWG interpolation algorithm for downscaling.
 REGRID_ALG = bilinear
 
-$(HEAP)/modern_trace_FSDS_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_FSDS.nc $(BIN)/ncremap
+$(HEAP)/modern_trace_FSDS_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_FSDS.nc $(NCO)
 	@echo "Downscaling modern FSDS file..."
 	@env PATH="$(BIN):$(PATH)" \
 		ncremap \
@@ -90,7 +104,7 @@ $(HEAP)/modern_trace_FSDS_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_FSDS.nc
 		--input_file="$(HEAP)/modern_trace_FSDS.nc" \
 		--output_file="$(HEAP)/modern_trace_FSDS_regrid.nc"
 
-$(HEAP)/modern_trace_PRECT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_PRECT.nc $(BIN)/ncremap
+$(HEAP)/modern_trace_PRECT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_PRECT.nc $(NCO)
 	@echo "Downscaling modern PRECT file..."
 	@env PATH="$(BIN):$(PATH)" \
 		ncremap \
@@ -99,7 +113,7 @@ $(HEAP)/modern_trace_PRECT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_PRECT.
 		--input_file="$(HEAP)/modern_trace_PRECT.nc" \
 		--output_file="$(HEAP)/modern_trace_PRECT_regrid.nc"
 
-$(HEAP)/modern_trace_TREFHT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_TREFHT.nc $(BIN)/ncremap
+$(HEAP)/modern_trace_TREFHT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_TREFHT.nc $(NCO)
 	@echo "Downscaling modern TREFHT file..."
 	@env PATH="$(BIN):$(PATH)" \
 		ncremap \
@@ -132,7 +146,7 @@ crop : $(patsubst %, $(HEAP)/cropped/%, $(ALL_ORIG))
 
 # For each original TraCE file there is a rule to create the corresponding
 # cropped NetCDF file (with the same name) in $(HEAP)/cropped.
-$(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py $(BIN)/ncks
+$(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py $(NCO)
 	@mkdir --parents $(HEAP)/cropped
 	@$(PYTHON) scripts/crop_file.py $< $@
 
@@ -143,7 +157,7 @@ $(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py $(BIN)/ncks
 # Create 100 years files (1200 time steps, 12*100 months) for each cropped file.
 # The split files are saved in a folder of the original file name (without .nc
 # suffix), labeled 000000.nc, 000001.nc, 000002.nc, etc.
-$(HEAP)/split/% : $(HEAP)/cropped/%.nc $(HEAP)/split $(BIN)/cdo
+$(HEAP)/split/% : $(HEAP)/cropped/%.nc $(HEAP)/split $(CDO)
 	@mkdir --parents $@
 	@env PATH="$(BIN):$(PATH)" \
 		cdo splitsel,1200 $< $@/
