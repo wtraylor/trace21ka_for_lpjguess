@@ -19,6 +19,8 @@ PYTHON = $(BIN)/python
 PYPKG = $(MINICONDA)/lib/python3.7/site-packages/
 # Individual Python packages. The '__init__.py' file is used as a proxy for
 # whole package to check if it’s installed.
+NETCDF4 = $(PYPKG)/netCDF4/__init__.py
+SCIPY = $(PYPKG)/scipy/__init__.py
 XARRAY = $(PYPKG)/xarray/__init__.py
 YAML = $(PYPKG)/yaml/__init__.py
 
@@ -64,12 +66,25 @@ $(CDO) : $(BIN)/conda
 	@$(BIN)/conda install -c conda-forge cdo
 	@touch --no-create $(CDO)
 
-# Add new python packages here as targets and as arguments to `pip`.
-$(XARRAY) $(YAML): $(BIN)/pip
+$(NETCDF4) : $(BIN)/pip
 	@echo
-	@echo "Installing Python packages with PIP..."
-	@$(BIN)/pip install xarray pyyaml
-	@touch --no-create $(XARRAY) $(YAML)
+	@$(BIN)/pip install netCDF4
+	@touch --no-create $(NETCDF4)
+
+$(SCIPY) : $(BIN)/pip
+	@echo
+	@$(BIN)/pip install scipy
+	@touch --no-create $(SCIPY)
+
+$(YAML) : $(BIN)/pip
+	@echo
+	@$(BIN)/pip install pyyaml
+	@touch --no-create $(YAML)
+
+$(XARRAY) : $(BIN)/pip
+	@echo
+	@$(BIN)/pip install xarray
+	@touch --no-create $(XARRAY)
 
 ###############################################################################
 ## SYMLINK ORIGINAL TRACE FILES
@@ -88,19 +103,19 @@ ALL_ORIG = $(TREFHT)
 ## AGGREGATE MODERN TRACE DATA
 ###############################################################################
 
-$(HEAP)/modern_trace_TREFHT.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
+$(HEAP)/modern_trace_TREFHT.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(NETCDF4) $(SCIPY) $(XARRAY) $(YAML) options.yaml
 	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py TREFHT
 
-$(HEAP)/modern_trace_FSDS.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
+$(HEAP)/modern_trace_FSDS.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(NETCDF4) $(SCIPY) $(XARRAY) $(YAML) options.yaml
 	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py FSDS
 
-$(HEAP)/modern_trace_PRECL.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
+$(HEAP)/modern_trace_PRECL.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(NETCDF4) $(SCIPY) $(XARRAY) $(YAML) options.yaml
 	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py PRECL
 
-$(HEAP)/modern_trace_PRECC.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(XARRAY) $(YAML) options.yaml
+$(HEAP)/modern_trace_PRECC.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(NETCDF4) $(SCIPY) $(XARRAY) $(YAML) options.yaml
 	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py PRECC
 
