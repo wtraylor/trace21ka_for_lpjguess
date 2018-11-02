@@ -3,6 +3,33 @@
 export HEAP ?= heap
 
 ###############################################################################
+## PHONY TARGETS
+###############################################################################
+
+.PHONY: clean
+# Be cautious: Only remove those files and directories that are also created
+# by this script.
+# Append `exit 0` to the `rm` command so that the return code is always
+# SUCCESS. Otherwise the rule fails if `rm` doesn’t find a file/directory.
+clean :
+	@rm --verbose \
+		heap/bias_*.nc \
+		heap/cropped/trace*.nc \
+		heap/downscaled/**trace*.nc \
+		heap/modern_trace_*.nc \
+		heap/split/**.nc \
+		2>/dev/null; \
+		exit 0
+	@rm --dir --verbose \
+		heap/cropped \
+		heap/downscaled/trace* \
+		heap/downscaled \
+		heap/split/trace* \
+		heap/split \
+		2>/dev/null; \
+		exit 0
+
+###############################################################################
 ## VARIABLES
 ###############################################################################
 
