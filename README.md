@@ -51,14 +51,12 @@ File Structure
 
 - `cruncep/`: Monthly means of the CRUNCEP5 data set from 1900 to 2013.
   **TODO:** Citation, where doe the data come from exactly?
-- `heap/`: Automatically created directory for temporary files. Can be customized.
+- `heap/`: Automatically created directory for temporary files. Can be customized with the `HEAP` variable when calling `make`.
 - `scripts/`:
     + `add_modern_monthly_PRECC_PRECL.sh`: Add the CCSM3 precipitation variables `PRECC` and `PRECL` to `PRECT`.
     + `aggregate_modern_trace.py`: Create monthly means of the TraCE-21ka output of most recent times and write it to NetCDF files in the heap.
     + `calculate_bias.py <VAR>`: Create a NetCDF file containing the monthly bias of TraCE compared to the CRUNCEP data.
-    + `install_miniconda.sh`: Download and install [Miniconda](https://conda.io/miniconda.html) in the subdirectory `miniconda3/`.
-    + `install_nco.sh`: Install [NCO](http://nco.sourceforge.net/) locally through `conda`.
-    + `install_python_packages.sh`: Install all necessary Python packages locally in `miniconda3/` using `pip`.
+	+ `symlink_trace_orig.py`: Create a symbolic link, `trace_orig`, in this directory that points to the directory of the original TraCE-21ka NetCDF files which is specified as `trace_orig` in `options.yaml`.
 
 Project Outline
 ---------------
@@ -66,8 +64,8 @@ Project Outline
 - [x] Calculate monthly bias for all grid cells against modern CRUNCEP.
 - [ ] Calculate `PRECT` as `PRECC + PRECL`.
 - [x] Crop TraCE data to specified region.
-- [ ] Split dataset into 100 years files.
-- [ ] Downscale TraCE dataset to 0.5° grid resolution.
+- [x] Split dataset into 100 years files.
+- [x] Downscale TraCE dataset to 0.5° grid resolution.
 - [ ] Mask oceans and glaciers, based on ICE-5G.
 - [ ] Bias-correct all files.
 - [ ] Calculate wet days, based on modern monthly wet days. Store them as `wet` variable in precipitation file.
