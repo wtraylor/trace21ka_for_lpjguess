@@ -116,10 +116,11 @@ NCO = $(BIN)/ncremap
 # TODO: Download 32 on 32-bit architectures.
 CONDA_INSTALLER = Miniconda3-latest-Linux-x86_64.sh
 
+# --timestamping: Only substitute local file if remote file is newer.
 $(CONDA_INSTALLER) :
 	@echo
 	@echo "Downloading Miniconda install script..."
-	@wget "https://repo.continuum.io/miniconda/$(CONDA_INSTALLER)"
+	@wget --timestamping "https://repo.continuum.io/miniconda/$(CONDA_INSTALLER)"
 	@touch --no-create $(CONDA_INSTALLER)
 
 # Miniconda installer command line arguments:
