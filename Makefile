@@ -125,10 +125,11 @@ $(CONDA_INSTALLER) :
 
 # Miniconda installer command line arguments:
 # -p PREFIX    install prefix, defaults to $PREFIX, must not contain spaces.
+# -u           update an existing installation
 $(BIN)/conda $(BIN)/pip $(PYTHON): $(CONDA_INSTALLER)
 	@echo
 	@echo "Installing Miniconda to '$(MINICONDA)'..."
-	@sh "$(CONDA_INSTALLER)" -p "$(MINICONDA)"
+	@sh "$(CONDA_INSTALLER)" -u -p "$(MINICONDA)"
 	@touch --no-create $(BIN)/conda $(BIN)/pip $(PYTHON)
 
 # Add all needed NCO binaries here as targets.
