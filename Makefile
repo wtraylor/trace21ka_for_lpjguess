@@ -19,7 +19,11 @@ ALL_ORIG = $(wildcard trace_orig/$(PRECC)) $(wildcard trace_orig/$(PRECL)) $(wil
 
 .PHONY: all
 # TODO: This is only a stub so far.
-all : crop
+all :
+
+.PHONY: split
+split : crop $(patsubst trace_orig/%.nc, $(HEAP)/split/%000000.nc, $(ALL_ORIG))
+	@echo "Splitting finished."
 
 # This target depends on all original TraCE files being cropped in the folder
 # '$(HEAP)/cropped/'.
@@ -241,11 +245,13 @@ $(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py $(NCO) $(PYTHON) $(Y
 ###############################################################################
 
 # Create 100 years files (1200 time steps, 12*100 months) for each cropped file.
-# The split files are saved in a folder of the original file name (without .nc
-# suffix), labeled 000000.nc, 000001.nc, 000002.nc, etc.
-$(HEAP)/split/% : $(HEAP)/cropped/%.nc $(CDO)
+# The split files are named with a suffix to the original file name:
+# *000000.nc,: *000001.nc,: *000002.nc, etc.
+# The original TraCE files are of varying time length, so the number of created
+# split files is not known beforehand. Therefore, we use the first split file
+# (index 000000) as a representative target for all split files.
+$(HEAP)/split/%000000.nc : $(HEAP)/cropped/%.nc $(CDO)
 	@echo
-	@echo "Splitting file '$@' into 100-years slices."
-	@mkdir --parents $@
+	@echo "Splitting file '$<' into 100-years slices."
 	@env PATH="$(BIN):$(PATH)" \
-		cdo splitsel,1200 $< $@/
+		cdo splitsel,1200 $< $(patsubst %.nc, %, $@)
