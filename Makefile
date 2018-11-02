@@ -81,6 +81,7 @@ clean :
 		heap/downscaled/**trace*.nc \
 		heap/modern_trace_*.nc \
 		heap/split/**.nc \
+		PET0.RegridWeightGen.Log \
 		2>/dev/null; \
 		exit 0
 	@rm --dir --verbose \
