@@ -11,7 +11,7 @@ PRECL := trace.*PRECL*.nc
 TREFHT := trace.*TREFHT*.nc
 
 # All original TraCE files. TODO: Add rest of the files.
-ALL_ORIG = trace_orig/$(PRECC) trace_orig/$(PRECL) trace_orig/$(TREFHT)
+ALL_ORIG = $(wildcard trace_orig/$(PRECC)) $(wildcard trace_orig/$(PRECL)) $(wildcard trace_orig/$(TREFHT))
 
 ###############################################################################
 ## PHONY TARGETS
@@ -217,7 +217,7 @@ $(HEAP)/bias_TREFHT.nc : $(HEAP)/modern_trace_TREFHT_regrid.nc scripts/calculate
 # This target depends on all original TraCE files being cropped in the folder
 # '$(HEAP)/cropped/'.
 .PHONY: crop
-crop : $(patsubst %, $(HEAP)/cropped/%, $(ALL_ORIG))
+crop : $(patsubst trace_orig/%, $(HEAP)/cropped/%, $(ALL_ORIG))
 	@echo "Cropping finished."
 
 # For each original TraCE file there is a rule to create the corresponding
