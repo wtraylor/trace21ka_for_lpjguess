@@ -53,7 +53,7 @@ File Structure
   **TODO:** Citation, where doe the data come from exactly?
 - `heap/`: Automatically created directory for temporary files. Can be customized with the `HEAP` variable when calling `make`.
 - `scripts/`:
-    + `add_modern_monthly_PRECC_PRECL.sh`: Add the CCSM3 precipitation variables `PRECC` and `PRECL` to `PRECT`.
+    + `add_PRECC_PRECL.sh`: Add the CCSM3 precipitation variables `PRECC` and `PRECL` to create a new file with `PRECT`.
     + `aggregate_modern_trace.py`: Create monthly means of the TraCE-21ka output of most recent times and write it to NetCDF files in the heap.
     + `calculate_bias.py <VAR>`: Create a NetCDF file containing the monthly bias of TraCE compared to the CRUNCEP data.
 	+ `symlink_trace_orig.py`: Create a symbolic link, `trace_orig`, in this directory that points to the directory of the original TraCE-21ka NetCDF files which is specified as `trace_orig` in `options.yaml`.

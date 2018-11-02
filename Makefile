@@ -190,10 +190,13 @@ $(HEAP)/modern_trace_PRECC.nc : trace_orig/ scripts/aggregate_modern_trace.py $(
 	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py PRECC
 
-$(HEAP)/modern_trace_PRECT.nc : $(HEAP)/modern_trace_PRECL.nc $(HEAP)/modern_trace_PRECC.nc $(NCO) scripts/add_modern_monthly_PRECC_PRECL.sh
+$(HEAP)/modern_trace_PRECT.nc : $(HEAP)/modern_trace_PRECL.nc $(HEAP)/modern_trace_PRECC.nc $(NCO) scripts/add_PRECC_PRECL.sh
 	@echo
 	@env PATH="$(BIN):$(PATH)" \
-		scripts/add_modern_monthly_PRECC_PRECL.sh
+		scripts/add_PRECC_PRECL.sh \
+		$(HEAP)/modern_trace_PRECC.nc \
+		$(HEAP)/modern_trace_PRECL.nc \
+		$(HEAP)/modern_trace_PRECT.nc
 
 ###############################################################################
 ## REGRID MODERN TRACE DATA
