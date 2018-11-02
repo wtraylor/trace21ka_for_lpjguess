@@ -22,6 +22,7 @@ ALL_ORIG = $(wildcard trace_orig/$(PRECC)) $(wildcard trace_orig/$(PRECL)) $(wil
 # by this script.
 # Append `exit 0` to the `rm` command so that the return code is always
 # SUCCESS. Otherwise the rule fails if `rm` doesn’t find a file/directory.
+# Also remove the symbolic link "trace_orig".
 clean :
 	@rm --verbose \
 		heap/bias_*.nc \
@@ -37,6 +38,10 @@ clean :
 		heap/downscaled \
 		heap/split/trace* \
 		heap/split \
+		2>/dev/null; \
+		exit 0
+	@rm --verbose \
+		trace_orig \
 		2>/dev/null; \
 		exit 0
 
