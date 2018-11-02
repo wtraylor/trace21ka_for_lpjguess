@@ -23,11 +23,28 @@ all :
 	@echo "Not implemented yet."
 
 # For every original TraCE file there is one cropped file.
-CROPPED_FILES = $(patsubst trace_orig/%, $(HEAP)/cropped/%, $(ALL_ORIG))
+# We need to calculate PRECT files from PRECC and PRECL. For that, we first
+# create a list of cropped files with PRECC and PRECL (and without PRECT),
+# directly from what we have as input. Afterwards, we substitute all 'PRECC'
+# and 'PRECL' with 'PRECT' in the list and remove duplicates. So any PRECC and
+# PRECL files are removed, but corresponding PRECT files are added. Now we have
+# all a list of all cropped files that are actually needed for further
+# processing.
+CROPPED_FILES_ORIG = $(patsubst trace_orig/%, $(HEAP)/cropped/%, $(ALL_ORIG))
+CROPPED_FILES = $(shell echo $(CROPPED_FILES_ORIG) | \
+								sed 's/ /\n/g' | \
+								sed 's/PREC[CL]/PRECT/g' | \
+								sort | \
+								uniq)
 
 # For every cropped file there is one (first!) split file with index 000000.
 # This file represents the rest (varying amount!) of the time slices.
-SPLIT_FILES = $(patsubst trace_orig/%.nc, $(HEAP)/split/%000000.nc, $(ALL_ORIG))
+# Of all the cropped files we filter out all PRECC and PRECL files because they
+# are already combined to PRECT.
+ALL_SPLIT_FILES = $(patsubst $(HEAP)/cropped/%.nc, $(HEAP)/split/%000000.nc, $(CROPPED_FILES))
+SPLIT_FILES = $(shell echo $(ALL_SPLIT_FILES) | \
+							sed 's/ /\n/g' | \
+							sed '/PREC[CL]/d')
 
 # For every split file there is one downscaled file.
 # The amount of downscaled files can only be determined after splitting is done!
