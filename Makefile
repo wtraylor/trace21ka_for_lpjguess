@@ -153,12 +153,12 @@ $(HEAP)/modern_trace_TREFHT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_TREFH
 ## CALCULATE BIAS
 ###############################################################################
 
-$(HEAP)/bias_PRECT.nc : $(HEAP)/modern_trace_PRECT_regrid scripts/calculate_bias.py $(XARRAY) $(PYTHON) $(YAML) options.yaml
+$(HEAP)/bias_PRECT.nc : $(HEAP)/modern_trace_PRECT_regrid.nc scripts/calculate_bias.py $(XARRAY) $(PYTHON) $(YAML) options.yaml
 	@echo
 	@echo "Calculating bias for variable 'PRECT'..."
 	@$(PYTHON) scripts/calculate_bias.py "PRECT"
 
-$(HEAP)/bias_TREFHT.nc : $(HEAP)/modern_trace_TREFHT_regrid scripts/calculate_bias.py $(XARRAY) $(PYTHON) $(YAML) options.yaml
+$(HEAP)/bias_TREFHT.nc : $(HEAP)/modern_trace_TREFHT_regrid.nc scripts/calculate_bias.py $(XARRAY) $(PYTHON) $(YAML) options.yaml
 	@echo
 	@echo "Calculating bias for variable 'TREFHT'..."
 	@$(PYTHON) scripts/calculate_bias.py "TREFHT"
