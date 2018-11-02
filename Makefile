@@ -17,6 +17,16 @@ ALL_ORIG = $(wildcard trace_orig/$(PRECC)) $(wildcard trace_orig/$(PRECL)) $(wil
 ## PHONY TARGETS
 ###############################################################################
 
+.PHONY: all
+# TODO: This is only a stub so far.
+all : crop
+
+# This target depends on all original TraCE files being cropped in the folder
+# '$(HEAP)/cropped/'.
+.PHONY: crop
+crop : $(patsubst trace_orig/%, $(HEAP)/cropped/%, $(ALL_ORIG))
+	@echo "Cropping finished."
+
 .PHONY: clean
 # Be cautious: Only remove those files and directories that are also created
 # by this script.
@@ -218,12 +228,6 @@ $(HEAP)/bias_TREFHT.nc : $(HEAP)/modern_trace_TREFHT_regrid.nc scripts/calculate
 ###############################################################################
 ## CROPPING
 ###############################################################################
-
-# This target depends on all original TraCE files being cropped in the folder
-# '$(HEAP)/cropped/'.
-.PHONY: crop
-crop : $(patsubst trace_orig/%, $(HEAP)/cropped/%, $(ALL_ORIG))
-	@echo "Cropping finished."
 
 # For each original TraCE file there is a rule to create the corresponding
 # cropped NetCDF file (with the same name) in $(HEAP)/cropped.
