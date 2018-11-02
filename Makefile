@@ -3,6 +3,17 @@
 export HEAP ?= heap
 
 ###############################################################################
+## ORIGINAL TRACE FILES
+###############################################################################
+
+PRECC := trace.*PRECC*.nc
+PRECL := trace.*PRECL*.nc
+TREFHT := trace.*TREFHT*.nc
+
+# All original TraCE files. TODO: Add rest of the files.
+ALL_ORIG = trace_orig/$(PRECC) trace_orig/$(PRECL) trace_orig/$(TREFHT)
+
+###############################################################################
 ## PHONY TARGETS
 ###############################################################################
 
@@ -119,12 +130,6 @@ $(XARRAY) : $(BIN)/pip
 
 trace_orig : scripts/symlink_trace_orig.py $(PYTHON) $(YAML) options.yaml
 	@$(PYTHON) scripts/symlink_trace_orig.py
-
-TREFHT = trace.01.22000-20001BP.cam2.h0.TREFHT.0000101-0200012.nc \
-				 trace.02.20000-19001BP.cam2.h0.TREFHT.0200101-0300012.nc
-
-# All original TraCE files. TODO: Add rest of the files.
-ALL_ORIG = $(TREFHT)
 
 ###############################################################################
 ## AGGREGATE MODERN TRACE DATA
