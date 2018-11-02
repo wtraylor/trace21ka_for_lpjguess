@@ -50,7 +50,7 @@ File Structure
 --------------
 
 - `cruncep/`: Monthly means of the CRUNCEP5 data set from 1900 to 2013.
-  **TODO:** Citation, where doe the data come from exactly?
+  **TODO:** Citation, where due the data come from exactly?
 - `heap/`: Automatically created directory for temporary files. Can be customized with the `HEAP` variable when calling `make`.
 - `scripts/`:
     + `add_PRECC_PRECL.sh`: Add the CCSM3 precipitation variables `PRECC` and `PRECL` to create a new file with `PRECT`.
@@ -62,7 +62,7 @@ Project Outline
 ---------------
 
 - [x] Calculate monthly bias for all grid cells against modern CRUNCEP.
-- [ ] Calculate `PRECT` as `PRECC + PRECL`.
+- [x] Calculate `PRECT` as `PRECC + PRECL`.
 - [x] Crop TraCE data to specified region.
 - [x] Split dataset into 100 years files.
 - [x] Downscale TraCE dataset to 0.5° grid resolution.
