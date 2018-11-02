@@ -20,15 +20,35 @@ ALL_ORIG = $(wildcard trace_orig/$(PRECC)) $(wildcard trace_orig/$(PRECL)) $(wil
 .PHONY: all
 # TODO: This is only a stub so far.
 all :
+	@echo "Not implemented yet."
+
+# For every original TraCE file there is one cropped file.
+CROPPED_FILES = $(patsubst trace_orig/%, $(HEAP)/cropped/%, $(ALL_ORIG))
+
+# For every cropped file there is one (first!) split file with index 000000.
+# This file represents the rest (varying amount!) of the time slices.
+SPLIT_FILES = $(patsubst trace_orig/%.nc, $(HEAP)/split/%000000.nc, $(ALL_ORIG))
+
+# For every split file there is one downscaled file.
+# The amount of downscaled files can only be determined after splitting is done!
+DOWNSCALED_FILES = $(patsubst $(HEAP)/split/%, $(HEAP)/downscaled/%, $(wildcard $(HEAP)/split/*.nc))
+
+.PHONY: downscale
+# Splitting creates files (*000000.nc, *000001.nc,...) that are not known
+# before actually executing the splitting. Therefore, the `SPLIT_FILES` are
+# first dependency. After they are created, the wildcard in `DOWNSCALED_FILES`
+# variable is parsed correctly.
+downscale : $(SPLIT_FILES) $(DOWNSCALED_FILES)
+	@echo "Downscaling finished."
 
 .PHONY: split
-split : crop $(patsubst trace_orig/%.nc, $(HEAP)/split/%000000.nc, $(ALL_ORIG))
+split : $(SPLIT_FILES)
 	@echo "Splitting finished."
 
+.PHONY: crop
 # This target depends on all original TraCE files being cropped in the folder
 # '$(HEAP)/cropped/'.
-.PHONY: crop
-crop : $(patsubst trace_orig/%, $(HEAP)/cropped/%, $(ALL_ORIG))
+crop : $(CROPPED_FILES)
 	@echo "Cropping finished."
 
 .PHONY: clean
@@ -255,3 +275,19 @@ $(HEAP)/split/%000000.nc : $(HEAP)/cropped/%.nc $(CDO)
 	@echo "Splitting file '$<' into 100-years slices."
 	@env PATH="$(BIN):$(PATH)" \
 		cdo splitsel,1200 $< $(patsubst %.nc, %, $@)
+
+###############################################################################
+## DOWNSCALE TRACE FILES
+###############################################################################
+
+# For every split file, there is a downscaled target.
+$(HEAP)/downscaled/%.nc : $(HEAP)/split/%.nc $(NCO)
+	@echo
+	@mkdir --parents $(HEAP)/downscaled
+	@echo "Regridding '$@'..."
+	@env PATH="$(BIN):$(PATH)" \
+		ncremap \
+		--algorithm="$(REGRID_ALG)" \
+		--template_file="$(GRID_TEMPL)" \
+		--input_file="$@" \
+		--output_file="$<"
