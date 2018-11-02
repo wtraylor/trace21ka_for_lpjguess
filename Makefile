@@ -319,3 +319,55 @@ $(HEAP)/downscaled/%.nc : $(HEAP)/split/%.nc $(NCO)
 		--template_file="$(GRID_TEMPL)" \
 		--input_file="$@" \
 		--output_file="$<"
+
+###############################################################################
+## CALCULATING PRECC + PRECL = PRECT
+###############################################################################
+
+# Here are all rules for creating the PRECT files.
+# Unfortunately, Make does not offer an easy solution to generate these rules
+# automatically.
+# TODO: Add rest of PRECT files.
+
+$(HEAP)/cropped/trace.01.22000-20001BP.cam2.h0.PRECT.0000101-0200012.nc : $(HEAP)/cropped/trace.01.22000-20001BP.cam2.h0.PRECC.0000101-0200012.nc $(HEAP)/cropped/trace.01.22000-20001BP.cam2.h0.PRECL.0000101-0200012.nc $(NCO)
+	@env PATH="$(BIN):$(PATH)" \
+		scripts/add_PRECC_PRECL.sh \
+		$(HEAP)/cropped/trace.01.22000-20001BP.cam2.h0.PRECC.0000101-0200012.nc \
+		$(HEAP)/cropped/trace.01.22000-20001BP.cam2.h0.PRECL.0000101-0200012.nc \
+		$@
+
+$(HEAP)/cropped/trace.02.20000-19001BP.cam2.h0.PRECT.0200101-0300012.nc : $(HEAP)/cropped/trace.02.20000-19001BP.cam2.h0.PRECC.0200101-0300012.nc $(HEAP)/cropped/trace.02.20000-19001BP.cam2.h0.PRECL.0200101-0300012.nc $(NCO)
+	@env PATH="$(BIN):$(PATH)" \
+		scripts/add_PRECC_PRECL.sh \
+		$(HEAP)/cropped/trace.02.20000-19001BP.cam2.h0.PRECC.0200101-0300012.nc \
+		$(HEAP)/cropped/trace.02.20000-19001BP.cam2.h0.PRECL.0200101-0300012.nc \
+		$@
+
+$(HEAP)/cropped/trace.03.19000-18501BP.cam2.h0.PRECT.0300101-0350012.nc : $(HEAP)/cropped/trace.03.19000-18501BP.cam2.h0.PRECC.0300101-0350012.nc $(HEAP)/cropped/trace.03.19000-18501BP.cam2.h0.PRECL.0300101-0350012.nc $(NCO)
+	@env PATH="$(BIN):$(PATH)" \
+		scripts/add_PRECC_PRECL.sh \
+		$(HEAP)/cropped/trace.03.19000-18501BP.cam2.h0.PRECC.0300101-0350012.nc \
+		$(HEAP)/cropped/trace.03.19000-18501BP.cam2.h0.PRECL.0300101-0350012.nc \
+		$@
+
+$(HEAP)/cropped/trace.04.18500-18401BP.cam2.h0.PRECT.0350101-0360012.nc : $(HEAP)/cropped/trace.04.18500-18401BP.cam2.h0.PRECC.0350101-0360012.nc $(HEAP)/cropped/trace.04.18500-18401BP.cam2.h0.PRECL.0350101-0360012.nc $(NCO)
+	@env PATH="$(BIN):$(PATH)" \
+		scripts/add_PRECC_PRECL.sh \
+		$(HEAP)/cropped/trace.04.18500-18401BP.cam2.h0.PRECC.0350101-0360012.nc \
+		$(HEAP)/cropped/trace.04.18500-18401BP.cam2.h0.PRECL.0350101-0360012.nc \
+		$@
+
+$(HEAP)/cropped/trace.05.18400-17501BP.cam2.h0.PRECT.0360101-0450012.nc : $(HEAP)/cropped/trace.05.18400-17501BP.cam2.h0.PRECC.0360101-0450012.nc $(HEAP)/cropped/trace.05.18400-17501BP.cam2.h0.PRECL.0360101-0450012.nc $(NCO)
+	@env PATH="$(BIN):$(PATH)" \
+		scripts/add_PRECC_PRECL.sh \
+		$(HEAP)/cropped/trace.05.18400-17501BP.cam2.h0.PRECC.0360101-0450012.nc \
+		$(HEAP)/cropped/trace.05.18400-17501BP.cam2.h0.PRECL.0360101-0450012.nc \
+		$@
+
+$(HEAP)/cropped/trace.36.400BP-1990CE.cam2.h0.PRECT.2160101-2204012.nc : $(HEAP)/cropped/trace.36.400BP-1990CE.cam2.h0.PRECC.2160101-2204012.nc $(HEAP)/cropped/trace.36.400BP-1990CE.cam2.h0.PRECL.2160101-2204012.nc $(NCO)
+	@env PATH="$(BIN):$(PATH)" \
+		scripts/add_PRECC_PRECL.sh \
+		$(HEAP)/cropped/trace.36.400BP-1990CE.cam2.h0.PRECC.2160101-2204012.nc \
+		$(HEAP)/cropped/trace.36.400BP-1990CE.cam2.h0.PRECL.2160101-2204012.nc \
+		$@
+
