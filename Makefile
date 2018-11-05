@@ -183,35 +183,51 @@ $(YAML) : $(BIN)/pip
 	@$(BIN)/pip install pyyaml
 	@touch --no-create $(YAML)
 
-$(XARRAY) : $(BIN)/pip
+$(XARRAY) : $(BIN)/pip $(NETCDF4) $(SCIPY)
 	@echo
 	@$(BIN)/pip install xarray
 	@touch --no-create $(XARRAY)
 
 ###############################################################################
+## PREREQUISITES FOR EACH SCRIPT
+###############################################################################
+
+scripts/add_PRECC_PRECL.sh : $(NCO)
+
+scripts/aggregate_modern_trace.py : $(PYTHON) $(XARRAY)
+
+scripts/calculate_bias.py : $(PYTHON) $(XARRAY) $(YAML) options.yaml
+
+scripts/crop_file.py : $(PYTHON) $(YAML) $(NCO) options.yaml
+
+scripts/rescale.py : $(PYTHON) $(YAML) $(NCO) options.yaml
+
+scripts/symlink_trace_orig.py : $(PYTHON) $(YAML) options.yaml
+
+###############################################################################
 ## SYMLINK ORIGINAL TRACE FILES
 ###############################################################################
 
-trace_orig : scripts/symlink_trace_orig.py $(PYTHON) $(YAML) options.yaml
+trace_orig : scripts/symlink_trace_orig.py
 	@$(PYTHON) scripts/symlink_trace_orig.py
 
 ###############################################################################
 ## AGGREGATE MODERN TRACE DATA
 ###############################################################################
 
-$(HEAP)/modern_trace_TREFHT.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(NETCDF4) $(SCIPY) $(XARRAY) $(YAML) options.yaml
+$(HEAP)/modern_trace_TREFHT.nc : trace_orig/ scripts/aggregate_modern_trace.py
 	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py TREFHT
 
-$(HEAP)/modern_trace_FSDS.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(NETCDF4) $(SCIPY) $(XARRAY) $(YAML) options.yaml
+$(HEAP)/modern_trace_FSDS.nc : trace_orig/ scripts/aggregate_modern_trace.py
 	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py FSDS
 
-$(HEAP)/modern_trace_PRECL.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(NETCDF4) $(SCIPY) $(XARRAY) $(YAML) options.yaml
+$(HEAP)/modern_trace_PRECL.nc : trace_orig/ scripts/aggregate_modern_trace.py
 	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py PRECL
 
-$(HEAP)/modern_trace_PRECC.nc : trace_orig/ scripts/aggregate_modern_trace.py $(PYTHON) $(NETCDF4) $(SCIPY) $(XARRAY) $(YAML) options.yaml
+$(HEAP)/modern_trace_PRECC.nc : trace_orig/ scripts/aggregate_modern_trace.py
 	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py PRECC
 
@@ -227,31 +243,31 @@ $(HEAP)/modern_trace_PRECT.nc : $(HEAP)/modern_trace_PRECL.nc $(HEAP)/modern_tra
 ## REGRID MODERN TRACE DATA
 ###############################################################################
 
-$(HEAP)/modern_trace_FSDS_regrid.nc : $(HEAP)/modern_trace_FSDS.nc $(NCO) $(PYTHON) $(YAML) scripts/rescale.py
+$(HEAP)/modern_trace_FSDS_regrid.nc : $(HEAP)/modern_trace_FSDS.nc scripts/rescale.py
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
-$(HEAP)/modern_trace_PRECT_regrid.nc : $(HEAP)/modern_trace_PRECT.nc $(NCO) $(PYTHON) $(YAML) scripts/rescale.py
+$(HEAP)/modern_trace_PRECT_regrid.nc : $(HEAP)/modern_trace_PRECT.nc scripts/rescale.py
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
-$(HEAP)/modern_trace_TREFHT_regrid.nc : $(HEAP)/modern_trace_TREFHT.nc $(NCO) $(PYTHON) $(YAML) scripts/rescale.py
+$(HEAP)/modern_trace_TREFHT_regrid.nc : $(HEAP)/modern_trace_TREFHT.nc scripts/rescale.py
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 ###############################################################################
 ## CALCULATE BIAS
 ###############################################################################
 
-$(HEAP)/cru_regrid/PRECT.nc : cruncep/precipitation.nc $(PYTHON) $(YAML) $(NCO) scripts/rescale.py
+$(HEAP)/cru_regrid/PRECT.nc : cruncep/precipitation.nc scripts/rescale.py
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
-$(HEAP)/bias_PRECT.nc : $(HEAP)/cru_regrid/PRECT.nc $(HEAP)/modern_trace_PRECT_regrid.nc scripts/calculate_bias.py $(XARRAY) $(PYTHON) $(YAML) options.yaml
+$(HEAP)/bias_PRECT.nc : $(HEAP)/cru_regrid/PRECT.nc $(HEAP)/modern_trace_PRECT_regrid.nc scripts/calculate_bias.py
 	@echo
 	@echo "Calculating bias for variable 'PRECT'..."
 	@$(PYTHON) scripts/calculate_bias.py "PRECT"
 
-$(HEAP)/cru_regrid/TREFHT.nc : cruncep/temperature.nc $(PYTHON) $(YAML) $(NCO) scripts/rescale.py
+$(HEAP)/cru_regrid/TREFHT.nc : cruncep/temperature.nc scripts/rescale.py
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
-$(HEAP)/bias_TREFHT.nc : $(HEAP)/cru_regrid/TREFHT.nc $(HEAP)/modern_trace_TREFHT_regrid.nc scripts/calculate_bias.py $(XARRAY) $(PYTHON) $(YAML) options.yaml
+$(HEAP)/bias_TREFHT.nc : $(HEAP)/cru_regrid/TREFHT.nc $(HEAP)/modern_trace_TREFHT_regrid.nc scripts/calculate_bias.py
 	@echo
 	@echo "Calculating bias for variable 'TREFHT'..."
 	@$(PYTHON) scripts/calculate_bias.py "TREFHT"
@@ -262,7 +278,7 @@ $(HEAP)/bias_TREFHT.nc : $(HEAP)/cru_regrid/TREFHT.nc $(HEAP)/modern_trace_TREFH
 
 # For each original TraCE file there is a rule to create the corresponding
 # cropped NetCDF file (with the same name) in $(HEAP)/cropped.
-$(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py $(NCO) $(PYTHON) $(YAML) options.yaml
+$(HEAP)/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py
 	@echo
 	@mkdir --parents $(HEAP)/cropped
 	@$(PYTHON) scripts/crop_file.py $< $@
@@ -288,7 +304,7 @@ $(HEAP)/split/%000000.nc : $(HEAP)/cropped/%.nc $(CDO)
 ###############################################################################
 
 # For every split file, there is a downscaled target.
-$(HEAP)/downscaled/%.nc : $(HEAP)/split/%.nc $(NCO) $(PYTHON) $(YAML) scripts/rescale.py
+$(HEAP)/downscaled/%.nc : $(HEAP)/split/%.nc scripts/rescale.py
 	@mkdir --parents $(HEAP)/downscaled
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
@@ -301,42 +317,42 @@ $(HEAP)/downscaled/%.nc : $(HEAP)/split/%.nc $(NCO) $(PYTHON) $(YAML) scripts/re
 # automatically.
 # TODO: Add rest of PRECT files.
 
-$(HEAP)/cropped/trace.01.22000-20001BP.cam2.h0.PRECT.0000101-0200012.nc : $(HEAP)/cropped/trace.01.22000-20001BP.cam2.h0.PRECC.0000101-0200012.nc $(HEAP)/cropped/trace.01.22000-20001BP.cam2.h0.PRECL.0000101-0200012.nc $(NCO)
+$(HEAP)/cropped/trace.01.22000-20001BP.cam2.h0.PRECT.0000101-0200012.nc : $(HEAP)/cropped/trace.01.22000-20001BP.cam2.h0.PRECC.0000101-0200012.nc $(HEAP)/cropped/trace.01.22000-20001BP.cam2.h0.PRECL.0000101-0200012.nc scripts/add_PRECC_PRECL.sh
 	@env PATH="$(BIN):$(PATH)" \
 		scripts/add_PRECC_PRECL.sh \
 		$(HEAP)/cropped/trace.01.22000-20001BP.cam2.h0.PRECC.0000101-0200012.nc \
 		$(HEAP)/cropped/trace.01.22000-20001BP.cam2.h0.PRECL.0000101-0200012.nc \
 		$@
 
-$(HEAP)/cropped/trace.02.20000-19001BP.cam2.h0.PRECT.0200101-0300012.nc : $(HEAP)/cropped/trace.02.20000-19001BP.cam2.h0.PRECC.0200101-0300012.nc $(HEAP)/cropped/trace.02.20000-19001BP.cam2.h0.PRECL.0200101-0300012.nc $(NCO)
+$(HEAP)/cropped/trace.02.20000-19001BP.cam2.h0.PRECT.0200101-0300012.nc : $(HEAP)/cropped/trace.02.20000-19001BP.cam2.h0.PRECC.0200101-0300012.nc $(HEAP)/cropped/trace.02.20000-19001BP.cam2.h0.PRECL.0200101-0300012.nc scripts/add_PRECC_PRECL.sh
 	@env PATH="$(BIN):$(PATH)" \
 		scripts/add_PRECC_PRECL.sh \
 		$(HEAP)/cropped/trace.02.20000-19001BP.cam2.h0.PRECC.0200101-0300012.nc \
 		$(HEAP)/cropped/trace.02.20000-19001BP.cam2.h0.PRECL.0200101-0300012.nc \
 		$@
 
-$(HEAP)/cropped/trace.03.19000-18501BP.cam2.h0.PRECT.0300101-0350012.nc : $(HEAP)/cropped/trace.03.19000-18501BP.cam2.h0.PRECC.0300101-0350012.nc $(HEAP)/cropped/trace.03.19000-18501BP.cam2.h0.PRECL.0300101-0350012.nc $(NCO)
+$(HEAP)/cropped/trace.03.19000-18501BP.cam2.h0.PRECT.0300101-0350012.nc : $(HEAP)/cropped/trace.03.19000-18501BP.cam2.h0.PRECC.0300101-0350012.nc $(HEAP)/cropped/trace.03.19000-18501BP.cam2.h0.PRECL.0300101-0350012.nc scripts/add_PRECC_PRECL.sh
 	@env PATH="$(BIN):$(PATH)" \
 		scripts/add_PRECC_PRECL.sh \
 		$(HEAP)/cropped/trace.03.19000-18501BP.cam2.h0.PRECC.0300101-0350012.nc \
 		$(HEAP)/cropped/trace.03.19000-18501BP.cam2.h0.PRECL.0300101-0350012.nc \
 		$@
 
-$(HEAP)/cropped/trace.04.18500-18401BP.cam2.h0.PRECT.0350101-0360012.nc : $(HEAP)/cropped/trace.04.18500-18401BP.cam2.h0.PRECC.0350101-0360012.nc $(HEAP)/cropped/trace.04.18500-18401BP.cam2.h0.PRECL.0350101-0360012.nc $(NCO)
+$(HEAP)/cropped/trace.04.18500-18401BP.cam2.h0.PRECT.0350101-0360012.nc : $(HEAP)/cropped/trace.04.18500-18401BP.cam2.h0.PRECC.0350101-0360012.nc $(HEAP)/cropped/trace.04.18500-18401BP.cam2.h0.PRECL.0350101-0360012.nc scripts/add_PRECC_PRECL.sh
 	@env PATH="$(BIN):$(PATH)" \
 		scripts/add_PRECC_PRECL.sh \
 		$(HEAP)/cropped/trace.04.18500-18401BP.cam2.h0.PRECC.0350101-0360012.nc \
 		$(HEAP)/cropped/trace.04.18500-18401BP.cam2.h0.PRECL.0350101-0360012.nc \
 		$@
 
-$(HEAP)/cropped/trace.05.18400-17501BP.cam2.h0.PRECT.0360101-0450012.nc : $(HEAP)/cropped/trace.05.18400-17501BP.cam2.h0.PRECC.0360101-0450012.nc $(HEAP)/cropped/trace.05.18400-17501BP.cam2.h0.PRECL.0360101-0450012.nc $(NCO)
+$(HEAP)/cropped/trace.05.18400-17501BP.cam2.h0.PRECT.0360101-0450012.nc : $(HEAP)/cropped/trace.05.18400-17501BP.cam2.h0.PRECC.0360101-0450012.nc $(HEAP)/cropped/trace.05.18400-17501BP.cam2.h0.PRECL.0360101-0450012.nc scripts/add_PRECC_PRECL.sh
 	@env PATH="$(BIN):$(PATH)" \
 		scripts/add_PRECC_PRECL.sh \
 		$(HEAP)/cropped/trace.05.18400-17501BP.cam2.h0.PRECC.0360101-0450012.nc \
 		$(HEAP)/cropped/trace.05.18400-17501BP.cam2.h0.PRECL.0360101-0450012.nc \
 		$@
 
-$(HEAP)/cropped/trace.36.400BP-1990CE.cam2.h0.PRECT.2160101-2204012.nc : $(HEAP)/cropped/trace.36.400BP-1990CE.cam2.h0.PRECC.2160101-2204012.nc $(HEAP)/cropped/trace.36.400BP-1990CE.cam2.h0.PRECL.2160101-2204012.nc $(NCO)
+$(HEAP)/cropped/trace.36.400BP-1990CE.cam2.h0.PRECT.2160101-2204012.nc : $(HEAP)/cropped/trace.36.400BP-1990CE.cam2.h0.PRECC.2160101-2204012.nc $(HEAP)/cropped/trace.36.400BP-1990CE.cam2.h0.PRECL.2160101-2204012.nc scripts/add_PRECC_PRECL.sh
 	@env PATH="$(BIN):$(PATH)" \
 		scripts/add_PRECC_PRECL.sh \
 		$(HEAP)/cropped/trace.36.400BP-1990CE.cam2.h0.PRECC.2160101-2204012.nc \
