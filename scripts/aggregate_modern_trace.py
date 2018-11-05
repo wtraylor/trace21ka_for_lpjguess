@@ -52,16 +52,6 @@ if not os.path.exists("trace_orig"):
     print("Directory 'trace_orig' doesn’t seem to exist.")
     sys.exit(1)
 
-# Retrieve directory to dump temporary files.
-heap = os.environ.get("HEAP")
-if not heap:
-    print("Heap directory not provided in environment variable `HEAP`.")
-    sys.exit(1)
-heap = os.path.abspath(heap)
-if not os.path.exists(heap):
-    print("Creating heap directory: %s" % heap)
-    os.mkdir(heap)
-
 # Compose file name of modern TraCE data.
 file_name = "trace.36.400BP-1990CE.cam2.h0.%s.2160101-2204012.nc" % var
 file_name = os.path.abspath(os.path.join("trace_orig", file_name))
@@ -74,6 +64,6 @@ if not os.path.isfile(file_name):
 print("Aggregating monthly averages from file '%s'." % file_name)
 dataset = get_monthly_means(file_name)
 out_file = "modern_trace_" + var + ".nc"
-out_file = os.path.join(heap, out_file)
+out_file = os.path.join("heap", out_file)
 print("Writing file '%s'." % out_file)
 dataset.to_netcdf(out_file)

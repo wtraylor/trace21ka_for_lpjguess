@@ -42,16 +42,15 @@ Only run `make` from an interactive shell.
 
 There will be some temporary files produced.
 They are stored in the “heap” directory.
-It defaults to `heap/` in the root of the Git repository, which is created when needed.
-You can specify it in the `Makefile` or as a parameter to the call `make HEAP=/path/to/heap`.
-Note that there should be enough free space available.
+It needs a lot of free space.
+You can create a symbolic link if you like to store the temporary files on another partition: `ln --force --symbolic /path/to/my/heap heap`
 
 File Structure
 --------------
 
 - `cruncep/`: Monthly means of the CRUNCEP5 data set from 1900 to 2013.
   **TODO:** Citation, where due the data come from exactly?
-- `heap/`: Automatically created directory for temporary files. Can be customized with the `HEAP` variable when calling `make`.
+- `heap/`: Directory for temporary files. This can be a symbolic link, too (see above).
 - `scripts/`:
     + `add_PRECC_PRECL.sh`: Add the CCSM3 precipitation variables `PRECC` and `PRECL` to create a new file with `PRECT`.
     + `aggregate_modern_trace.py`: Create monthly means of the TraCE-21ka output of most recent times and write it to NetCDF files in the heap.

@@ -11,15 +11,8 @@ if len(sys.argv) != 2:
     sys.exit(1)
 var = sys.argv[1]
 
-# Retrieve directory to dump temporary files.
-heap = os.environ.get("HEAP")
-if not heap:
-    print("Heap directory not provided in environment variable `HEAP`.")
-    sys.exit(1)
-heap = os.path.abspath(heap)
-
 # Construct the TraCE input file name.
-trace_file = os.path.join(heap, "modern_trace_%s_regrid.nc" % var)
+trace_file = os.path.join("heap", "modern_trace_%s_regrid.nc" % var)
 if not os.path.exists(trace_file):
     print("Input file does not exist: %s" % trace_file)
     sys.exit(1)
