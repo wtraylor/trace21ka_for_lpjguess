@@ -46,6 +46,15 @@ SPLIT_FILES = $(shell echo $(ALL_SPLIT_FILES) | \
 # The amount of downscaled files can only be determined after splitting is done!
 DOWNSCALED_FILES = $(patsubst heap/split/%, heap/downscaled/%, $(wildcard heap/split/*.nc))
 
+DEBIASED_TREFHT = $(shell echo $(DOWNSCALED_FILES) | \
+									sed 's/downscaled/debiased/g' | \
+									sed 's/ /\n/g' | \
+									grep 'TREFHT')
+DEBIASED_PRECT = $(shell echo $(DOWNSCALED_FILES) | \
+								 sed 's/downscaled/debiased/g' | \
+								 sed 's/ /\n/g' | \
+								 grep 'PRECT')
+
 .PHONY: downscale
 # Splitting creates files (*000000.nc, *000001.nc,...) that are not known
 # before actually executing the splitting. Therefore, the `SPLIT_FILES` are
@@ -198,6 +207,8 @@ scripts/calculate_bias.py : $(PYTHON) $(XARRAY) $(YAML) options.yaml
 
 scripts/crop_file.py : $(PYTHON) $(YAML) $(NCO) options.yaml
 
+scripts/debias.py : $(PYTHON) $(XARRAY)
+
 scripts/rescale.py : $(PYTHON) $(YAML) $(NCO) options.yaml heap/grid_template.nc
 
 scripts/symlink_trace_orig.py : $(PYTHON) $(YAML) options.yaml
@@ -310,6 +321,16 @@ heap/split/%000000.nc : heap/cropped/%.nc $(CDO)
 heap/downscaled/%.nc : heap/split/%.nc scripts/rescale.py
 	@mkdir --parents heap/downscaled
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+
+###############################################################################
+## DEBIAS TRACE FILES
+###############################################################################
+
+$(DEBIASED_TREFHT) : heap/debiased/%.nc : heap/downscaled/%.nc heap/bias_TREFHT.nc scripts/debias.py
+	@$(PYTHON) scripts/debias.py $< $@
+
+$(DEBIASED_PRECT) : heap/debiased/%.nc : heap/downscaled/%.nc heap/bias_PRECT.nc scripts/debias.py
+	@$(PYTHON) scripts/debias.py $< $@
 
 ###############################################################################
 ## CALCULATING PRECC + PRECL = PRECT

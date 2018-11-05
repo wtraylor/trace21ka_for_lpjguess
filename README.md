@@ -66,7 +66,7 @@ Project Outline
 - [x] Split dataset into 100 years files.
 - [x] Downscale TraCE dataset to 0.5° grid resolution.
 - [ ] Mask oceans and glaciers, based on ICE-5G.
-- [ ] Bias-correct all files.
+- [x] Bias-correct all files.
 - [ ] Calculate wet days, based on modern monthly wet days. Store them as `wet` variable in precipitation file.
 - [ ] Set standard names for all NetCDF variables.
 - [ ] Use land IDs instead of lon/lat for LPJ-GUESS (for performance).
