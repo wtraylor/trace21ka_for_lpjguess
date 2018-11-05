@@ -27,13 +27,7 @@ if not os.path.exists(trace_file):
 # Open and load the file completely. It needs to be in the RAM for calculation.
 trace = xr.open_dataset(trace_file).load()
 
-# Map the TraCE variable name to the CRUNCEP file name.
-if var == "TREFHT":
-    cru_file = "temperature.nc"
-else:
-    print("CRUNCEP file for variable '%s' is not defined." % var)
-    sys.exit(1)
-cru_file = os.path.join("cruncep", cru_file)
+cru_file = "heap/cru_regrid/%s.nc" % var
 
 if not os.path.exists(cru_file):
     print("CRUNCEP file is missing: %s" % cru_file)
@@ -48,9 +42,6 @@ cru = xr.open_dataset(cru_file).load()
 # 0 to 11 as the month numbers, assuming that the CRUNCEP record also starts
 # with January.
 cru["time"].values = [i for i in range(12)]
-
-# The names of the CRU file must match the names of the TraCE file.
-cru = cru.rename({"longitude": "lon", "latitude": "lat"})
 
 # Rename the variable in the CRU file to the TraCE variable name.
 cru_vars = yaml.load(open("options.yaml"))["cru_vars"]

@@ -240,12 +240,18 @@ $(HEAP)/modern_trace_TREFHT_regrid.nc : $(HEAP)/modern_trace_TREFHT.nc $(NCO) $(
 ## CALCULATE BIAS
 ###############################################################################
 
-$(HEAP)/bias_PRECT.nc : $(HEAP)/modern_trace_PRECT_regrid.nc scripts/calculate_bias.py $(XARRAY) $(PYTHON) $(YAML) options.yaml
+$(HEAP)/cru_regrid/PRECT.nc : cruncep/precipitation.nc $(PYTHON) $(YAML) $(NCO) scripts/rescale.py
+	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+
+$(HEAP)/bias_PRECT.nc : $(HEAP)/cru_regrid/PRECT.nc $(HEAP)/modern_trace_PRECT_regrid.nc scripts/calculate_bias.py $(XARRAY) $(PYTHON) $(YAML) options.yaml
 	@echo
 	@echo "Calculating bias for variable 'PRECT'..."
 	@$(PYTHON) scripts/calculate_bias.py "PRECT"
 
-$(HEAP)/bias_TREFHT.nc : $(HEAP)/modern_trace_TREFHT_regrid.nc scripts/calculate_bias.py $(XARRAY) $(PYTHON) $(YAML) options.yaml
+$(HEAP)/cru_regrid/TREFHT.nc : cruncep/temperature.nc $(PYTHON) $(YAML) $(NCO) scripts/rescale.py
+	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+
+$(HEAP)/bias_TREFHT.nc : $(HEAP)/cru_regrid/TREFHT.nc $(HEAP)/modern_trace_TREFHT_regrid.nc scripts/calculate_bias.py $(XARRAY) $(PYTHON) $(YAML) options.yaml
 	@echo
 	@echo "Calculating bias for variable 'TREFHT'..."
 	@$(PYTHON) scripts/calculate_bias.py "TREFHT"
