@@ -196,7 +196,7 @@ scripts/calculate_bias.py : $(PYTHON) $(XARRAY) $(YAML) options.yaml
 
 scripts/crop_file.py : $(PYTHON) $(YAML) $(NCO) options.yaml
 
-scripts/rescale.py : $(PYTHON) $(YAML) $(NCO) options.yaml
+scripts/rescale.py : $(PYTHON) $(YAML) $(NCO) options.yaml heap/grid_template.nc
 
 scripts/symlink_trace_orig.py : $(PYTHON) $(YAML) options.yaml
 
@@ -277,6 +277,11 @@ heap/bias_TREFHT.nc : heap/cru_regrid/TREFHT.nc heap/modern_trace_TREFHT_regrid.
 heap/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py
 	@echo
 	@mkdir --parents heap/cropped
+	@$(PYTHON) scripts/crop_file.py $< $@
+
+heap/cropped/%.nc : cruncep/%.nc
+
+heap/grid_template.nc : cruncep/temperature.nc
 	@$(PYTHON) scripts/crop_file.py $< $@
 
 ###############################################################################
