@@ -9,8 +9,6 @@
 # Paths, either absolute or relative to the root of the Git repository.
 # ("~" for home directory and environment variables are allowed.)
 
-trace_orig: "~/data/drivers/trace/" # Directory of original TraCE files.
-
 # Geographic extent of study area.
 region:
   # Longitude: 0° to 360° E
@@ -18,10 +16,7 @@ region:
   # Latitude: -90° to +90° N
   lat: [50, 80]
 
-# Time frame of interest. In negative thousand calendar years before present
-# (-kaBP).
-timeframe: [ -21, -15]
-
+trace_orig: "~/data/drivers/trace/" # Directory of original TraCE files.
 
 ###############################################################################
 ###############################################################################
