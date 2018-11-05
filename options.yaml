@@ -16,7 +16,14 @@ region:
   # Latitude: -90° to +90° N
   lat: [50, 80]
 
-trace_orig: "~/data/drivers/trace/" # Directory of original TraCE files.
+# Interpolation algorithm for regridding
+# (downscaling) the NetCDF files.
+# See here for detailed descriptions:
+# http://www.earthsystemmodeling.org/esmf_releases/public/ESMF_6_3_0rp1/ESMF_refdoc/node3.html#SECTION03020000000000000000
+regrid_algorithm: 'bilinear'
+
+# Directory of original TraCE files.
+trace_orig: "~/data/drivers/trace/"
 
 ###############################################################################
 ###############################################################################

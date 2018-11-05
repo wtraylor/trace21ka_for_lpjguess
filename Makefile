@@ -227,41 +227,14 @@ $(HEAP)/modern_trace_PRECT.nc : $(HEAP)/modern_trace_PRECL.nc $(HEAP)/modern_tra
 ## REGRID MODERN TRACE DATA
 ###############################################################################
 
-# Template NetCDF file for regridding (=downscaling).
-GRID_TEMPL = cruncep/temperature.nc
+$(HEAP)/modern_trace_FSDS_regrid.nc : $(HEAP)/modern_trace_FSDS.nc $(NCO) $(PYTHON) $(YAML) scripts/rescale.py
+	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
-# ERWG interpolation algorithm for downscaling.
-REGRID_ALG = bilinear
+$(HEAP)/modern_trace_PRECT_regrid.nc : $(HEAP)/modern_trace_PRECT.nc $(NCO) $(PYTHON) $(YAML) scripts/rescale.py
+	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
-$(HEAP)/modern_trace_FSDS_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_FSDS.nc $(NCO)
-	@echo
-	@echo "Downscaling modern FSDS file..."
-	@env PATH="$(BIN):$(PATH)" \
-		ncremap \
-		--algorithm="$(REGRID_ALG)" \
-		--template_file="$(GRID_TEMPL)" \
-		--input_file="$(HEAP)/modern_trace_FSDS.nc" \
-		--output_file="$(HEAP)/modern_trace_FSDS_regrid.nc"
-
-$(HEAP)/modern_trace_PRECT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_PRECT.nc $(NCO)
-	@echo
-	@echo "Downscaling modern PRECT file..."
-	@env PATH="$(BIN):$(PATH)" \
-		ncremap \
-		--algorithm="$(REGRID_ALG)" \
-		--template_file="$(GRID_TEMPL)" \
-		--input_file="$(HEAP)/modern_trace_PRECT.nc" \
-		--output_file="$(HEAP)/modern_trace_PRECT_regrid.nc"
-
-$(HEAP)/modern_trace_TREFHT_regrid.nc : $(GRID_TEMPL) $(HEAP)/modern_trace_TREFHT.nc $(NCO)
-	@echo
-	@echo "Downscaling modern TREFHT file..."
-	@env PATH="$(BIN):$(PATH)" \
-		ncremap \
-		--algorithm="$(REGRID_ALG)" \
-		--template_file="$(GRID_TEMPL)" \
-		--input_file="$(HEAP)/modern_trace_TREFHT.nc" \
-		--output_file="$(HEAP)/modern_trace_TREFHT_regrid.nc"
+$(HEAP)/modern_trace_TREFHT_regrid.nc : $(HEAP)/modern_trace_TREFHT.nc $(NCO) $(PYTHON) $(YAML) scripts/rescale.py
+	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 ###############################################################################
 ## CALCULATE BIAS
@@ -309,16 +282,9 @@ $(HEAP)/split/%000000.nc : $(HEAP)/cropped/%.nc $(CDO)
 ###############################################################################
 
 # For every split file, there is a downscaled target.
-$(HEAP)/downscaled/%.nc : $(HEAP)/split/%.nc $(NCO)
-	@echo
+$(HEAP)/downscaled/%.nc : $(HEAP)/split/%.nc $(NCO) $(PYTHON) $(YAML) scripts/rescale.py
 	@mkdir --parents $(HEAP)/downscaled
-	@echo "Regridding '$@'..."
-	@env PATH="$(BIN):$(PATH)" \
-		ncremap \
-		--algorithm="$(REGRID_ALG)" \
-		--template_file="$(GRID_TEMPL)" \
-		--input_file="$@" \
-		--output_file="$<"
+	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 ###############################################################################
 ## CALCULATING PRECC + PRECL = PRECT
