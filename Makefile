@@ -318,45 +318,32 @@ heap/downscaled/%.nc : heap/split/%.nc scripts/rescale.py
 # automatically.
 # TODO: Add rest of PRECT files.
 
+# This "canned rule" applies to all the PRECT files. The first prerequisite is
+# the PRECC file, the second is the PRECL file.
+# This way we save some repetition when defining rules for all PRECT files.
+define PRECT_RULE =
+@env PATH="$(BIN):$(PATH)" \
+	scripts/add_PRECC_PRECL.sh \
+	$(word 1,$^) \
+	$(word 2,$^) \
+	$@
+endef
+
 heap/cropped/trace.01.22000-20001BP.cam2.h0.PRECT.0000101-0200012.nc : heap/cropped/trace.01.22000-20001BP.cam2.h0.PRECC.0000101-0200012.nc heap/cropped/trace.01.22000-20001BP.cam2.h0.PRECL.0000101-0200012.nc scripts/add_PRECC_PRECL.sh
-	@env PATH="$(BIN):$(PATH)" \
-		scripts/add_PRECC_PRECL.sh \
-		heap/cropped/trace.01.22000-20001BP.cam2.h0.PRECC.0000101-0200012.nc \
-		heap/cropped/trace.01.22000-20001BP.cam2.h0.PRECL.0000101-0200012.nc \
-		$@
+	$(PRECT_RULE)
 
 heap/cropped/trace.02.20000-19001BP.cam2.h0.PRECT.0200101-0300012.nc : heap/cropped/trace.02.20000-19001BP.cam2.h0.PRECC.0200101-0300012.nc heap/cropped/trace.02.20000-19001BP.cam2.h0.PRECL.0200101-0300012.nc scripts/add_PRECC_PRECL.sh
-	@env PATH="$(BIN):$(PATH)" \
-		scripts/add_PRECC_PRECL.sh \
-		heap/cropped/trace.02.20000-19001BP.cam2.h0.PRECC.0200101-0300012.nc \
-		heap/cropped/trace.02.20000-19001BP.cam2.h0.PRECL.0200101-0300012.nc \
-		$@
+	$(PRECT_RULE)
 
 heap/cropped/trace.03.19000-18501BP.cam2.h0.PRECT.0300101-0350012.nc : heap/cropped/trace.03.19000-18501BP.cam2.h0.PRECC.0300101-0350012.nc heap/cropped/trace.03.19000-18501BP.cam2.h0.PRECL.0300101-0350012.nc scripts/add_PRECC_PRECL.sh
-	@env PATH="$(BIN):$(PATH)" \
-		scripts/add_PRECC_PRECL.sh \
-		heap/cropped/trace.03.19000-18501BP.cam2.h0.PRECC.0300101-0350012.nc \
-		heap/cropped/trace.03.19000-18501BP.cam2.h0.PRECL.0300101-0350012.nc \
-		$@
+	$(PRECT_RULE)
 
 heap/cropped/trace.04.18500-18401BP.cam2.h0.PRECT.0350101-0360012.nc : heap/cropped/trace.04.18500-18401BP.cam2.h0.PRECC.0350101-0360012.nc heap/cropped/trace.04.18500-18401BP.cam2.h0.PRECL.0350101-0360012.nc scripts/add_PRECC_PRECL.sh
-	@env PATH="$(BIN):$(PATH)" \
-		scripts/add_PRECC_PRECL.sh \
-		heap/cropped/trace.04.18500-18401BP.cam2.h0.PRECC.0350101-0360012.nc \
-		heap/cropped/trace.04.18500-18401BP.cam2.h0.PRECL.0350101-0360012.nc \
-		$@
+	$(PRECT_RULE)
 
 heap/cropped/trace.05.18400-17501BP.cam2.h0.PRECT.0360101-0450012.nc : heap/cropped/trace.05.18400-17501BP.cam2.h0.PRECC.0360101-0450012.nc heap/cropped/trace.05.18400-17501BP.cam2.h0.PRECL.0360101-0450012.nc scripts/add_PRECC_PRECL.sh
-	@env PATH="$(BIN):$(PATH)" \
-		scripts/add_PRECC_PRECL.sh \
-		heap/cropped/trace.05.18400-17501BP.cam2.h0.PRECC.0360101-0450012.nc \
-		heap/cropped/trace.05.18400-17501BP.cam2.h0.PRECL.0360101-0450012.nc \
-		$@
+	$(PRECT_RULE)
 
 heap/cropped/trace.36.400BP-1990CE.cam2.h0.PRECT.2160101-2204012.nc : heap/cropped/trace.36.400BP-1990CE.cam2.h0.PRECC.2160101-2204012.nc heap/cropped/trace.36.400BP-1990CE.cam2.h0.PRECL.2160101-2204012.nc scripts/add_PRECC_PRECL.sh
-	@env PATH="$(BIN):$(PATH)" \
-		scripts/add_PRECC_PRECL.sh \
-		heap/cropped/trace.36.400BP-1990CE.cam2.h0.PRECC.2160101-2204012.nc \
-		heap/cropped/trace.36.400BP-1990CE.cam2.h0.PRECL.2160101-2204012.nc \
-		$@
+	$(PRECT_RULE)
 
