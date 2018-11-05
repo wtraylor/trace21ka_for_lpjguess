@@ -74,6 +74,7 @@ clean :
 	@rm --verbose \
 		heap/bias_*.nc \
 		heap/cropped/trace*.nc \
+		heap/cru_regrid/*.nc \
 		heap/downscaled/**trace*.nc \
 		heap/modern_trace_*.nc \
 		heap/split/**.nc \
@@ -82,6 +83,7 @@ clean :
 		exit 0
 	@rm --dir --verbose \
 		heap/cropped \
+		heap/cru_regrid \
 		heap/downscaled/trace* \
 		heap/downscaled \
 		heap/split/trace* \
