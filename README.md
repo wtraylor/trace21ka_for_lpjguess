@@ -65,6 +65,8 @@ Project Outline
 - [x] Crop TraCE data to specified region.
 - [x] Split dataset into 100 years files.
 - [x] Downscale TraCE dataset to 0.5° grid resolution.
+- [ ] Improve regridding performance by saving und reusing the weight map.
+- [ ] Add option to define custom grid resolution. 0.5° is just very high resolution!
 - [ ] Mask oceans and glaciers, based on ICE-5G.
 - [x] Bias-correct all files.
 - [ ] Calculate wet days, based on modern monthly wet days. Store them as `wet` variable in precipitation file.
