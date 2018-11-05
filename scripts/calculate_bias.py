@@ -52,6 +52,6 @@ else:
     print("Arithmetic operation not defined for variable '%s'." % var)
     sys.exit(1)
 
-bias_file = os.path.join(heap, "bias_%s.nc" % var)
+bias_file = os.path.join("heap", "bias_%s.nc" % var)
 print("Saving bias map to file '%s'." % bias_file)
 bias.to_netcdf(bias_file, mode='w')
