@@ -60,6 +60,7 @@ File Structure
 Project Outline
 ---------------
 
+- [ ] Fix the broken time dimension! It’s all set to zero.
 - [x] Calculate monthly bias for all grid cells against modern CRUNCEP.
 - [x] Calculate `PRECT` as `PRECC + PRECL`.
 - [x] Crop TraCE data to specified region.
