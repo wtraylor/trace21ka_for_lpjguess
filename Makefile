@@ -14,7 +14,7 @@ ALL_ORIG = $(wildcard trace_orig/$(PRECC)) $(wildcard trace_orig/$(PRECL)) $(wil
 ###############################################################################
 
 # Select all CRU files that follow the standard naming and filter then for
-# specific variables.
+# specific variables. We only select the time frame 1901 to 1990.
 
 CRU_ALL = $(shell find cru_orig/ -name 'cru_ts4\.01\.19[0-8]1\.19[1-9]0\.[a-z]*\.dat\.nc\.gz')
 CRU_PRE = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
