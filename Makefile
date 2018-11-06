@@ -218,14 +218,17 @@ scripts/debias.py : $(PYTHON) $(TERMCOLOR) $(XARRAY)
 
 scripts/rescale.py : $(PYTHON) $(TERMCOLOR) $(YAML) $(NCO) options.yaml heap/grid_template.nc
 
-scripts/symlink_trace_orig.py : $(PYTHON) $(TERMCOLOR) $(YAML) options.yaml
+scripts/symlink_orig.py : $(PYTHON) $(TERMCOLOR) $(YAML) options.yaml
 
 ###############################################################################
-## SYMLINK ORIGINAL TRACE FILES
+## SYMLINK ORIGINAL FILES
 ###############################################################################
 
-trace_orig : scripts/symlink_trace_orig.py
-	@$(PYTHON) scripts/symlink_trace_orig.py
+trace_orig : scripts/symlink_orig.py options.yaml
+	@$(PYTHON) scripts/symlink_orig.py 'trace_orig'
+
+cru_orig : scripts/symlink_orig.py options.yaml
+	@$(PYTHON) scripts/symlink_orig.py 'cru_orig'
 
 ###############################################################################
 ## AGGREGATE MODERN TRACE DATA
