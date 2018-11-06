@@ -271,14 +271,12 @@ heap/cru_regrid/PRECT.nc : cruncep/precipitation.nc scripts/rescale.py
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 heap/bias_PRECT.nc : heap/cru_regrid/PRECT.nc heap/modern_trace_PRECT_regrid.nc scripts/calculate_bias.py
-	@echo "Calculating bias for variable 'PRECT'..."
 	@$(PYTHON) scripts/calculate_bias.py "PRECT"
 
 heap/cru_regrid/TREFHT.nc : cruncep/temperature.nc scripts/rescale.py
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 heap/bias_TREFHT.nc : heap/cru_regrid/TREFHT.nc heap/modern_trace_TREFHT_regrid.nc scripts/calculate_bias.py
-	@echo "Calculating bias for variable 'TREFHT'..."
 	@$(PYTHON) scripts/calculate_bias.py "TREFHT"
 
 ###############################################################################

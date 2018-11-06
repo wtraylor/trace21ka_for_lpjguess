@@ -19,6 +19,8 @@ if not os.path.exists(trace_file):
     cprint("Input file does not exist: %s" % trace_file, "red")
     sys.exit(1)
 
+cprint("Calculating bias for variable '%s'..." % var, "green")
+
 # Open and load the file completely. It needs to be in the RAM for calculation.
 trace = xr.open_dataset(trace_file).load()
 
