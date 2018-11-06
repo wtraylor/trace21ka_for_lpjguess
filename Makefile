@@ -159,7 +159,6 @@ CONDA_INSTALLER = Miniconda3-latest-Linux-x86_64.sh
 
 # --timestamping: Only substitute local file if remote file is newer.
 $(CONDA_INSTALLER) :
-	@echo
 	@echo "Downloading Miniconda install script..."
 	@wget --timestamping "https://repo.continuum.io/miniconda/$(CONDA_INSTALLER)"
 	@touch --no-create $(CONDA_INSTALLER)
@@ -168,46 +167,38 @@ $(CONDA_INSTALLER) :
 # -p PREFIX    install prefix, defaults to $PREFIX, must not contain spaces.
 # -u           update an existing installation
 $(BIN)/conda $(BIN)/pip $(PYTHON): $(CONDA_INSTALLER)
-	@echo
 	@echo "Installing Miniconda to '$(MINICONDA)'..."
 	@sh "$(CONDA_INSTALLER)" -u -p "$(MINICONDA)"
 	@touch --no-create $(BIN)/conda $(BIN)/pip $(PYTHON)
 
 # Add all needed NCO binaries here as targets.
 $(NCO) : $(BIN)/conda
-	@echo
 	@echo "Installing NCO locally with Miniconda..."
 	@$(BIN)/conda install -c conda-forge nco
 	@touch --no-create $(NCO)
 
 $(CDO) : $(BIN)/conda
-	@echo
 	@echo "Installing CDO locally with Miniconda..."
 	@$(BIN)/conda install -c conda-forge cdo
 	@touch --no-create $(CDO)
 
 $(NETCDF4) : $(BIN)/pip
-	@echo
 	@$(BIN)/pip install netCDF4
 	@touch --no-create $(NETCDF4)
 
 $(SCIPY) : $(BIN)/pip
-	@echo
 	@$(BIN)/pip install scipy
 	@touch --no-create $(SCIPY)
 
 $(TERMCOLOR) : $(BIN)/pip
-	@echo
 	@$(BIN)/pip install termcolor
 	@touch --no-create $(TERMCOLOR)
 
 $(YAML) : $(BIN)/pip
-	@echo
 	@$(BIN)/pip install pyyaml
 	@touch --no-create $(YAML)
 
 $(XARRAY) : $(BIN)/pip $(NETCDF4) $(SCIPY)
-	@echo
 	@$(BIN)/pip install xarray
 	@touch --no-create $(XARRAY)
 
@@ -241,23 +232,18 @@ trace_orig : scripts/symlink_trace_orig.py
 ###############################################################################
 
 heap/modern_trace_TREFHT.nc : trace_orig/ scripts/aggregate_modern_trace.py
-	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py TREFHT
 
 heap/modern_trace_FSDS.nc : trace_orig/ scripts/aggregate_modern_trace.py
-	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py FSDS
 
 heap/modern_trace_PRECL.nc : trace_orig/ scripts/aggregate_modern_trace.py
-	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py PRECL
 
 heap/modern_trace_PRECC.nc : trace_orig/ scripts/aggregate_modern_trace.py
-	@echo
 	@$(PYTHON) scripts/aggregate_modern_trace.py PRECC
 
 heap/modern_trace_PRECT.nc : heap/modern_trace_PRECL.nc heap/modern_trace_PRECC.nc $(NCO) scripts/add_PRECC_PRECL.sh
-	@echo
 	@env PATH="$(BIN):$(PATH)" \
 		scripts/add_PRECC_PRECL.sh \
 		heap/modern_trace_PRECC.nc \
@@ -269,15 +255,12 @@ heap/modern_trace_PRECT.nc : heap/modern_trace_PRECL.nc heap/modern_trace_PRECC.
 ###############################################################################
 
 heap/modern_trace_FSDS_regrid.nc : heap/modern_trace_FSDS.nc scripts/rescale.py
-	@echo
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 heap/modern_trace_PRECT_regrid.nc : heap/modern_trace_PRECT.nc scripts/rescale.py
-	@echo
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 heap/modern_trace_TREFHT_regrid.nc : heap/modern_trace_TREFHT.nc scripts/rescale.py
-	@echo
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 ###############################################################################
@@ -285,20 +268,16 @@ heap/modern_trace_TREFHT_regrid.nc : heap/modern_trace_TREFHT.nc scripts/rescale
 ###############################################################################
 
 heap/cru_regrid/PRECT.nc : cruncep/precipitation.nc scripts/rescale.py
-	@echo
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 heap/bias_PRECT.nc : heap/cru_regrid/PRECT.nc heap/modern_trace_PRECT_regrid.nc scripts/calculate_bias.py
-	@echo
 	@echo "Calculating bias for variable 'PRECT'..."
 	@$(PYTHON) scripts/calculate_bias.py "PRECT"
 
 heap/cru_regrid/TREFHT.nc : cruncep/temperature.nc scripts/rescale.py
-	@echo
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 heap/bias_TREFHT.nc : heap/cru_regrid/TREFHT.nc heap/modern_trace_TREFHT_regrid.nc scripts/calculate_bias.py
-	@echo
 	@echo "Calculating bias for variable 'TREFHT'..."
 	@$(PYTHON) scripts/calculate_bias.py "TREFHT"
 
@@ -309,7 +288,6 @@ heap/bias_TREFHT.nc : heap/cru_regrid/TREFHT.nc heap/modern_trace_TREFHT_regrid.
 # For each original TraCE file there is a rule to create the corresponding
 # cropped NetCDF file (with the same name) in heap/cropped.
 heap/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py
-	@echo
 	@mkdir --parents heap/cropped
 	@$(PYTHON) scripts/crop_file.py $< $@
 
@@ -329,7 +307,6 @@ heap/grid_template.nc : cruncep/temperature.nc
 # split files is not known beforehand. Therefore, we use the first split file
 # (index 000000) as a representative target for all split files.
 heap/split/%000000.nc : heap/cropped/%.nc $(CDO)
-	@echo
 	@echo "Splitting file '$<' into 100-years slices."
 	@env PATH="$(BIN):$(PATH)" \
 		cdo splitsel,1200 $< $(patsubst %.nc, %, $@)
@@ -341,7 +318,6 @@ heap/split/%000000.nc : heap/cropped/%.nc $(CDO)
 # For every split file, there is a downscaled target.
 heap/downscaled/%.nc : heap/split/%.nc scripts/rescale.py
 	@mkdir --parents heap/downscaled
-	@echo
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 ###############################################################################
