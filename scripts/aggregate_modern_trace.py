@@ -67,3 +67,4 @@ out_file = "modern_trace_" + var + ".nc"
 out_file = os.path.join("heap", out_file)
 print("Writing file '%s'." % out_file)
 dataset.to_netcdf(out_file)
+dataset.close()

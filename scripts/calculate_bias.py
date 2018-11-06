@@ -55,3 +55,6 @@ else:
 bias_file = os.path.join("heap", "bias_%s.nc" % var)
 print("Saving bias map to file '%s'." % bias_file)
 bias.to_netcdf(bias_file, mode='w')
+trace.close()
+cru.close()
+bias.close()
