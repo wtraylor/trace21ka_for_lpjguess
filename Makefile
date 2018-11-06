@@ -263,12 +263,15 @@ heap/modern_trace_PRECT.nc : heap/modern_trace_PRECL.nc heap/modern_trace_PRECC.
 ###############################################################################
 
 heap/modern_trace_FSDS_regrid.nc : heap/modern_trace_FSDS.nc scripts/rescale.py
+	@echo
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 heap/modern_trace_PRECT_regrid.nc : heap/modern_trace_PRECT.nc scripts/rescale.py
+	@echo
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 heap/modern_trace_TREFHT_regrid.nc : heap/modern_trace_TREFHT.nc scripts/rescale.py
+	@echo
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 ###############################################################################
@@ -276,6 +279,7 @@ heap/modern_trace_TREFHT_regrid.nc : heap/modern_trace_TREFHT.nc scripts/rescale
 ###############################################################################
 
 heap/cru_regrid/PRECT.nc : cruncep/precipitation.nc scripts/rescale.py
+	@echo
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 heap/bias_PRECT.nc : heap/cru_regrid/PRECT.nc heap/modern_trace_PRECT_regrid.nc scripts/calculate_bias.py
@@ -284,6 +288,7 @@ heap/bias_PRECT.nc : heap/cru_regrid/PRECT.nc heap/modern_trace_PRECT_regrid.nc 
 	@$(PYTHON) scripts/calculate_bias.py "PRECT"
 
 heap/cru_regrid/TREFHT.nc : cruncep/temperature.nc scripts/rescale.py
+	@echo
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 heap/bias_TREFHT.nc : heap/cru_regrid/TREFHT.nc heap/modern_trace_TREFHT_regrid.nc scripts/calculate_bias.py
@@ -330,6 +335,7 @@ heap/split/%000000.nc : heap/cropped/%.nc $(CDO)
 # For every split file, there is a downscaled target.
 heap/downscaled/%.nc : heap/split/%.nc scripts/rescale.py
 	@mkdir --parents heap/downscaled
+	@echo
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
 ###############################################################################
