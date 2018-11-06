@@ -7,6 +7,8 @@ import os
 import sys
 import xarray as xr
 
+# Name of this script file.
+scriptfile = os.path.basename(__file__) + ": "
 
 def drop_superfluous_trace_vars(data):
     """Drop all unneeded data variables from a TraCE-21ka xarray dataset."""
@@ -43,30 +45,31 @@ def get_monthly_means(trace_file):
 
 # Read command line argument: the TraCE variable.
 if len(sys.argv) != 2:
-    cprint("Please provide the TraCE variable as one command line argument.",
-           "red")
+    cprint(scriptfile + "Please provide the TraCE variable as one command line "
+           "argument.", "red")
     sys.exit(1)
 var = sys.argv[1]
 
 # Find relevant TraCE files of the modern time in a directory.
 
 if not os.path.exists("trace_orig"):
-    cprint("Directory 'trace_orig' doesn’t seem to exist.", "red")
+    cprint(scriptfile + "Directory 'trace_orig' doesn’t seem to exist.", "red")
     sys.exit(1)
 
 # Compose file name of modern TraCE data.
 file_name = "trace.36.400BP-1990CE.cam2.h0.%s.2160101-2204012.nc" % var
 file_name = os.path.abspath(os.path.join("trace_orig", file_name))
 if not os.path.isfile(file_name):
-    cprint("Couldn’t find TraCE file with modern monthly data for "
+    cprint(scriptfile + "Couldn’t find TraCE file with modern monthly data for "
            "variable %s:\n '%s'" % (var, file_name), "red")
     sys.exit(1)
 
 # Calculate averages and write new NetCDF files to heap directory.
-cprint("Aggregating monthly averages from file '%s'." % file_name, "green")
+cprint(scriptfile + "Aggregating monthly averages from file '%s'." % file_name,
+       "green")
 dataset = get_monthly_means(file_name)
 out_file = "modern_trace_" + var + ".nc"
 out_file = os.path.join("heap", out_file)
-cprint("Writing file '%s'." % out_file, "green")
+cprint(scriptfile + "Writing file '%s'." % out_file, "green")
 dataset.to_netcdf(out_file)
 dataset.close()
