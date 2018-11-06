@@ -104,6 +104,7 @@ clean :
 	@rm --verbose \
 		heap/bias_*.nc \
 		heap/cropped/trace*.nc \
+		heap/cru/*.nc \
 		heap/cru_regrid/*.nc \
 		heap/downscaled/**trace*.nc \
 		heap/modern_trace_*.nc \
@@ -113,6 +114,7 @@ clean :
 		exit 0
 	@rm --dir --verbose \
 		heap/cropped \
+		heap/cru \
 		heap/cru_regrid \
 		heap/downscaled/trace* \
 		heap/downscaled \
@@ -240,6 +242,14 @@ trace_orig : scripts/symlink_orig.py options.yaml
 
 cru_orig : scripts/symlink_orig.py options.yaml
 	@$(PYTHON) scripts/symlink_orig.py 'cru_orig'
+
+###############################################################################
+## DECOMPRESS CRU FILES
+###############################################################################
+
+heap/cru/%.nc : cru_orig/%.nc.gz
+	mkdir --parents 'heap/cru'
+	gunzip --decompress --synchronous --stdout $< > $@
 
 ###############################################################################
 ## AGGREGATE MODERN TRACE DATA
