@@ -22,7 +22,7 @@ if not os.path.exists(trace_file):
 cprint("Calculating bias for variable '%s'..." % var, "green")
 
 # Open and load the file completely. It needs to be in the RAM for calculation.
-trace = xr.open_dataset(trace_file).load()
+trace = xr.open_dataset(trace_file, decode_times=False).load()
 
 cru_file = "heap/cru_regrid/%s.nc" % var
 
@@ -32,7 +32,7 @@ if not os.path.exists(cru_file):
 
 # The CRU file needs to be loaded immediately to RAM in order to perform
 # arithmetic operations with the dataeset.
-cru = xr.open_dataset(cru_file).load()
+cru = xr.open_dataset(cru_file, decode_times=False).load()
 
 # The values of the 'time' dimensions of the CRU and the TraCE dataset must
 # match in order to perform calculation. So we just overwrite the values with

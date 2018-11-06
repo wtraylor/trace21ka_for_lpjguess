@@ -23,15 +23,16 @@ if not os.path.isfile(trace_file):
     sys.exit(1)
 
 # The TraCE map as xarray Dataset.
-trace = xr.open_dataset(trace_file)
+trace = xr.open_dataset(trace_file, decode_times=False)
 
 # Find the variable in the TraCE file.
 if 'TREFHT' in trace.data_vars:
     var = 'TREFHT'
 elif 'PRECT' in trace.data_vars:
     var = 'PRECT'
-    else: predrint("debias.py: Could not find known variable in TraCE file: '%s'." %
-                trace_file)
+else:
+    cprint("debias.py: Could not find known variable in TraCE file: '%s'." %
+           trace_file, "red")
     sys.exit(1)
 
 bias_file = "heap/bias_%s.nc" % var
@@ -41,7 +42,7 @@ if not os.path.isfile(bias_file):
     sys.exit(1)
 
 # The bias map as xarray Dataset.
-bias = xr.open_dataarray(bias_file).load()
+bias = xr.open_dataarray(bias_file, decode_times=False).load()
 
 # How many years are in the monthly TraCE file?
 years = len(trace[var]) // 12
