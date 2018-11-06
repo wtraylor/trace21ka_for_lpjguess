@@ -105,6 +105,7 @@ clean :
 		heap/bias_*.nc \
 		heap/cropped/trace*.nc \
 		heap/cru/*.nc \
+		heap/cru_cat/*.nc \
 		heap/cru_regrid/*.nc \
 		heap/downscaled/**trace*.nc \
 		heap/modern_trace_*.nc \
@@ -115,6 +116,7 @@ clean :
 	@rm --dir --verbose \
 		heap/cropped \
 		heap/cru \
+		heap/cru_cat \
 		heap/cru_regrid \
 		heap/downscaled/trace* \
 		heap/downscaled \
@@ -248,8 +250,30 @@ cru_orig : scripts/symlink_orig.py options.yaml
 ###############################################################################
 
 heap/cru/%.nc : cru_orig/%.nc.gz
-	mkdir --parents 'heap/cru'
+	@mkdir --parents 'heap/cru'
 	gunzip --decompress --synchronous --stdout $< > $@
+
+###############################################################################
+## CONCATENATE AND AGGREGATE CRU FILES
+###############################################################################
+
+heap/cru_cat/pre.nc : $(patsubst cru_orig/%.nc.gz, heap/cru/%.nc, $(CRU_PRE)) $(NCO)
+	@mkdir --parents 'heap/cru_cat'
+	@echo "Concatenating CRU precipitation..."
+	@env PATH="$(BIN):$(PATH)" \
+	  ncrcat $(filter heap/cru/%, $^) $@
+
+heap/cru_cat/tmp.nc : $(patsubst cru_orig/%.nc.gz, heap/cru/%.nc, $(CRU_TMP)) $(NCO)
+	@mkdir --parents 'heap/cru_cat'
+	@echo "Concatenating CRU temperature..."
+	@env PATH="$(BIN):$(PATH)" \
+	  ncrcat $(filter heap/cru/%, $^) $@
+
+heap/cru_cat/wet.nc : $(patsubst cru_orig/%.nc.gz, heap/cru/%.nc, $(CRU_WET)) $(NCO)
+	@mkdir --parents 'heap/cru_cat'
+	@echo "Concatenating CRU wet days..."
+	@env PATH="$(BIN):$(PATH)" \
+	  ncrcat $(filter heap/cru/%, $^) $@
 
 ###############################################################################
 ## AGGREGATE MODERN TRACE DATA
