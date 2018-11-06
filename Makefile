@@ -138,7 +138,7 @@ PYPKG = $(MINICONDA)/lib/python3.7/site-packages/
 # whole package to check if it’s installed.
 NETCDF4 = $(PYPKG)/netCDF4/__init__.py
 SCIPY = $(PYPKG)/scipy/__init__.py
-TERMCOLOR = $(PYPKG)/termcolor/__init__.py
+TERMCOLOR = $(PYPKG)/termcolor.py
 XARRAY = $(PYPKG)/xarray/__init__.py
 YAML = $(PYPKG)/yaml/__init__.py
 
