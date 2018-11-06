@@ -13,6 +13,17 @@ ALL_ORIG = $(wildcard trace_orig/$(PRECC)) $(wildcard trace_orig/$(PRECL)) $(wil
 ## TARGET FILES
 ###############################################################################
 
+# Select all CRU files that follow the standard naming and filter then for
+# specific variables.
+
+CRU_ALL = $(shell find cru_orig/ -name 'cru_ts4\.01\.19[0-8]1\.19[1-9]0\.[a-z]*\.dat\.nc\.gz')
+CRU_PRE = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
+		  grep 'pre')
+CRU_TMP = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
+		  grep 'tmp')
+CRU_WET = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
+		  grep 'wet')
+
 # For every original TraCE file there is one cropped file.
 # We need to calculate PRECT files from PRECC and PRECL. For that, we first
 # create a list of cropped files with PRECC and PRECL (and without PRECT),
