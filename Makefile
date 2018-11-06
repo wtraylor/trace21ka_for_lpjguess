@@ -10,13 +10,8 @@ TREFHT := trace.*TREFHT*.nc
 ALL_ORIG = $(wildcard trace_orig/$(PRECC)) $(wildcard trace_orig/$(PRECL)) $(wildcard trace_orig/$(TREFHT))
 
 ###############################################################################
-## PHONY TARGETS
+## TARGET FILES
 ###############################################################################
-
-.PHONY: all
-# TODO: This is only a stub so far.
-all :
-	@echo "Not implemented yet."
 
 # For every original TraCE file there is one cropped file.
 # We need to calculate PRECT files from PRECC and PRECL. For that, we first
@@ -55,11 +50,26 @@ DEBIASED_PRECT = $(shell echo $(DOWNSCALED_FILES) | \
 								 sed 's/ /\n/g' | \
 								 grep 'PRECT')
 
-.PHONY: downscale
+###############################################################################
+## PHONY TARGETS
+###############################################################################
+
 # Splitting creates files (*000000.nc, *000001.nc,...) that are not known
 # before actually executing the splitting. Therefore, the `SPLIT_FILES` are
-# first dependency. After they are created, the wildcard in `DOWNSCALED_FILES`
-# variable is parsed correctly.
+# first dependency for any rules after splitting. After the split files are
+# created, the wildcards in the variables `DOWNSCALED_FILES`,
+# `DEBIASED_TREFHT`, etc. are parsed correctly.
+
+.PHONY: all
+# TODO: This is only a stub so far.
+all : $(OUTPUT_FILES)
+	@echo "Not implemented yet."
+
+.PHONY: debias
+debias : $(SPLIT_FILES) $(DEBIASED_TREFHT) $(DEBIASED_PRECT)
+	@echo "Debiasing finished."
+
+.PHONY: downscale
 downscale : $(SPLIT_FILES) $(DOWNSCALED_FILES)
 	@echo "Downscaling finished."
 
