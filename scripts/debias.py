@@ -2,21 +2,24 @@
 
 # Usage: debias.py <input> <output>
 
+from termcolor import cprint
+import numpy as np
 import os
 import sys
 import xarray as xr
 
 # Read command line argument.
 if len(sys.argv) != 3:
-    print("Usage: debias.py <input> <output>")
+    cprint("Usage: debias.py <input> <output>", "red")
     sys.exit(1)
 trace_file = sys.argv[1]
 out_file = sys.argv[2]
 
-print("debias.py: '%s' => '%s'" % (trace_file, out_file))
+cprint("debias.py: '%s' => '%s'" % (trace_file, out_file), "green")
 
 if not os.path.isfile(trace_file):
-    print("debias.py: Input TraCE file does not exist: '%s'" % trace_file)
+    cprint("debias.py: Input TraCE file does not exist: '%s'" % trace_file,
+           "red")
     sys.exit(1)
 
 # The TraCE map as xarray Dataset.
@@ -27,15 +30,14 @@ if 'TREFHT' in trace.data_vars:
     var = 'TREFHT'
 elif 'PRECT' in trace.data_vars:
     var = 'PRECT'
-else:
-    print("debias.py: Could not find known variable in TraCE file: '%s'." %
-          trace_file)
+    else: predrint("debias.py: Could not find known variable in TraCE file: '%s'." %
+                trace_file)
     sys.exit(1)
 
 bias_file = "heap/bias_%s.nc" % var
 
 if not os.path.isfile(bias_file):
-    print("debias.py: Bias file does not exist: '%s'" % bias_file)
+    cprint("debias.py: Bias file does not exist: '%s'" % bias_file, "red")
     sys.exit(1)
 
 # The bias map as xarray Dataset.
@@ -57,7 +59,8 @@ if var == "TREFHT":
 elif var == "PRECT":
     output = trace[var] * bias
 else:
-    print("debias.py: No bias correction defined for variable '%s'." % var)
+    cprint("debias.py: No bias correction defined for variable '%s'." % var,
+           "red")
     sys.exit(1)
 
 if not os.path.isdir("heap/debiased"):

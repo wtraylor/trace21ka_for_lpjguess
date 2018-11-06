@@ -138,6 +138,7 @@ PYPKG = $(MINICONDA)/lib/python3.7/site-packages/
 # whole package to check if it’s installed.
 NETCDF4 = $(PYPKG)/netCDF4/__init__.py
 SCIPY = $(PYPKG)/scipy/__init__.py
+TERMCOLOR = $(PYPKG)/termcolor/__init__.py
 XARRAY = $(PYPKG)/xarray/__init__.py
 YAML = $(PYPKG)/yaml/__init__.py
 
@@ -195,6 +196,11 @@ $(SCIPY) : $(BIN)/pip
 	@$(BIN)/pip install scipy
 	@touch --no-create $(SCIPY)
 
+$(TERMCOLOR) : $(BIN)/pip
+	@echo
+	@$(BIN)/pip install termcolor
+	@touch --no-create $(TERMCOLOR)
+
 $(YAML) : $(BIN)/pip
 	@echo
 	@$(BIN)/pip install pyyaml
@@ -211,17 +217,17 @@ $(XARRAY) : $(BIN)/pip $(NETCDF4) $(SCIPY)
 
 scripts/add_PRECC_PRECL.sh : $(NCO)
 
-scripts/aggregate_modern_trace.py : $(PYTHON) $(XARRAY)
+scripts/aggregate_modern_trace.py : $(PYTHON) $(TERMCOLOR) $(XARRAY)
 
-scripts/calculate_bias.py : $(PYTHON) $(XARRAY) $(YAML) options.yaml
+scripts/calculate_bias.py : $(PYTHON) $(TERMCOLOR) $(XARRAY) $(YAML) options.yaml
 
-scripts/crop_file.py : $(PYTHON) $(YAML) $(NCO) options.yaml
+scripts/crop_file.py : $(PYTHON) $(TERMCOLOR) $(YAML) $(NCO) options.yaml
 
-scripts/debias.py : $(PYTHON) $(XARRAY)
+scripts/debias.py : $(PYTHON) $(TERMCOLOR) $(XARRAY)
 
-scripts/rescale.py : $(PYTHON) $(YAML) $(NCO) options.yaml heap/grid_template.nc
+scripts/rescale.py : $(PYTHON) $(TERMCOLOR) $(YAML) $(NCO) options.yaml heap/grid_template.nc
 
-scripts/symlink_trace_orig.py : $(PYTHON) $(YAML) options.yaml
+scripts/symlink_trace_orig.py : $(PYTHON) $(TERMCOLOR) $(YAML) options.yaml
 
 ###############################################################################
 ## SYMLINK ORIGINAL TRACE FILES

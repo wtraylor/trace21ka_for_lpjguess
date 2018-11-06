@@ -1,5 +1,6 @@
 #!/bin/python
 
+from termcolor import cprint
 import os
 import sys
 import yaml
@@ -12,8 +13,8 @@ import yaml
 trace_orig = yaml.load(open("options.yaml"))["trace_orig"]
 
 if trace_orig == "":
-    print("Please define the path to the original TraCE-21ka files under "
-          "'trace_orig' in 'options.yaml'.")
+    cprint("Please define the path to the original TraCE-21ka files under "
+           "'trace_orig' in 'options.yaml'.", "red")
     sys.exit(1)
 
 # Expand path of the user-selected option.
@@ -22,8 +23,8 @@ trace_orig = os.path.expandvars(trace_orig)
 trace_orig = os.path.abspath(trace_orig)
 
 if not os.path.exists(trace_orig):
-    print("The directory for 'trace_orig' as defined in options.yaml does",
-          "not exist: '%s'" % trace_orig)
+    cprint("The directory for 'trace_orig' as defined in options.yaml does",
+           "not exist: '%s'" % trace_orig, "red")
     sys.exit(1)
 
 if os.path.islink("trace_orig"):
@@ -32,18 +33,18 @@ if os.path.islink("trace_orig"):
     # We will just replace it.
     os.remove("trace_orig")
 elif os.path.isdir("trace_orig"):
-    print("'trace_orig' is an existing subdirectory.")
-    print("I cannot create a symbolic link there. Please remove the "
-          "directory: '%s'" % os.path.abspath("trace_orig"))
+    cprint("'trace_orig' is an existing subdirectory.", "red")
+    cprint("I cannot create a symbolic link there. Please remove the "
+           "directory: '%s'" % os.path.abspath("trace_orig"), "red")
     sys.exit(1)
 elif os.path.isfile("trace_orig"):
-    print("'trace_orig' is an existing file.")
-    print("I cannot create a symbolic link there. Please remove the "
-          "file: '%s'" % os.path.abspath("trace_orig"))
+    cprint("'trace_orig' is an existing file.", "red")
+    cprint("I cannot create a symbolic link there. Please remove the "
+           "file: '%s'" % os.path.abspath("trace_orig"), "red")
     sys.exit(1)
 
 # Until here, the script has exited if we don’t need a new symbolic link.
 
-print("Creating symbolic link from '%s' to subdirectory 'trace_orig'."
-      % trace_orig)
+cprint("Creating symbolic link from '%s' to subdirectory 'trace_orig'."
+       % trace_orig, "green")
 os.symlink(trace_orig, os.path.abspath("trace_orig"))
