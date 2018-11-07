@@ -69,7 +69,7 @@ nc_attributes:
     units: 'count'
 
 # Variables in the CRU NetCDF files as they correspond to the TraCE-21ka
-# variables.
+# variables. The CRU files are also named like their variables.
 cru_vars:
   PRECT: 'pre'
   TREFHT: 'tmp'
