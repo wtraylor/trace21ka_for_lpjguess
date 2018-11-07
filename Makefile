@@ -105,6 +105,7 @@ clean :
 		heap/bias_*.nc \
 		heap/cropped/trace*.nc \
 		heap/cru_cat/*.nc \
+		heap/cru_mean/*.nc \
 		heap/cru_orig/*.nc \
 		heap/cru_regrid/*.nc \
 		heap/downscaled/**trace*.nc \
@@ -116,6 +117,7 @@ clean :
 	@rm --dir --verbose \
 		heap/cropped \
 		heap/cru_cat \
+		heap/cru_mean \
 		heap/cru_orig \
 		heap/cru_regrid \
 		heap/downscaled/trace* \
@@ -274,6 +276,18 @@ heap/cru_cat/wet.nc : $(patsubst cru_orig/%.nc.gz, heap/cru_orig/%.nc, $(CRU_WET
 	@echo "Concatenating CRU wet days..."
 	@env PATH="$(BIN):$(PATH)" \
 	  ncrcat $(filter heap/cru_orig/%, $^) $@
+
+###############################################################################
+## AGGREGATE CRU FILES
+###############################################################################
+
+# Calculate the monthly averages over all years so that we have only 12 values
+# in each file.
+
+heap/cru_mean/%.nc : heap/cru_cat/%.nc
+	@mkdir --parents 'heap/cru_mean'
+	@env PATH="$(BIN):$(PATH)" \
+		cdo ymonmean $< $@
 
 ###############################################################################
 ## AGGREGATE MODERN TRACE DATA
