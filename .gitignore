@@ -1,4 +1,4 @@
-# The default directory for the original TraCE-21ka files (as folder and as symbolic link):
+# The directory or symbolic link for the original TraCE-21ka files:
 trace_orig
 trace_orig/
 
