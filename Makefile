@@ -290,6 +290,13 @@ heap/cru_mean/%.nc : heap/cru_cat/%.nc
 		cdo ymonmean $< $@
 
 ###############################################################################
+## REGRID CRU FILES
+###############################################################################
+
+heap/cru_regrid/%.nc : heap/cru_mean/%.nc scripts/rescale.py
+	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+
+###############################################################################
 ## AGGREGATE MODERN TRACE DATA
 ###############################################################################
 
@@ -329,16 +336,10 @@ heap/modern_trace_TREFHT_regrid.nc : heap/modern_trace_TREFHT.nc scripts/rescale
 ## CALCULATE BIAS
 ###############################################################################
 
-heap/cru_regrid/PRECT.nc : cruncep/precipitation.nc scripts/rescale.py
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
-
-heap/bias_PRECT.nc : heap/cru_regrid/PRECT.nc heap/modern_trace_PRECT_regrid.nc scripts/calculate_bias.py
+heap/bias_PRECT.nc : heap/cru_regrid/pre.nc heap/modern_trace_PRECT_regrid.nc scripts/calculate_bias.py
 	@$(PYTHON) scripts/calculate_bias.py "PRECT"
 
-heap/cru_regrid/TREFHT.nc : cruncep/temperature.nc scripts/rescale.py
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
-
-heap/bias_TREFHT.nc : heap/cru_regrid/TREFHT.nc heap/modern_trace_TREFHT_regrid.nc scripts/calculate_bias.py
+heap/bias_TREFHT.nc : heap/cru_regrid/tmp.nc heap/modern_trace_TREFHT_regrid.nc scripts/calculate_bias.py
 	@$(PYTHON) scripts/calculate_bias.py "TREFHT"
 
 ###############################################################################
@@ -351,9 +352,7 @@ heap/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py
 	@mkdir --parents heap/cropped
 	@$(PYTHON) scripts/crop_file.py $< $@
 
-heap/cropped/%.nc : cruncep/%.nc
-
-heap/grid_template.nc : cruncep/temperature.nc
+heap/grid_template.nc : heap/cru_mean/temperature.nc
 	@$(PYTHON) scripts/crop_file.py $< $@
 
 ###############################################################################

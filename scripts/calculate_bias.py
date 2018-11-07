@@ -28,10 +28,17 @@ cprint(scriptfile + "Variable '%s'..." % var, "green")
 # Open and load the file completely. It needs to be in the RAM for calculation.
 trace = xr.open_dataset(trace_file, decode_times=False).load()
 
-cru_file = "heap/cru_regrid/%s.nc" % var
+# The CRU variables corresponding to the TraCE variables.
+cru_vars = yaml.load(open("options.yaml"))["cru_vars"]
+
+if not var in cru_vars:
+    cprint(scriptfile + "Variable '%s' not mapped to a CRU variables." % var)
+    sys.exit(1)
+
+cru_file = "heap/cru_regrid/%s.nc" % cru_vars[var]
 
 if not os.path.exists(cru_file):
-    cprint(scriptfile + "CRUNCEP file is missing: %s" % cru_file, "red")
+    cprint(scriptfile + "CRU file is missing: %s" % cru_file, "red")
     sys.exit(1)
 
 # The CRU file needs to be loaded immediately to RAM in order to perform
@@ -40,12 +47,11 @@ cru = xr.open_dataset(cru_file, decode_times=False).load()
 
 # The values of the 'time' dimensions of the CRU and the TraCE dataset must
 # match in order to perform calculation. So we just overwrite the values with
-# 0 to 11 as the month numbers, assuming that the CRUNCEP record also starts
+# 0 to 11 as the month numbers, assuming that the CRU record also starts
 # with January.
 cru["time"].values = [i for i in range(12)]
 
 # Rename the variable in the CRU file to the TraCE variable name.
-cru_vars = yaml.load(open("options.yaml"))["cru_vars"]
 if var not in cru_vars:
     cprint(scriptfile + "Variable '%s' is not in 'cru_vars' in options.yaml." %
            var, "red")
