@@ -286,6 +286,8 @@ heap/cru_cat/wet.nc : $(patsubst cru_orig/%.nc.gz, heap/cru_orig/%.nc, $(CRU_WET
 
 heap/cru_mean/%.nc : heap/cru_cat/%.nc
 	@mkdir --parents 'heap/cru_mean'
+	@echo "Calculating monthly means over total time period in CRU:"
+	@echo "$< => $@"
 	@env PATH="$(BIN):$(PATH)" \
 		cdo ymonmean $< $@
 
@@ -352,7 +354,7 @@ heap/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py
 	@mkdir --parents heap/cropped
 	@$(PYTHON) scripts/crop_file.py $< $@
 
-heap/grid_template.nc : heap/cru_mean/temperature.nc
+heap/grid_template.nc : heap/cru_mean/tmp.nc
 	@$(PYTHON) scripts/crop_file.py $< $@
 
 ###############################################################################
