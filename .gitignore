@@ -2,6 +2,10 @@
 trace_orig
 trace_orig/
 
+# The directory or symbolic link for the original CRU files:
+cru_orig
+cru_orig/
+
 heap
 heap/
 
