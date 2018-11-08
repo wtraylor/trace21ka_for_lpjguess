@@ -409,6 +409,7 @@ heap/grid_template.nc : heap/cru_mean/tmp.nc
 # split files is not known beforehand. Therefore, we use the first split file
 # (index 000000) as a representative target for all split files.
 heap/split/%000000.nc : heap/cropped/%.nc $(CDO)
+	@mkdir --parents heap/split
 	@echo "Splitting file '$<' into 100-years slices."
 	@env PATH="$(BIN):$(PATH)" \
 		cdo splitsel,1200 $< $(patsubst %.nc, %, $@)
