@@ -2,12 +2,17 @@
 cru_orig
 cru_orig/
 
+# The directory or symbolic link for temporary files:
+heap
+heap/
+
 # The directory or symbolic link for the original TraCE-21ka files:
 trace_orig
 trace_orig/
 
-heap
-heap/
+# The directory or symbolic link for output files:
+output
+output/
 
 /Miniconda3-latest-Linux-x86_64.sh
 /miniconda3/

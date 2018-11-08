@@ -15,14 +15,24 @@ scriptfile = os.path.basename(__file__) + ": "
 # The option 'trace_orig' defined in 'options.yaml' is an absolute or relative
 # path. If it already points to the subfolder 'trace_orig', an existing symlink
 # or directory is expected.
-# The same applies to the CRU files.
+# The same applies to the CRU files and other directories defined in
+# 'options.yaml'.
 
 
 def create_symlink(dest):
     """
     Create a symbolic link `dest` as relative path, as defined in options.yaml
     """
-    orig = yaml.load(open("options.yaml"))[dest]
+    orig = yaml.load(open("options.yaml"))["directories"][dest]
+
+    if dest in ["cru_orig", "trace_orig"]:
+        is_input = True
+    elif dest in ["output", "heap"]:
+        is_input = False
+    else:
+        cprint(scriptfile +
+               "It is not specified whether '%s' is input or output." % dest)
+        sys.exit(1)
 
     if orig == "":
         cprint(scriptfile +
@@ -37,9 +47,14 @@ def create_symlink(dest):
 
     if not os.path.exists(orig):
         cprint(scriptfile +
-               "The directory for '%s' as defined in options.yaml does not "
-               "exist: '%s'" % (dest, orig), "red")
-        sys.exit(1)
+               "The directory for '%s' as defined in options.yaml does "
+               "not exist: '%s'" % (dest, orig), "red")
+        if is_input:
+            cprint("I cannot proceed without that input directory.", "red")
+            sys.exit(1)
+        else:
+            cprint("I will create that directory.", "green")
+            os.makedirs(orig)
 
     if os.path.islink(dest):
         # The symlink `dest` must have been created by this script or by the

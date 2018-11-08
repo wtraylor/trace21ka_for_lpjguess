@@ -16,7 +16,7 @@ ALL_ORIG = $(wildcard trace_orig/$(PRECC)) $(wildcard trace_orig/$(PRECL)) $(wil
 # Select all CRU files that follow the standard naming and filter then for
 # specific variables. We only select the time frame 1901 to 1990.
 
-CRU_ALL = $(shell find cru_orig/ -name 'cru_ts4\.01\.19[0-8]1\.19[1-9]0\.[a-z]*\.dat\.nc\.gz')
+CRU_ALL = $(shell find cru_orig/ -name 'cru_ts4\.01\.19[0-8]1\.19[1-9]0\.[a-z]*\.dat\.nc\.gz' 2>/dev/null)
 CRU_PRE = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
 		  grep 'pre')
 CRU_TMP = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
@@ -129,11 +129,12 @@ clean :
 		heap/debiased \
 		heap/downscaled \
 		heap/split \
-		heap \
 		2>/dev/null; \
 		exit 0
 	@rm --verbose \
 		cru_orig \
+		heap \
+		output \
 		trace_orig \
 		2>/dev/null; \
 		exit 0
@@ -242,17 +243,23 @@ scripts/debias.py : $(PYTHON) $(TERMCOLOR) $(XARRAY)
 
 scripts/rescale.py : $(PYTHON) $(TERMCOLOR) $(YAML) $(NCO) options.yaml heap/grid_template.nc
 
-scripts/symlink_orig.py : $(PYTHON) $(TERMCOLOR) $(YAML) options.yaml
+scripts/symlink_dir.py : $(PYTHON) $(TERMCOLOR) $(YAML) options.yaml
 
 ###############################################################################
-## SYMLINK ORIGINAL FILES
+## SYMLINK INPUT & OUTPUT DIRECTORIES
 ###############################################################################
 
-cru_orig : scripts/symlink_orig.py options.yaml
-	@$(PYTHON) scripts/symlink_orig.py 'cru_orig'
+cru_orig : scripts/symlink_dir.py options.yaml
+	@$(PYTHON) scripts/symlink_dir.py 'cru_orig'
 
-trace_orig : scripts/symlink_orig.py options.yaml
-	@$(PYTHON) scripts/symlink_orig.py 'trace_orig'
+heap : scripts/symlink_dir.py options.yaml
+	@$(PYTHON) scripts/symlink_dir.py 'heap'
+
+output : scripts/symlink_dir.py options.yaml
+	@$(PYTHON) scripts/symlink_dir.py 'output'
+
+trace_orig : scripts/symlink_dir.py options.yaml
+	@$(PYTHON) scripts/symlink_dir.py 'trace_orig'
 
 ###############################################################################
 ## DECOMPRESS CRU FILES
