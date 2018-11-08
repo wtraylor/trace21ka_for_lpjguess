@@ -23,10 +23,10 @@ region:
 regrid_algorithm: 'bilinear'
 
 # Directory of original TraCE files.
-trace_orig: "~/data/trace/"
+trace_orig: "/mnt/exthdd/data/trace"
 
 # Directory of original CRU files.
-cru_orig: "~/data/cru_ts4.01/"
+cru_orig: "/mnt/exthdd/data/cru_ts4.01"
 
 ###############################################################################
 ###############################################################################
