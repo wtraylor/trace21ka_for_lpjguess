@@ -59,8 +59,11 @@ def create_symlink(dest):
     if os.path.islink(dest):
         # The symlink `dest` must have been created by this script or by the
         # user manually (`ln -s ...`).
-        # We will just replace it.
-        os.remove(dest)
+        # We will just replace it if it is not pointing to `origin`.
+        if os.readlink(dest) != orig:
+            os.remove(dest)
+        else:
+            sys.exit(0) # Nothing to do.
     elif os.path.isdir(dest):
         cprint(scriptfile + "'%s' is an existing subdirectory." % dest, "red")
         cprint("I cannot create a symbolic link there. Please remove the "
