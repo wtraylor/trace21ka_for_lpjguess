@@ -426,10 +426,10 @@ heap/downscaled/%.nc : heap/split/%.nc scripts/rescale.py
 ## DEBIAS TRACE FILES
 ###############################################################################
 
-$(DEBIASED_TREFHT) : heap/debiased/%.nc : heap/downscaled/%.nc heap/bias_TREFHT.nc scripts/debias.py
+$(DEBIASED_PRECT) : heap/debiased/%.nc : heap/downscaled/%.nc heap/bias_PRECT.nc scripts/debias.py
 	@$(PYTHON) scripts/debias.py $< $@
 
-$(DEBIASED_PRECT) : heap/debiased/%.nc : heap/downscaled/%.nc heap/bias_PRECT.nc scripts/debias.py
+$(DEBIASED_TREFHT) : heap/debiased/%.nc : heap/downscaled/%.nc heap/bias_TREFHT.nc scripts/debias.py
 	@$(PYTHON) scripts/debias.py $< $@
 
 ###############################################################################
