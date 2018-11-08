@@ -15,14 +15,41 @@ ALL_ORIG = $(wildcard trace_orig/$(PRECC)) $(wildcard trace_orig/$(PRECL)) $(wil
 
 # Select all CRU files that follow the standard naming and filter then for
 # specific variables. We only select the time frame 1901 to 1990.
-
-CRU_ALL = $(shell find cru_orig/ -name 'cru_ts4\.01\.19[0-8]1\.19[1-9]0\.[a-z]*\.dat\.nc\.gz' 2>/dev/null)
+# The command to find all relevant zipped CRU files is this:
+# `find cru_orig/ -name 'cru_ts4\.01\.19[0-8]1\.19[1-9]0\.[a-z]*\.dat\.nc\.gz'`
+CRU_ALL = cru_orig/cru_ts4.01.1921.1930.pre.dat.nc.gz \
+					cru_orig/cru_ts4.01.1941.1950.wet.dat.nc.gz \
+					cru_orig/cru_ts4.01.1921.1930.tmp.dat.nc.gz \
+					cru_orig/cru_ts4.01.1931.1940.pre.dat.nc.gz \
+					cru_orig/cru_ts4.01.1901.1910.tmp.dat.nc.gz \
+					cru_orig/cru_ts4.01.1911.1920.pre.dat.nc.gz \
+					cru_orig/cru_ts4.01.1961.1970.tmp.dat.nc.gz \
+					cru_orig/cru_ts4.01.1931.1940.tmp.dat.nc.gz \
+					cru_orig/cru_ts4.01.1921.1930.wet.dat.nc.gz \
+					cru_orig/cru_ts4.01.1971.1980.wet.dat.nc.gz \
+					cru_orig/cru_ts4.01.1951.1960.tmp.dat.nc.gz \
+					cru_orig/cru_ts4.01.1911.1920.tmp.dat.nc.gz \
+					cru_orig/cru_ts4.01.1971.1980.tmp.dat.nc.gz \
+					cru_orig/cru_ts4.01.1981.1990.tmp.dat.nc.gz \
+					cru_orig/cru_ts4.01.1951.1960.wet.dat.nc.gz \
+					cru_orig/cru_ts4.01.1981.1990.pre.dat.nc.gz \
+					cru_orig/cru_ts4.01.1901.1910.pre.dat.nc.gz \
+					cru_orig/cru_ts4.01.1981.1990.wet.dat.nc.gz \
+					cru_orig/cru_ts4.01.1941.1950.tmp.dat.nc.gz \
+					cru_orig/cru_ts4.01.1901.1910.wet.dat.nc.gz \
+					cru_orig/cru_ts4.01.1941.1950.pre.dat.nc.gz \
+					cru_orig/cru_ts4.01.1911.1920.wet.dat.nc.gz \
+					cru_orig/cru_ts4.01.1931.1940.wet.dat.nc.gz \
+					cru_orig/cru_ts4.01.1951.1960.pre.dat.nc.gz \
+					cru_orig/cru_ts4.01.1961.1970.wet.dat.nc.gz \
+					cru_orig/cru_ts4.01.1971.1980.pre.dat.nc.gz \
+					cru_orig/cru_ts4.01.1961.1970.pre.dat.nc.gz
 CRU_PRE = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
-		  grep 'pre')
+					grep 'pre')
 CRU_TMP = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
-		  grep 'tmp')
+					grep 'tmp')
 CRU_WET = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
-		  grep 'wet')
+					grep 'wet')
 
 # For every original TraCE file there is one cropped file.
 # We need to calculate PRECT files from PRECC and PRECL. For that, we first
@@ -273,19 +300,19 @@ heap/cru_orig/%.nc : cru_orig/%.nc.gz
 ## CONCATENATE AND AGGREGATE CRU FILES
 ###############################################################################
 
-heap/cru_cat/pre.nc : $(patsubst cru_orig/%.nc.gz, heap/cru_orig/%.nc, $(CRU_PRE)) $(NCO)
+heap/cru_cat/pre.nc : cru_orig $(patsubst cru_orig/%.nc.gz, heap/cru_orig/%.nc, $(CRU_PRE)) $(NCO)
 	@mkdir --parents 'heap/cru_cat'
 	@echo "Concatenating CRU precipitation..."
 	@env PATH="$(BIN):$(PATH)" \
 	  ncrcat $(filter heap/cru_orig/%, $^) $@
 
-heap/cru_cat/tmp.nc : $(patsubst cru_orig/%.nc.gz, heap/cru_orig/%.nc, $(CRU_TMP)) $(NCO)
+heap/cru_cat/tmp.nc : cru_orig $(patsubst cru_orig/%.nc.gz, heap/cru_orig/%.nc, $(CRU_TMP)) $(NCO)
 	@mkdir --parents 'heap/cru_cat'
 	@echo "Concatenating CRU temperature..."
 	@env PATH="$(BIN):$(PATH)" \
 	  ncrcat $(filter heap/cru_orig/%, $^) $@
 
-heap/cru_cat/wet.nc : $(patsubst cru_orig/%.nc.gz, heap/cru_orig/%.nc, $(CRU_WET)) $(NCO)
+heap/cru_cat/wet.nc : cru_orig $(patsubst cru_orig/%.nc.gz, heap/cru_orig/%.nc, $(CRU_WET)) $(NCO)
 	@mkdir --parents 'heap/cru_cat'
 	@echo "Concatenating CRU wet days..."
 	@env PATH="$(BIN):$(PATH)" \
@@ -316,16 +343,16 @@ heap/cru_regrid/%.nc : heap/cru_mean/%.nc scripts/rescale.py
 ## AGGREGATE MODERN TRACE DATA
 ###############################################################################
 
-heap/modern_trace_TREFHT.nc : trace_orig/ scripts/aggregate_modern_trace.py
+heap/modern_trace_TREFHT.nc : trace_orig scripts/aggregate_modern_trace.py
 	@$(PYTHON) scripts/aggregate_modern_trace.py TREFHT
 
-heap/modern_trace_FSDS.nc : trace_orig/ scripts/aggregate_modern_trace.py
+heap/modern_trace_FSDS.nc : trace_orig scripts/aggregate_modern_trace.py
 	@$(PYTHON) scripts/aggregate_modern_trace.py FSDS
 
-heap/modern_trace_PRECL.nc : trace_orig/ scripts/aggregate_modern_trace.py
+heap/modern_trace_PRECL.nc : trace_orig scripts/aggregate_modern_trace.py
 	@$(PYTHON) scripts/aggregate_modern_trace.py PRECL
 
-heap/modern_trace_PRECC.nc : trace_orig/ scripts/aggregate_modern_trace.py
+heap/modern_trace_PRECC.nc : trace_orig scripts/aggregate_modern_trace.py
 	@$(PYTHON) scripts/aggregate_modern_trace.py PRECC
 
 heap/modern_trace_PRECT.nc : heap/modern_trace_PRECL.nc heap/modern_trace_PRECC.nc $(NCO) scripts/add_PRECC_PRECL.sh
