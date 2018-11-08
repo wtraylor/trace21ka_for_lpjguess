@@ -428,9 +428,11 @@ heap/downscaled/%.nc : heap/split/%.nc scripts/rescale.py
 ###############################################################################
 
 $(DEBIASED_PRECT) : heap/debiased/%.nc : heap/downscaled/%.nc heap/bias_PRECT.nc scripts/debias.py
+	@mkdir --parents 'heap/debiased'
 	@$(PYTHON) scripts/debias.py $< $@
 
 $(DEBIASED_TREFHT) : heap/debiased/%.nc : heap/downscaled/%.nc heap/bias_TREFHT.nc scripts/debias.py
+	@mkdir --parents 'heap/debiased'
 	@$(PYTHON) scripts/debias.py $< $@
 
 ###############################################################################
