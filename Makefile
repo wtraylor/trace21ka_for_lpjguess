@@ -97,9 +97,12 @@ crop : $(CROPPED_FILES)
 .PHONY: clean
 # Be cautious: Only remove those files and directories that are also created
 # by this script.
+# NCO can produce temporary files like this one:
+# 'trace.01.22000-20001BP.cam2.h0.PRECC.0000101-0200012.nc.pid31368.ncks.tmp'
+# Those temporary NCO files are removed with a `find` command.
 # Append `exit 0` to the `rm` command so that the return code is always
 # SUCCESS. Otherwise the rule fails if `rm` doesn’t find a file/directory.
-# Also remove the symbolic link "trace_orig".
+# Also remove the symbolic links "trace_orig" and "cru_orig".
 clean :
 	@rm --verbose \
 		heap/bias_*.nc \
@@ -108,25 +111,29 @@ clean :
 		heap/cru_mean/*.nc \
 		heap/cru_orig/*.nc \
 		heap/cru_regrid/*.nc \
+		heap/debiased/trace.*.nc \
 		heap/downscaled/**trace*.nc \
+		heap/grid_template.nc \
 		heap/modern_trace_*.nc \
 		heap/split/**.nc \
 		PET0.RegridWeightGen.Log \
 		2>/dev/null; \
 		exit 0
+	@find heap -name '*.nc.pid*.nc*.tmp' -delete -print 2>/dev/null; exit 0
 	@rm --dir --verbose \
 		heap/cropped \
 		heap/cru_cat \
 		heap/cru_mean \
 		heap/cru_orig \
 		heap/cru_regrid \
-		heap/downscaled/trace* \
+		heap/debiased \
 		heap/downscaled \
-		heap/split/trace* \
 		heap/split \
+		heap \
 		2>/dev/null; \
 		exit 0
 	@rm --verbose \
+		cru_orig \
 		trace_orig \
 		2>/dev/null; \
 		exit 0
