@@ -70,4 +70,10 @@ else:
 if not os.path.isdir("heap/debiased"):
     os.mkdir("heap/debiased")
 
+# Calculate wet days.
+if var == "PRECT":
+    wet = np.ones_like(trace[var].values, 'int32')
+
+
 output.to_netcdf(out_file)
+output.close()
