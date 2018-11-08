@@ -1,4 +1,87 @@
 ###############################################################################
+## PHONY TARGETS
+###############################################################################
+
+# Splitting creates files (*000000.nc, *000001.nc,...) that are not known
+# before actually executing the splitting. Therefore, the `SPLIT_FILES` are
+# first dependency for any rules after splitting. After the split files are
+# created, the wildcards in the variables `DOWNSCALED_FILES`,
+# `DEBIASED_TREFHT`, etc. are parsed correctly.
+
+.PHONY: all
+# TODO: This is only a stub so far.
+all : $(OUTPUT_FILES)
+	@echo "Not implemented yet."
+
+.PHONY: debias
+debias : $(SPLIT_FILES) $(DEBIASED_TREFHT) $(DEBIASED_PRECT)
+	@echo "Debiasing finished."
+
+.PHONY: downscale
+downscale : $(SPLIT_FILES) $(DOWNSCALED_FILES)
+	@echo "Downscaling finished."
+
+.PHONY: split
+split : $(SPLIT_FILES)
+	@echo "Splitting finished."
+
+.PHONY: crop
+# This target depends on all original TraCE files being cropped in the folder
+# 'heap/cropped/'.
+crop : $(CROPPED_FILES)
+	@echo "Cropping finished."
+
+.PHONY: clean
+# Be cautious: Only remove those files and directories that are also created
+# by this script.
+# NCO can produce temporary files like this one:
+# 'trace.01.22000-20001BP.cam2.h0.PRECC.0000101-0200012.nc.pid31368.ncks.tmp'
+# Those temporary NCO files are removed with a `find` command.
+# Append `exit 0` to the `rm` command so that the return code is always
+# SUCCESS. Otherwise the rule fails if `rm` doesn’t find a file/directory.
+# Also remove the symbolic links "trace_orig" and "cru_orig".
+clean :
+	@rm --verbose \
+		heap/bias_*.nc \
+		heap/cropped/trace*.nc \
+		heap/cru_cat/*.nc \
+		heap/cru_mean/*.nc \
+		heap/cru_orig/*.nc \
+		heap/cru_regrid/*.nc \
+		heap/debiased/trace.*.nc \
+		heap/downscaled/**trace*.nc \
+		heap/grid_template.nc \
+		heap/modern_trace_*.nc \
+		heap/split/**.nc \
+		PET0.RegridWeightGen.Log \
+		2>/dev/null; \
+		exit 0
+	@find heap -name '*.nc.pid*.nc*.tmp' -delete -print 2>/dev/null; exit 0
+	@rm --dir --verbose \
+		heap/cropped \
+		heap/cru_cat \
+		heap/cru_mean \
+		heap/cru_orig \
+		heap/cru_regrid \
+		heap/debiased \
+		heap/downscaled \
+		heap/split \
+		2>/dev/null; \
+		exit 0
+	@rm --verbose \
+		cru_orig \
+		heap \
+		output \
+		trace_orig \
+		2>/dev/null; \
+		exit 0
+
+clean_install : clean
+	@rm --recursive --verbose \
+		$(MINICONDA) \
+		$(CONDA_INSTALLER)
+
+###############################################################################
 ## ORIGINAL TRACE FILES
 ###############################################################################
 
@@ -87,89 +170,6 @@ DEBIASED_PRECT = $(shell echo $(DOWNSCALED_FILES) | \
 								 sed 's/downscaled/debiased/g' | \
 								 sed 's/ /\n/g' | \
 								 grep 'PRECT')
-
-###############################################################################
-## PHONY TARGETS
-###############################################################################
-
-# Splitting creates files (*000000.nc, *000001.nc,...) that are not known
-# before actually executing the splitting. Therefore, the `SPLIT_FILES` are
-# first dependency for any rules after splitting. After the split files are
-# created, the wildcards in the variables `DOWNSCALED_FILES`,
-# `DEBIASED_TREFHT`, etc. are parsed correctly.
-
-.PHONY: all
-# TODO: This is only a stub so far.
-all : $(OUTPUT_FILES)
-	@echo "Not implemented yet."
-
-.PHONY: debias
-debias : $(SPLIT_FILES) $(DEBIASED_TREFHT) $(DEBIASED_PRECT)
-	@echo "Debiasing finished."
-
-.PHONY: downscale
-downscale : $(SPLIT_FILES) $(DOWNSCALED_FILES)
-	@echo "Downscaling finished."
-
-.PHONY: split
-split : $(SPLIT_FILES)
-	@echo "Splitting finished."
-
-.PHONY: crop
-# This target depends on all original TraCE files being cropped in the folder
-# 'heap/cropped/'.
-crop : $(CROPPED_FILES)
-	@echo "Cropping finished."
-
-.PHONY: clean
-# Be cautious: Only remove those files and directories that are also created
-# by this script.
-# NCO can produce temporary files like this one:
-# 'trace.01.22000-20001BP.cam2.h0.PRECC.0000101-0200012.nc.pid31368.ncks.tmp'
-# Those temporary NCO files are removed with a `find` command.
-# Append `exit 0` to the `rm` command so that the return code is always
-# SUCCESS. Otherwise the rule fails if `rm` doesn’t find a file/directory.
-# Also remove the symbolic links "trace_orig" and "cru_orig".
-clean :
-	@rm --verbose \
-		heap/bias_*.nc \
-		heap/cropped/trace*.nc \
-		heap/cru_cat/*.nc \
-		heap/cru_mean/*.nc \
-		heap/cru_orig/*.nc \
-		heap/cru_regrid/*.nc \
-		heap/debiased/trace.*.nc \
-		heap/downscaled/**trace*.nc \
-		heap/grid_template.nc \
-		heap/modern_trace_*.nc \
-		heap/split/**.nc \
-		PET0.RegridWeightGen.Log \
-		2>/dev/null; \
-		exit 0
-	@find heap -name '*.nc.pid*.nc*.tmp' -delete -print 2>/dev/null; exit 0
-	@rm --dir --verbose \
-		heap/cropped \
-		heap/cru_cat \
-		heap/cru_mean \
-		heap/cru_orig \
-		heap/cru_regrid \
-		heap/debiased \
-		heap/downscaled \
-		heap/split \
-		2>/dev/null; \
-		exit 0
-	@rm --verbose \
-		cru_orig \
-		heap \
-		output \
-		trace_orig \
-		2>/dev/null; \
-		exit 0
-
-clean_install : clean
-	@rm --recursive --verbose \
-		$(MINICONDA) \
-		$(CONDA_INSTALLER)
 
 ###############################################################################
 ## VARIABLES
