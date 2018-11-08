@@ -10,25 +10,25 @@
 
 .PHONY: all
 # TODO: This is only a stub so far.
-all : $(OUTPUT_FILES)
+all : $(SYMLINKS) $(OUTPUT_FILES)
 	@echo "Not implemented yet."
 
 .PHONY: debias
-debias : $(SPLIT_FILES) $(DEBIASED_TREFHT) $(DEBIASED_PRECT)
+debias : $(SYMLINKS) $(SPLIT_FILES) $(DEBIASED_TREFHT) $(DEBIASED_PRECT)
 	@echo "Debiasing finished."
 
 .PHONY: downscale
-downscale : $(SPLIT_FILES) $(DOWNSCALED_FILES)
+downscale : $(SYMLINKS) $(SPLIT_FILES) $(DOWNSCALED_FILES)
 	@echo "Downscaling finished."
 
 .PHONY: split
-split : $(SPLIT_FILES)
+split : $(SYMLINKS) $(SPLIT_FILES)
 	@echo "Splitting finished."
 
 .PHONY: crop
 # This target depends on all original TraCE files being cropped in the folder
 # 'heap/cropped/'.
-crop : $(CROPPED_FILES)
+crop : $(SYMLINKS) $(CROPPED_FILES)
 	@echo "Cropping finished."
 
 .PHONY: clean
@@ -134,6 +134,8 @@ CRU_TMP = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
 CRU_WET = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
 					grep 'wet')
 
+SYMLINKS = cru_orig heap output trace_orig
+
 # For every original TraCE file there is one cropped file.
 # We need to calculate PRECT files from PRECC and PRECL. For that, we first
 # create a list of cropped files with PRECC and PRECL (and without PRECT),
@@ -170,6 +172,8 @@ DEBIASED_PRECT = $(shell echo $(DOWNSCALED_FILES) | \
 								 sed 's/downscaled/debiased/g' | \
 								 sed 's/ /\n/g' | \
 								 grep 'PRECT')
+
+OUTPUT_FILES = $(patsubst heap/debiased/%, output/%, $(DEBIASED_TREFHT) $(DEBIASED_PRECT))
 
 ###############################################################################
 ## VARIABLES
