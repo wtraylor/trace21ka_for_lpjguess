@@ -248,11 +248,11 @@ scripts/symlink_orig.py : $(PYTHON) $(TERMCOLOR) $(YAML) options.yaml
 ## SYMLINK ORIGINAL FILES
 ###############################################################################
 
-trace_orig : scripts/symlink_orig.py options.yaml
-	@$(PYTHON) scripts/symlink_orig.py 'trace_orig'
-
 cru_orig : scripts/symlink_orig.py options.yaml
 	@$(PYTHON) scripts/symlink_orig.py 'cru_orig'
+
+trace_orig : scripts/symlink_orig.py options.yaml
+	@$(PYTHON) scripts/symlink_orig.py 'trace_orig'
 
 ###############################################################################
 ## DECOMPRESS CRU FILES

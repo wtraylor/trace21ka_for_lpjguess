@@ -22,11 +22,11 @@ region:
 # http://www.earthsystemmodeling.org/esmf_releases/public/ESMF_6_3_0rp1/ESMF_refdoc/node3.html#SECTION03020000000000000000
 regrid_algorithm: 'bilinear'
 
-# Directory of original TraCE files.
-trace_orig: "/mnt/exthdd/data/trace"
-
 # Directory of original CRU files.
 cru_orig: "/mnt/exthdd/data/cru_ts4.01"
+
+# Directory of original TraCE files.
+trace_orig: "/mnt/exthdd/data/trace"
 
 ###############################################################################
 ###############################################################################
