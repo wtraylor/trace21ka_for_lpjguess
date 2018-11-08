@@ -93,7 +93,7 @@ TREFHT := trace.*TREFHT*.nc
 ALL_ORIG = $(wildcard trace_orig/$(PRECC)) $(wildcard trace_orig/$(PRECL)) $(wildcard trace_orig/$(TREFHT))
 
 ###############################################################################
-## TARGET FILES
+## ORIGINAL CRU FILES
 ###############################################################################
 
 # Select all CRU files that follow the standard naming and filter then for
@@ -133,6 +133,10 @@ CRU_TMP = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
 					grep 'tmp')
 CRU_WET = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
 					grep 'wet')
+
+###############################################################################
+## TARGET FILES
+###############################################################################
 
 SYMLINKS = cru_orig heap output trace_orig
 
