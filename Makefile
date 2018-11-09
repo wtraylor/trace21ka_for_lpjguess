@@ -406,7 +406,7 @@ heap/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py
 	@mkdir --parents heap/cropped
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/crop_file.py $< $@
 
-heap/grid_template.nc : heap/cru_mean/tmp.nc
+heap/grid_template.nc : heap/cru_mean/tmp.nc scripts/crop_file.py
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/crop_file.py $< $@
 
 ###############################################################################
