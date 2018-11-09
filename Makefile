@@ -217,10 +217,13 @@ clean_install : clean
 # up-to-date even if the installation command doesn’t change them (because
 # they are already installed.
 
-# --timestamping: Only substitute local file if remote file is newer.
+# For some reasen, the download with `wget` did not always work reliably. With
+# `curl` it is no problem.
+
 $(CONDA_INSTALLER) :
 	@echo "Downloading Miniconda install script..."
-	@wget --timestamping "https://repo.continuum.io/miniconda/$(CONDA_INSTALLER)"
+	@curl "https://repo.continuum.io/miniconda/$(CONDA_INSTALLER)" > \
+		$(CONDA_INSTALLER)
 	@touch --no-create $(CONDA_INSTALLER)
 
 # Miniconda installer command line arguments:
