@@ -404,10 +404,10 @@ heap/bias_TREFHT.nc : heap/cru_regrid/tmp.nc heap/modern_trace_TREFHT_regrid.nc 
 # cropped NetCDF file (with the same name) in heap/cropped.
 heap/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py
 	@mkdir --parents heap/cropped
-	@$(PYTHON) scripts/crop_file.py $< $@
+	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/crop_file.py $< $@
 
 heap/grid_template.nc : heap/cru_mean/tmp.nc
-	@$(PYTHON) scripts/crop_file.py $< $@
+	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/crop_file.py $< $@
 
 ###############################################################################
 ## SPLIT INTO 100 YEARS FILES
