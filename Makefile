@@ -237,12 +237,12 @@ $(BIN)/conda $(BIN)/pip $(PYTHON): $(CONDA_INSTALLER)
 # Add all needed NCO binaries here as targets.
 $(NCO) : $(BIN)/conda
 	@echo "Installing NCO locally with Miniconda..."
-	@$(BIN)/conda install -c conda-forge nco
+	@$(BIN)/conda install --yes --channel conda-forge nco
 	@touch --no-create $(NCO)
 
 $(CDO) : $(BIN)/conda
 	@echo "Installing CDO locally with Miniconda..."
-	@$(BIN)/conda install -c conda-forge cdo
+	@$(BIN)/conda install --yes --channel conda-forge cdo
 	@touch --no-create $(CDO)
 
 $(NETCDF4) : $(BIN)/pip
