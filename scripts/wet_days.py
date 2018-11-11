@@ -6,7 +6,7 @@ from scipy.stats import gamma
 
 def get_gamma_cdf(x, xmean, xstd):
     """Calculate cumulative density function of gamma distribution.
-    
+
     Args:
         x: TODO
         xmean: Monthly mean precipitation.
@@ -18,18 +18,17 @@ def get_gamma_cdf(x, xmean, xstd):
     return rv.cdf(x)
 
 
-def calc_wetdays(trace_prec, cru_std, days):
+def calc_wet_days(trace_prec, cru_std, days):
     """Calculate wet days per month.
 
     Arguments:
-        trace_prec: Array of monthly mean precipitation [mm/month] from the
-            TraCE dataset.
-        cru_std: Standard deviation (day-to-day variability) of monthly
-            precipitation from the CRU dataset.
-        days: Number of days for each month.
+        trace_prec: Array with one month’s mean daily precipitation [mm/day]
+            from the TraCE dataset for all grid cells.
+        cru_std: Array with standard deviation (day-to-day variability) of this
+            month’s precipitation from the CRU dataset.
+        days: Number of days for this month.
     Returns:
-        An array of the same dimensions like `trace_prec` containing the wet
-        days per month.
+        Array with number of wet days in the month for the TraCE data.
     """
     precip_threshold = 0.1  # [mm/day], constant
 

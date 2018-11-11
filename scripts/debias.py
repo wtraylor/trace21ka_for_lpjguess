@@ -72,7 +72,19 @@ if not os.path.isdir("heap/debiased"):
 
 # Calculate wet days.
 if var == "PRECT":
-    wet = np.ones_like(trace[var].values, 'int32')
+    # The mean number of wet days per month from the CRU dataset.
+    cru_prec_std = xr.open_dataset("heap/cru_mean/wet_std.nc", decode_times=False)
+    # Arbitrary number for missing values.
+    NODATA = -9999
+    # Create a numpy array of the same shape, but with missing values.
+    wet_values = np.full_like(trace[var].values, NODATA, dtype='int32')
+    # Create an
+    months = range(12) * 
+    for i, (month, days) in enumerate(zip(months, days_per_month)):
+        mean_daily_prec = trace[var][i] / float(days)
+        wet_values[i] = calc_wet_days(mean_daily_prec,
+                                      cru_prec_std[month],
+                                      days)
 
 
 output.to_netcdf(out_file)
