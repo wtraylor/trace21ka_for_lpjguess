@@ -236,6 +236,7 @@ clean :
 		heap/cru_cat/*.nc \
 		heap/cru_mean/*.nc \
 		heap/cru_orig/*.nc \
+		heap/crujra_orig/*.nc \
 		heap/cru_regrid/*.nc \
 		heap/debiased/trace.*.nc \
 		heap/downscaled/**trace*.nc \
@@ -251,6 +252,7 @@ clean :
 		heap/cru_cat \
 		heap/cru_mean \
 		heap/cru_orig \
+		heap/crujra_orig \
 		heap/cru_regrid \
 		heap/debiased \
 		heap/downscaled \
@@ -369,6 +371,10 @@ trace_orig : scripts/symlink_dir.py options.yaml
 ###############################################################################
 
 heap/cru_orig/%.nc : cru_orig/%.nc.gz
+	@mkdir --parents 'heap/cru_orig'
+	gunzip --decompress --synchronous --stdout $< > $@
+
+heap/crujra_orig/%.nc : crujra_orig/%.nc.gz
 	@mkdir --parents 'heap/cru_orig'
 	gunzip --decompress --synchronous --stdout $< > $@
 
