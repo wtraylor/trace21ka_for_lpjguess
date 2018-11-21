@@ -375,7 +375,7 @@ heap/cru_orig/%.nc : cru_orig/%.nc.gz
 	gunzip --decompress --synchronous --stdout $< > $@
 
 heap/crujra_orig/%.nc : crujra_orig/%.nc.gz
-	@mkdir --parents 'heap/cru_orig'
+	@mkdir --parents 'heap/crujra_orig'
 	gunzip --decompress --synchronous --stdout $< > $@
 
 ###############################################################################
