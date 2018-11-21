@@ -56,14 +56,18 @@ You can create a symbolic link if you like to store the temporary files on anoth
 File Structure
 --------------
 
-- `cruncep/`: Monthly means of the CRUNCEP5 data set from 1900 to 2013.
-  **TODO:** Citation, where due the data come from exactly?
 - `heap/`: Directory for temporary files. This can be a symbolic link, too (see above).
 - `scripts/`:
     + `add_PRECC_PRECL.sh`: Add the CCSM3 precipitation variables `PRECC` and `PRECL` to create a new file with `PRECT`.
+	+ `aggregate_crujra.sh`: Create a NetCDF file with the mean monthly day-to-day standard deviation of precipitation from the CRU JRA dataset.
     + `aggregate_modern_trace.py`: Create monthly means of the TraCE-21ka output of most recent times and write it to NetCDF files in the heap.
     + `calculate_bias.py <VAR>`: Create a NetCDF file containing the monthly bias of TraCE compared to the CRUNCEP data.
-	+ `symlink_trace_orig.py`: Create a symbolic link, `trace_orig`, in this directory that points to the directory of the original TraCE-21ka NetCDF files which is specified as `trace_orig` in `options.yaml`.
+	+ `debias.py`: TODO
+	+ `cf_attributes.py`: TODO
+	+ `download_crujra.py`: A little python script for downloading the required CRU JRA files. This is not automatically called by `make`.
+	+ `rescale.py`: TODO
+	+ `symlink_dir.py`: Create a symbolic link in the repository root that points to a directory with downloaded NetCDF files. The path to the this directory is specified in `options.yaml`.
+	+ `wet_days.py`: TODO
 
 Project Outline
 ---------------
