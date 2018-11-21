@@ -259,6 +259,7 @@ clean :
 		exit 0
 	@rm --verbose \
 		cru_orig \
+		crujra_orig \
 		heap \
 		output \
 		trace_orig \
@@ -349,6 +350,9 @@ scripts/symlink_dir.py : $(PYTHON) $(TERMCOLOR) $(YAML) options.yaml
 ###############################################################################
 
 cru_orig : scripts/symlink_dir.py options.yaml
+	@$(PYTHON) scripts/symlink_dir.py '$@'
+
+crujra_orig : scripts/symlink_dir.py options.yaml
 	@$(PYTHON) scripts/symlink_dir.py '$@'
 
 heap : scripts/symlink_dir.py options.yaml
