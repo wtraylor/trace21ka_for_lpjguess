@@ -35,11 +35,15 @@ This way, no system-wide installations are required.
 How to Use
 ----------
 
-1) Download the TraCE-21ka monthly datasets for the CCSM3 variables `PRECC`, `PRECL`, `TREFHT`, `CLOUD`, and `FSDS` for your time period from [earthsystemgrid.org](https://www.earthsystemgrid.org/dataset/ucar.cgd.ccsm3.trace.html).
+1) Download the data sets:
 
-2) Customize `options.yaml` to your own needs.
+    - Download the TraCE-21ka monthly datasets for the CCSM3 variables `PRECC`, `PRECL`, `TREFHT`, `CLOUD`, and `FSDS` for your time period from [earthsystemgrid.org](https://www.earthsystemgrid.org/dataset/ucar.cgd.ccsm3.trace.html). All files need to be in one directory with their original file name.
 
-3) Run `make` from within this directory (where `Makefile` resides).
+    - Download the global monthly CRU TS 4.01 data set in 0.5° resolution as the original zip files from [crudata.uea.ac.uk](https://crudata.uea.ac.uk/cru/data/hrg/). Save all files with their original name in one directory. You will need the following variables: `pre`, `tmp`, `wet`
+
+4) Customize `options.yaml` to your own needs.
+
+5) Run `make` from within this directory (where `Makefile` resides).
 Only run `make` from an interactive shell.
 
 There will be some temporary files produced.
@@ -77,6 +81,7 @@ Project Outline
 - [ ] Use land IDs instead of lon/lat for LPJ-GUESS (for performance).
 - [ ] Compress output files.
 - [ ] Provide example LPJ-GUESS instruction file.
+- [ ] Switch to more recent CRU 4.02
 
 Design Questions
 ----------------
