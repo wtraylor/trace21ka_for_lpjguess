@@ -35,11 +35,13 @@ This way, no system-wide installations are required.
 How to Use
 ----------
 
-1) Download the data sets:
+1) Download the data sets. Do not change the original file names.
 
     - Download the TraCE-21ka monthly datasets for the CCSM3 variables `PRECC`, `PRECL`, `TREFHT`, `CLOUD`, and `FSDS` for your time period from [earthsystemgrid.org](https://www.earthsystemgrid.org/dataset/ucar.cgd.ccsm3.trace.html). All files need to be in one directory with their original file name.
 
     - Download the global monthly CRU TS 4.01 data set in 0.5° resolution as the original zip files from [crudata.uea.ac.uk](https://crudata.uea.ac.uk/cru/data/hrg/). Save all files with their original name in one directory. You will need the following variables: `pre`, `tmp`, `wet`
+
+    - Download the CRU JRA-55 precipitation (`pre`) data set from [vesg.ipsl.upmc.fr](https://vesg.ipsl.upmc.fr/thredds/catalog/work/p529viov/crujra/catalog.html). Only the years 1958 to 2017 are used. You can use the download script `scripts/download_crujra.py`. Have all files in one directory.
 
 4) Customize `options.yaml` to your own needs.
 

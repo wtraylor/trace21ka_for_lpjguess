@@ -26,6 +26,8 @@ regrid_algorithm: 'bilinear'
 directories:
   # Directory of original CRU files.
   cru_orig: "/mnt/exthdd/data/cru_ts4.01"
+  # Directory of original CRU JRA-55 precipitation files.
+  crujra_orig: "/mnt/exthdd/data/crujra"
   # Directory for temporary files.
   heap: "/mnt/exthdd/heap"
   # Directory for final output files.
