@@ -335,6 +335,8 @@ $(XARRAY) : $(BIN)/pip $(NETCDF4) $(SCIPY)
 
 scripts/add_PRECC_PRECL.sh : $(NCO)
 
+scripts/aggregate_crujra.sh : $(CDO)
+
 scripts/aggregate_modern_trace.py : $(PYTHON) $(TERMCOLOR) $(XARRAY)
 
 scripts/calculate_bias.py : $(PYTHON) $(TERMCOLOR) $(XARRAY) $(YAML) options.yaml
@@ -413,6 +415,12 @@ heap/cru_mean/%.nc : heap/cru_cat/%.nc
 	@echo "$< => $@"
 	@env PATH="$(BIN):$(PATH)" \
 		cdo ymonmean $< $@
+
+# Calculate the day-to-day standard deviation of daily precipitation sum as
+# monthly means.
+heap/crujra/monthly_std.nc : $(patsubst crujra_orig/%.nc.gz, heap/crujra_orig/%.nc, $(CRUJRA)) scripts/aggregate_crujra.sh
+	@env PATH="$(BIN):$(PATH)" \
+		scripts/aggregate_crujra.sh
 
 ###############################################################################
 ## REGRID CRU FILES
