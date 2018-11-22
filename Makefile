@@ -434,6 +434,9 @@ heap/crujra/monthly_std.nc : $(patsubst crujra_orig/%.nc.gz, heap/crujra_orig/%.
 heap/cru_regrid/%.nc : heap/cru_mean/%.nc scripts/rescale.py
 	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
 
+heap/crujra/monthly_std_regrid.nc : heap/crujra/monthly_std.nc scripts/rescale.py
+	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+
 ###############################################################################
 ## AGGREGATE MODERN TRACE DATA
 ###############################################################################
