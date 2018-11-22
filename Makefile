@@ -350,6 +350,16 @@ scripts/rescale.py : $(PYTHON) $(TERMCOLOR) $(YAML) $(NCO) options.yaml heap/gri
 scripts/symlink_dir.py : $(PYTHON) $(TERMCOLOR) $(YAML) options.yaml
 
 ###############################################################################
+## GLOBAL DEFINES
+###############################################################################
+
+# Regrid the first prerequisite file and save it in rule target.
+define RESCALE_RULE =
+@mkdir --parents "$$(dirname @<)"
+@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+endef
+
+###############################################################################
 ## SYMLINK INPUT & OUTPUT DIRECTORIES
 ###############################################################################
 
@@ -432,10 +442,10 @@ heap/crujra/monthly_std.nc : $(patsubst crujra_orig/%.nc.gz, heap/crujra_orig/%.
 ###############################################################################
 
 heap/cru_regrid/%.nc : heap/cru_mean/%.nc scripts/rescale.py
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+	$(RESCALE_RULE)
 
 heap/crujra/monthly_std_regrid.nc : heap/crujra/monthly_std.nc scripts/rescale.py
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+	$(RESCALE_RULE)
 
 ###############################################################################
 ## AGGREGATE MODERN TRACE DATA
@@ -465,13 +475,13 @@ heap/modern_trace_PRECT.nc : heap/modern_trace_PRECL.nc heap/modern_trace_PRECC.
 ###############################################################################
 
 heap/modern_trace_FSDS_regrid.nc : heap/modern_trace_FSDS.nc scripts/rescale.py
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+	$(RESCALE_RULE)
 
 heap/modern_trace_PRECT_regrid.nc : heap/modern_trace_PRECT.nc scripts/rescale.py
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+	$(RESCALE_RULE)
 
 heap/modern_trace_TREFHT_regrid.nc : heap/modern_trace_TREFHT.nc scripts/rescale.py
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+	$(RESCALE_RULE)
 
 ###############################################################################
 ## CALCULATE BIAS
@@ -518,8 +528,7 @@ heap/split/%000000.nc : heap/cropped/%.nc $(CDO)
 
 # For every split file, there is a downscaled target.
 heap/downscaled/%.nc : heap/split/%.nc scripts/rescale.py
-	@mkdir --parents heap/downscaled
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+	$(RESCALE_RULE)
 
 ###############################################################################
 ## DEBIAS TRACE FILES
