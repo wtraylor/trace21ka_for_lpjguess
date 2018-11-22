@@ -374,11 +374,11 @@ trace_orig : scripts/symlink_dir.py options.yaml
 
 heap/cru_orig/%.nc : cru_orig/%.nc.gz
 	@mkdir --parents 'heap/cru_orig'
-	gunzip --decompress --synchronous --stdout $< > $@
+	gunzip --verbose --decompress --synchronous --stdout $< > $@
 
 heap/crujra_orig/%.nc : crujra_orig/%.nc.gz
 	@mkdir --parents 'heap/crujra_orig'
-	gunzip --decompress --synchronous --stdout $< > $@
+	gunzip --verbose --decompress --synchronous --stdout $< > $@
 
 ###############################################################################
 ## CONCATENATE AND AGGREGATE CRU FILES
