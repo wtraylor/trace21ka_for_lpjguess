@@ -53,64 +53,65 @@ CRU_WET = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
 
 CRUJRA = crujra_orig/crujra.V1.1.5d.pre.1958.365d.noc.nc.gz\
 		 crujra_orig/crujra.V1.1.5d.pre.1959.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1960.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1961.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1962.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1963.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1964.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1965.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1966.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1967.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1968.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1969.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1970.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1971.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1972.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1973.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1974.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1975.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1976.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1977.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1978.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1979.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1980.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1981.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1982.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1983.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1984.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1985.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1986.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1987.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1988.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1989.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1990.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1991.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1992.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1993.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1994.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1995.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1996.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1997.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1998.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.1999.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2000.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2001.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2002.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2003.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2004.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2005.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2006.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2007.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2008.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2009.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2010.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2011.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2012.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2013.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2014.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2015.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2016.365d.noc.nc.gz\
-		 crujra_orig/crujra.V1.1.5d.pre.2017.365d.noc.nc.gz
+		 crujra_orig/crujra.V1.1.5d.pre.1960.365d.noc.nc.gz
+		 # TODO: Uncomment these in final version
+		 # crujra_orig/crujra.V1.1.5d.pre.1961.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1962.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1963.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1964.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1965.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1966.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1967.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1968.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1969.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1970.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1971.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1972.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1973.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1974.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1975.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1976.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1977.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1978.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1979.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1980.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1981.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1982.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1983.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1984.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1985.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1986.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1987.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1988.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1989.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1990.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1991.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1992.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1993.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1994.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1995.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1996.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1997.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1998.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.1999.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2000.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2001.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2002.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2003.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2004.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2005.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2006.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2007.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2008.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2009.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2010.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2011.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2012.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2013.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2014.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2015.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2016.365d.noc.nc.gz\
+		 # crujra_orig/crujra.V1.1.5d.pre.2017.365d.noc.nc.gz
 
 ###############################################################################
 ## TARGET FILES
