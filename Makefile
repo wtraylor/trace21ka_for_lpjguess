@@ -374,7 +374,7 @@ trace_orig : scripts/symlink_dir.py options.yaml
 
 # `pv` ("pipe viewer") shows the progress.
 define UNZIP_RULE =
-@mkdir --parents 'heap/cru_orig'
+@mkdir --parents $$(dirname $@)
 @echo "Unzipping $<..."
 @pv $< | gunzip --verbose --decompress --synchronous --stdout > $@
 endef
