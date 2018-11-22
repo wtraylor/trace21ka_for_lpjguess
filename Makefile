@@ -51,7 +51,7 @@ CRU_TMP = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
 CRU_WET = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
 					grep 'wet')
 
-CRUJRA = crujra_orig/crujra.V1.1.5d.pre.1958.365d.noc.nc.gz\
+export CRUJRA = crujra_orig/crujra.V1.1.5d.pre.1958.365d.noc.nc.gz\
 		 crujra_orig/crujra.V1.1.5d.pre.1959.365d.noc.nc.gz\
 		 crujra_orig/crujra.V1.1.5d.pre.1960.365d.noc.nc.gz
 		 # TODO: Uncomment these in final version
@@ -112,6 +112,7 @@ CRUJRA = crujra_orig/crujra.V1.1.5d.pre.1958.365d.noc.nc.gz\
 		 # crujra_orig/crujra.V1.1.5d.pre.2015.365d.noc.nc.gz\
 		 # crujra_orig/crujra.V1.1.5d.pre.2016.365d.noc.nc.gz\
 		 # crujra_orig/crujra.V1.1.5d.pre.2017.365d.noc.nc.gz
+export CRUJRA_UNZIPPED = $(patsubst crujra_orig/%.nc.gz, heap/crujra_orig/%.nc, $(CRUJRA))
 
 ###############################################################################
 ## TARGET FILES
@@ -434,7 +435,7 @@ heap/cru_mean/%.nc : heap/cru_cat/%.nc
 
 # Calculate the day-to-day standard deviation of daily precipitation sum as
 # monthly means.
-heap/crujra/monthly_std.nc : $(patsubst crujra_orig/%.nc.gz, heap/crujra_orig/%.nc, $(CRUJRA)) scripts/aggregate_crujra.sh
+heap/crujra/monthly_std.nc : $(CRUJRA_UNZIPPED) scripts/aggregate_crujra.sh
 	@env PATH="$(BIN):$(PATH)" \
 		scripts/aggregate_crujra.sh
 
