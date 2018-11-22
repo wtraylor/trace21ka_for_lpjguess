@@ -72,19 +72,32 @@ if not os.path.isdir("heap/debiased"):
 
 # Calculate wet days.
 if var == "PRECT":
-    # The mean number of wet days per month from the CRU dataset.
-    cru_prec_std = xr.open_dataset("heap/cru_mean/wet_std.nc", decode_times=False)
+    # The mean standard deviation of daily precipitation within each month.
+    # This dataset has 12 values (one for each month) per grid cell.
+    cru_prec_std = xr.open_dataset("heap/crujra/monthly_std_regrid.nc",
+                                   decode_times=False)
     # Arbitrary number for missing values.
     NODATA = -9999
     # Create a numpy array of the same shape, but with missing values.
     wet_values = np.full_like(trace[var].values, NODATA, dtype='int32')
-    # Create an
-    months = range(12) * 
-    for i, (month, days) in enumerate(zip(months, days_per_month)):
+    # Create an array that holds the month number (0 to 11) for each index in
+    # the original TraCE time dimension.
+    months_array = range(12) * (len(trace['time']) // 12)
+    # Do the same for the number of days within each month.
+    days_per_month = [31,28,31,30,31,30,31,31,30,31,30,31]
+    days_per_month_array = days_per_month  * (len(trace['time']) // 12)
+    for i, (month, days) in enumerate(zip(months_array, days_per_month_array)):
         mean_daily_prec = trace[var][i] / float(days)
         wet_values[i] = calc_wet_days(mean_daily_prec,
                                       cru_prec_std[month],
                                       days)
+    set_attributes(wet_values, 
+    wet_values.attrs['standard_name'] = "number_of_days_with_lwe_thickness_of_precipitation_amount_above_threshold"
+    wet_values.attrs['long_name'] = "wet_days"
+    wet_values.attrs['units'] = "count"
+    wet_values.attrs['_FillValue'] = NODATA
+    wet_values.attrs['missing_value'] = NODATA
+    trace['wet'] = wet_values
 
 
 output.to_netcdf(out_file)
