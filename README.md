@@ -21,9 +21,7 @@ Requirements
 
 - A _make_ implementation, e.g. `gmake`.
 
-- `wget`
-
-- `gunzip`
+- Some command line tools: `gunzip`, `pv`, `wget`
 
 - A working internet connection for the automatic download of [Miniconda](https://conda.io/miniconda.html) and Python packages.
 

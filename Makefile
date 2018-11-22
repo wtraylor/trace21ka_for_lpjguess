@@ -372,13 +372,18 @@ trace_orig : scripts/symlink_dir.py options.yaml
 ## DECOMPRESS CRU FILES
 ###############################################################################
 
+# `pv` ("pipe viewer") shows the progress.
+define UNZIP_RULE =
+@mkdir --parents 'heap/cru_orig'
+@echo "Unzipping $<..."
+@pv $< | gunzip --verbose --decompress --synchronous --stdout > $@
+endef
+
 heap/cru_orig/%.nc : cru_orig/%.nc.gz
-	@mkdir --parents 'heap/cru_orig'
-	gunzip --verbose --decompress --synchronous --stdout $< > $@
+	$(UNZIP_RULE)
 
 heap/crujra_orig/%.nc : crujra_orig/%.nc.gz
-	@mkdir --parents 'heap/crujra_orig'
-	gunzip --verbose --decompress --synchronous --stdout $< > $@
+	$(UNZIP_RULE)
 
 ###############################################################################
 ## CONCATENATE AND AGGREGATE CRU FILES
