@@ -1,5 +1,13 @@
 #!/bin/python
 
+# Apply bias correction to TraCE-21ka NetCDF file.
+# The NetCDF file containing the bias must be prepared:
+# "heap/bias_<VARIABLE>.nc".
+# Wet days are calculated with functions from "wet_days.py" and added as a new
+# variable to the precipitation NetCDF output file.
+# The script "cf_attributes.py" is used to set the correct metadata in the
+# output files.
+
 # Usage: debias.py <input> <output>
 
 from termcolor import cprint
@@ -91,14 +99,10 @@ if var == "PRECT":
         wet_values[i] = calc_wet_days(mean_daily_prec,
                                       cru_prec_std[month],
                                       days)
-    set_attributes(wet_values, 
-    wet_values.attrs['standard_name'] = "number_of_days_with_lwe_thickness_of_precipitation_amount_above_threshold"
-    wet_values.attrs['long_name'] = "wet_days"
-    wet_values.attrs['units'] = "count"
+    set_attributes(wet_values, "wet_days")
     wet_values.attrs['_FillValue'] = NODATA
     wet_values.attrs['missing_value'] = NODATA
     trace['wet'] = wet_values
-
 
 output.to_netcdf(out_file)
 output.close()
