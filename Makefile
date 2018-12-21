@@ -51,6 +51,69 @@ CRU_TMP = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
 CRU_WET = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
 					grep 'wet')
 
+export CRUJRA = crujra_orig/crujra.V1.1.5d.pre.1958.365d.noc.nc.gz\
+  crujra_orig/crujra.V1.1.5d.pre.1959.365d.noc.nc.gz\
+  crujra_orig/crujra.V1.1.5d.pre.1960.365d.noc.nc.gz
+  # TODO: Uncomment these in final version
+  # crujra_orig/crujra.V1.1.5d.pre.1961.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1962.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1963.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1964.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1965.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1966.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1967.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1968.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1969.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1970.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1971.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1972.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1973.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1974.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1975.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1976.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1977.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1978.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1979.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1980.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1981.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1982.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1983.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1984.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1985.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1986.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1987.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1988.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1989.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1990.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1991.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1992.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1993.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1994.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1995.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1996.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1997.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1998.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.1999.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2000.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2001.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2002.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2003.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2004.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2005.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2006.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2007.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2008.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2009.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2010.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2011.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2012.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2013.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2014.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2015.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2016.365d.noc.nc.gz\
+  # crujra_orig/crujra.V1.1.5d.pre.2017.365d.noc.nc.gz
+export CRUJRA_UNZIPPED = $(patsubst crujra_orig/%.nc.gz, heap/crujra_orig/%.nc, $(CRUJRA))
+
 ###############################################################################
 ## TARGET FILES
 ###############################################################################
@@ -175,6 +238,7 @@ clean :
 		heap/cru_cat/*.nc \
 		heap/cru_mean/*.nc \
 		heap/cru_orig/*.nc \
+		heap/crujra_orig/*.nc \
 		heap/cru_regrid/*.nc \
 		heap/debiased/trace.*.nc \
 		heap/downscaled/**trace*.nc \
@@ -190,6 +254,7 @@ clean :
 		heap/cru_cat \
 		heap/cru_mean \
 		heap/cru_orig \
+		heap/crujra_orig \
 		heap/cru_regrid \
 		heap/debiased \
 		heap/downscaled \
@@ -198,6 +263,7 @@ clean :
 		exit 0
 	@rm --verbose \
 		cru_orig \
+		crujra_orig \
 		heap \
 		output \
 		trace_orig \
@@ -217,10 +283,13 @@ clean_install : clean
 # up-to-date even if the installation command doesn’t change them (because
 # they are already installed.
 
-# --timestamping: Only substitute local file if remote file is newer.
+# For some reasen, the download with `wget` did not always work reliably. With
+# `curl` it is no problem.
+
 $(CONDA_INSTALLER) :
 	@echo "Downloading Miniconda install script..."
-	@wget --timestamping "https://repo.continuum.io/miniconda/$(CONDA_INSTALLER)"
+	@curl "https://repo.continuum.io/miniconda/$(CONDA_INSTALLER)" > \
+		$(CONDA_INSTALLER)
 	@touch --no-create $(CONDA_INSTALLER)
 
 # Miniconda installer command line arguments:
@@ -234,12 +303,12 @@ $(BIN)/conda $(BIN)/pip $(PYTHON): $(CONDA_INSTALLER)
 # Add all needed NCO binaries here as targets.
 $(NCO) : $(BIN)/conda
 	@echo "Installing NCO locally with Miniconda..."
-	@$(BIN)/conda install -c conda-forge nco
+	@$(BIN)/conda install --yes --channel conda-forge nco
 	@touch --no-create $(NCO)
 
 $(CDO) : $(BIN)/conda
 	@echo "Installing CDO locally with Miniconda..."
-	@$(BIN)/conda install -c conda-forge cdo
+	@$(BIN)/conda install --yes --channel conda-forge cdo
 	@touch --no-create $(CDO)
 
 $(NETCDF4) : $(BIN)/pip
@@ -268,23 +337,38 @@ $(XARRAY) : $(BIN)/pip $(NETCDF4) $(SCIPY)
 
 scripts/add_PRECC_PRECL.sh : $(NCO)
 
+scripts/aggregate_crujra.sh : $(CDO)
+
 scripts/aggregate_modern_trace.py : $(PYTHON) $(TERMCOLOR) $(XARRAY)
 
 scripts/calculate_bias.py : $(PYTHON) $(TERMCOLOR) $(XARRAY) $(YAML) options.yaml
 
 scripts/crop_file.py : $(PYTHON) $(TERMCOLOR) $(YAML) $(NCO) options.yaml
 
-scripts/debias.py : $(PYTHON) $(TERMCOLOR) $(XARRAY)
+scripts/debias.py : $(PYTHON) $(TERMCOLOR) $(XARRAY) heap/crujra/monthly_std_regrid.nc
 
 scripts/rescale.py : $(PYTHON) $(TERMCOLOR) $(YAML) $(NCO) options.yaml heap/grid_template.nc
 
 scripts/symlink_dir.py : $(PYTHON) $(TERMCOLOR) $(YAML) options.yaml
 
 ###############################################################################
+## GLOBAL DEFINES
+###############################################################################
+
+# Regrid the first prerequisite file and save it in rule target.
+define RESCALE_RULE =
+@mkdir --parents "$$(dirname @<)"
+@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+endef
+
+###############################################################################
 ## SYMLINK INPUT & OUTPUT DIRECTORIES
 ###############################################################################
 
 cru_orig : scripts/symlink_dir.py options.yaml
+	@$(PYTHON) scripts/symlink_dir.py '$@'
+
+crujra_orig : scripts/symlink_dir.py options.yaml
 	@$(PYTHON) scripts/symlink_dir.py '$@'
 
 heap : scripts/symlink_dir.py options.yaml
@@ -300,9 +384,18 @@ trace_orig : scripts/symlink_dir.py options.yaml
 ## DECOMPRESS CRU FILES
 ###############################################################################
 
+# `pv` ("pipe viewer") shows the progress.
+define UNZIP_RULE =
+@mkdir --parents $$(dirname $@)
+@echo "Unzipping $<..."
+@pv $< | gunzip --verbose --decompress --synchronous --stdout > $@
+endef
+
 heap/cru_orig/%.nc : cru_orig/%.nc.gz
-	@mkdir --parents 'heap/cru_orig'
-	gunzip --decompress --synchronous --stdout $< > $@
+	$(UNZIP_RULE)
+
+heap/crujra_orig/%.nc : crujra_orig/%.nc.gz
+	$(UNZIP_RULE)
 
 ###############################################################################
 ## CONCATENATE AND AGGREGATE CRU FILES
@@ -340,12 +433,21 @@ heap/cru_mean/%.nc : heap/cru_cat/%.nc
 	@env PATH="$(BIN):$(PATH)" \
 		cdo ymonmean $< $@
 
+# Calculate the day-to-day standard deviation of daily precipitation sum as
+# monthly means.
+heap/crujra/monthly_std.nc : $(CRUJRA_UNZIPPED) scripts/aggregate_crujra.sh
+	@env PATH="$(BIN):$(PATH)" \
+		scripts/aggregate_crujra.sh
+
 ###############################################################################
 ## REGRID CRU FILES
 ###############################################################################
 
 heap/cru_regrid/%.nc : heap/cru_mean/%.nc scripts/rescale.py
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+	$(RESCALE_RULE)
+
+heap/crujra/monthly_std_regrid.nc : heap/crujra/monthly_std.nc scripts/rescale.py
+	$(RESCALE_RULE)
 
 ###############################################################################
 ## AGGREGATE MODERN TRACE DATA
@@ -375,13 +477,13 @@ heap/modern_trace_PRECT.nc : heap/modern_trace_PRECL.nc heap/modern_trace_PRECC.
 ###############################################################################
 
 heap/modern_trace_FSDS_regrid.nc : heap/modern_trace_FSDS.nc scripts/rescale.py
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+	$(RESCALE_RULE)
 
 heap/modern_trace_PRECT_regrid.nc : heap/modern_trace_PRECT.nc scripts/rescale.py
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+	$(RESCALE_RULE)
 
 heap/modern_trace_TREFHT_regrid.nc : heap/modern_trace_TREFHT.nc scripts/rescale.py
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+	$(RESCALE_RULE)
 
 ###############################################################################
 ## CALCULATE BIAS
@@ -401,10 +503,10 @@ heap/bias_TREFHT.nc : heap/cru_regrid/tmp.nc heap/modern_trace_TREFHT_regrid.nc 
 # cropped NetCDF file (with the same name) in heap/cropped.
 heap/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py
 	@mkdir --parents heap/cropped
-	@$(PYTHON) scripts/crop_file.py $< $@
+	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/crop_file.py $< $@
 
-heap/grid_template.nc : heap/cru_mean/tmp.nc
-	@$(PYTHON) scripts/crop_file.py $< $@
+heap/grid_template.nc : heap/cru_mean/tmp.nc scripts/crop_file.py
+	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/crop_file.py $< $@
 
 ###############################################################################
 ## SPLIT INTO 100 YEARS FILES
@@ -428,8 +530,7 @@ heap/split/%000000.nc : heap/cropped/%.nc $(CDO)
 
 # For every split file, there is a downscaled target.
 heap/downscaled/%.nc : heap/split/%.nc scripts/rescale.py
-	@mkdir --parents heap/downscaled
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
+	$(RESCALE_RULE)
 
 ###############################################################################
 ## DEBIAS TRACE FILES

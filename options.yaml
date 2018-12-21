@@ -25,13 +25,15 @@ regrid_algorithm: 'bilinear'
 # For the following directories, symbolic links will be created:
 directories:
   # Directory of original CRU files.
-  cru_orig: "/mnt/exthdd/data/cru_ts4.01"
+  cru_orig: "/mnt/firell/data/cru_ts4.01"
+  # Directory of original CRU JRA-55 precipitation files.
+  crujra_orig: "/mnt/firell/data/crujra"
   # Directory for temporary files.
-  heap: "/mnt/exthdd/heap"
+  heap: "/mnt/firell/heap"
   # Directory for final output files.
-  output: "/mnt/exthdd/output"
+  output: "/mnt/firell/output"
   # Directory of original TraCE files.
-  trace_orig: "/mnt/exthdd/data/trace"
+  trace_orig: "/mnt/firell/data/trace"
 
 ###############################################################################
 ###############################################################################

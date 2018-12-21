@@ -21,9 +21,7 @@ Requirements
 
 - A _make_ implementation, e.g. `gmake`.
 
-- `wget`
-
-- `gunzip`
+- Some command line tools: `gunzip`, `pv`, `wget`
 
 - A working internet connection for the automatic download of [Miniconda](https://conda.io/miniconda.html) and Python packages.
 
@@ -35,11 +33,17 @@ This way, no system-wide installations are required.
 How to Use
 ----------
 
-1) Download the TraCE-21ka monthly datasets for the CCSM3 variables `PRECC`, `PRECL`, `TREFHT`, `CLOUD`, and `FSDS` for your time period from [earthsystemgrid.org](https://www.earthsystemgrid.org/dataset/ucar.cgd.ccsm3.trace.html).
+1) Download the data sets. Do not change the original file names.
 
-2) Customize `options.yaml` to your own needs.
+    - Download the TraCE-21ka monthly datasets for the CCSM3 variables `PRECC`, `PRECL`, `TREFHT`, `CLOUD`, and `FSDS` for your time period from [earthsystemgrid.org](https://www.earthsystemgrid.org/dataset/ucar.cgd.ccsm3.trace.html). All files need to be in one directory with their original file name.
 
-3) Run `make` from within this directory (where `Makefile` resides).
+    - Download the global monthly CRU TS 4.01 data set in 0.5° resolution as the original zip files from [crudata.uea.ac.uk](https://crudata.uea.ac.uk/cru/data/hrg/). Save all files with their original name in one directory. You will need the following variables: `pre`, `tmp`, `wet`
+
+    - Download the CRU JRA-55 precipitation (`pre`) data set from [vesg.ipsl.upmc.fr](https://vesg.ipsl.upmc.fr/thredds/catalog/work/p529viov/crujra/catalog.html). Only the years 1958 to 2017 are used. You can use the download script `scripts/download_crujra.py`. Have all files in one directory.
+
+4) Customize `options.yaml` to your own needs.
+
+5) Run `make` from within this directory (where `Makefile` resides).
 Only run `make` from an interactive shell.
 
 There will be some temporary files produced.
@@ -50,14 +54,18 @@ You can create a symbolic link if you like to store the temporary files on anoth
 File Structure
 --------------
 
-- `cruncep/`: Monthly means of the CRUNCEP5 data set from 1900 to 2013.
-  **TODO:** Citation, where due the data come from exactly?
 - `heap/`: Directory for temporary files. This can be a symbolic link, too (see above).
 - `scripts/`:
     + `add_PRECC_PRECL.sh`: Add the CCSM3 precipitation variables `PRECC` and `PRECL` to create a new file with `PRECT`.
+	+ `aggregate_crujra.sh`: Create a NetCDF file with the mean monthly day-to-day standard deviation of precipitation from the CRU JRA dataset.
     + `aggregate_modern_trace.py`: Create monthly means of the TraCE-21ka output of most recent times and write it to NetCDF files in the heap.
     + `calculate_bias.py <VAR>`: Create a NetCDF file containing the monthly bias of TraCE compared to the CRUNCEP data.
-	+ `symlink_trace_orig.py`: Create a symbolic link, `trace_orig`, in this directory that points to the directory of the original TraCE-21ka NetCDF files which is specified as `trace_orig` in `options.yaml`.
+	+ `debias.py`: TODO
+	+ `cf_attributes.py`: TODO
+	+ `download_crujra.py`: A little python script for downloading the required CRU JRA files. This is not automatically called by `make`.
+	+ `rescale.py`: TODO
+	+ `symlink_dir.py`: Create a symbolic link in the repository root that points to a directory with downloaded NetCDF files. The path to the this directory is specified in `options.yaml`.
+	+ `wet_days.py`: TODO
 
 Project Outline
 ---------------
@@ -77,6 +85,7 @@ Project Outline
 - [ ] Use land IDs instead of lon/lat for LPJ-GUESS (for performance).
 - [ ] Compress output files.
 - [ ] Provide example LPJ-GUESS instruction file.
+- [ ] Switch to more recent CRU 4.02
 
 Design Questions
 ----------------

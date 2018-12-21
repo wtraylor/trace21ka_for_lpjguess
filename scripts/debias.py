@@ -1,5 +1,13 @@
 #!/bin/python
 
+# Apply bias correction to TraCE-21ka NetCDF file.
+# The NetCDF file containing the bias must be prepared:
+# "heap/bias_<VARIABLE>.nc".
+# Wet days are calculated with functions from "wet_days.py" and added as a new
+# variable to the precipitation NetCDF output file.
+# The script "cf_attributes.py" is used to set the correct metadata in the
+# output files.
+
 # Usage: debias.py <input> <output>
 
 from termcolor import cprint
@@ -70,4 +78,31 @@ else:
 if not os.path.isdir("heap/debiased"):
     os.mkdir("heap/debiased")
 
+# Calculate wet days.
+if var == "PRECT":
+    # The mean standard deviation of daily precipitation within each month.
+    # This dataset has 12 values (one for each month) per grid cell.
+    cru_prec_std = xr.open_dataset("heap/crujra/monthly_std_regrid.nc",
+                                   decode_times=False)
+    # Arbitrary number for missing values.
+    NODATA = -9999
+    # Create a numpy array of the same shape, but with missing values.
+    wet_values = np.full_like(trace[var].values, NODATA, dtype='int32')
+    # Create an array that holds the month number (0 to 11) for each index in
+    # the original TraCE time dimension.
+    months_array = range(12) * (len(trace['time']) // 12)
+    # Do the same for the number of days within each month.
+    days_per_month = [31,28,31,30,31,30,31,31,30,31,30,31]
+    days_per_month_array = days_per_month  * (len(trace['time']) // 12)
+    for i, (month, days) in enumerate(zip(months_array, days_per_month_array)):
+        mean_daily_prec = trace[var][i] / float(days)
+        wet_values[i] = calc_wet_days(mean_daily_prec,
+                                      cru_prec_std[month],
+                                      days)
+    set_attributes(wet_values, "wet_days")
+    wet_values.attrs['_FillValue'] = NODATA
+    wet_values.attrs['missing_value'] = NODATA
+    trace['wet'] = wet_values
+
 output.to_netcdf(out_file)
+output.close()

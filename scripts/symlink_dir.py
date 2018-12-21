@@ -25,7 +25,7 @@ def create_symlink(dest):
     """
     orig = yaml.load(open("options.yaml"))["directories"][dest]
 
-    if dest in ["cru_orig", "trace_orig"]:
+    if dest in ["cru_orig", "crujra_orig", "trace_orig"]:
         is_input = True
     elif dest in ["output", "heap"]:
         is_input = False
