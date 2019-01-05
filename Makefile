@@ -10,115 +10,8 @@ TREFHT := trace.*TREFHT*.nc
 ALL_ORIG = $(wildcard trace_orig/$(PRECC)) $(wildcard trace_orig/$(PRECL)) $(wildcard trace_orig/$(TREFHT))
 
 ###############################################################################
-## ORIGINAL CRU FILES
-###############################################################################
-
-# Select all CRU files that follow the standard naming and filter then for
-# specific variables. We only select the time frame 1901 to 1990.
-# The command to find all relevant zipped CRU files is this:
-# `find cru_orig/ -name 'cru_ts4\.01\.19[0-8]1\.19[1-9]0\.[a-z]*\.dat\.nc\.gz'`
-CRU_ALL = cru_orig/cru_ts4.01.1921.1930.pre.dat.nc.gz \
-					cru_orig/cru_ts4.01.1941.1950.wet.dat.nc.gz \
-					cru_orig/cru_ts4.01.1921.1930.tmp.dat.nc.gz \
-					cru_orig/cru_ts4.01.1931.1940.pre.dat.nc.gz \
-					cru_orig/cru_ts4.01.1901.1910.tmp.dat.nc.gz \
-					cru_orig/cru_ts4.01.1911.1920.pre.dat.nc.gz \
-					cru_orig/cru_ts4.01.1961.1970.tmp.dat.nc.gz \
-					cru_orig/cru_ts4.01.1931.1940.tmp.dat.nc.gz \
-					cru_orig/cru_ts4.01.1921.1930.wet.dat.nc.gz \
-					cru_orig/cru_ts4.01.1971.1980.wet.dat.nc.gz \
-					cru_orig/cru_ts4.01.1951.1960.tmp.dat.nc.gz \
-					cru_orig/cru_ts4.01.1911.1920.tmp.dat.nc.gz \
-					cru_orig/cru_ts4.01.1971.1980.tmp.dat.nc.gz \
-					cru_orig/cru_ts4.01.1981.1990.tmp.dat.nc.gz \
-					cru_orig/cru_ts4.01.1951.1960.wet.dat.nc.gz \
-					cru_orig/cru_ts4.01.1981.1990.pre.dat.nc.gz \
-					cru_orig/cru_ts4.01.1901.1910.pre.dat.nc.gz \
-					cru_orig/cru_ts4.01.1981.1990.wet.dat.nc.gz \
-					cru_orig/cru_ts4.01.1941.1950.tmp.dat.nc.gz \
-					cru_orig/cru_ts4.01.1901.1910.wet.dat.nc.gz \
-					cru_orig/cru_ts4.01.1941.1950.pre.dat.nc.gz \
-					cru_orig/cru_ts4.01.1911.1920.wet.dat.nc.gz \
-					cru_orig/cru_ts4.01.1931.1940.wet.dat.nc.gz \
-					cru_orig/cru_ts4.01.1951.1960.pre.dat.nc.gz \
-					cru_orig/cru_ts4.01.1961.1970.wet.dat.nc.gz \
-					cru_orig/cru_ts4.01.1971.1980.pre.dat.nc.gz \
-					cru_orig/cru_ts4.01.1961.1970.pre.dat.nc.gz
-CRU_PRE = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
-					grep 'pre')
-CRU_TMP = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
-					grep 'tmp')
-CRU_WET = $(shell echo $(CRU_ALL) | sed 's/ /\n/g' | \
-					grep 'wet')
-
-export CRUJRA = crujra_orig/crujra.V1.1.5d.pre.1958.365d.noc.nc.gz\
-  crujra_orig/crujra.V1.1.5d.pre.1959.365d.noc.nc.gz\
-  crujra_orig/crujra.V1.1.5d.pre.1960.365d.noc.nc.gz
-  # TODO: Uncomment these in final version
-  # crujra_orig/crujra.V1.1.5d.pre.1961.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1962.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1963.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1964.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1965.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1966.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1967.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1968.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1969.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1970.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1971.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1972.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1973.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1974.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1975.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1976.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1977.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1978.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1979.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1980.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1981.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1982.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1983.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1984.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1985.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1986.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1987.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1988.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1989.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1990.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1991.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1992.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1993.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1994.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1995.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1996.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1997.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1998.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.1999.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2000.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2001.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2002.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2003.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2004.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2005.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2006.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2007.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2008.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2009.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2010.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2011.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2012.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2013.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2014.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2015.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2016.365d.noc.nc.gz\
-  # crujra_orig/crujra.V1.1.5d.pre.2017.365d.noc.nc.gz
-export CRUJRA_UNZIPPED = $(patsubst crujra_orig/%.nc.gz, heap/crujra_orig/%.nc, $(CRUJRA))
-
-###############################################################################
 ## TARGET FILES
 ###############################################################################
-
-SYMLINKS = cru_orig heap output trace_orig
 
 # For every original TraCE file there is one cropped file.
 # We need to calculate PRECT files from PRECC and PRECL. For that, we first
@@ -199,82 +92,6 @@ NCO = $(BIN)/ncremap
 # created, the wildcards in the variables `DOWNSCALED_FILES`,
 # `DEBIASED_TREFHT`, etc. are parsed correctly.
 
-.PHONY: all
-# TODO: This is only a stub so far.
-all : $(SYMLINKS) $(OUTPUT_FILES)
-	@echo "Not implemented yet."
-
-.PHONY: debias
-debias : $(SYMLINKS) $(SPLIT_FILES) $(DEBIASED_TREFHT) $(DEBIASED_PRECT)
-	@echo "Debiasing finished."
-
-.PHONY: downscale
-downscale : $(SYMLINKS) $(SPLIT_FILES) $(DOWNSCALED_FILES)
-	@echo "Downscaling finished."
-
-.PHONY: split
-split : $(SYMLINKS) $(SPLIT_FILES)
-	@echo "Splitting finished."
-
-.PHONY: crop
-# This target depends on all original TraCE files being cropped in the folder
-# 'heap/cropped/'.
-crop : $(SYMLINKS) $(CROPPED_FILES)
-	@echo "Cropping finished."
-
-.PHONY: clean
-# Be cautious: Only remove those files and directories that are also created
-# by this script.
-# NCO can produce temporary files like this one:
-# 'trace.01.22000-20001BP.cam2.h0.PRECC.0000101-0200012.nc.pid31368.ncks.tmp'
-# Those temporary NCO files are removed with a `find` command.
-# Append `exit 0` to the `rm` command so that the return code is always
-# SUCCESS. Otherwise the rule fails if `rm` doesn’t find a file/directory.
-# Also remove the symbolic links "trace_orig" and "cru_orig".
-clean :
-	@rm --verbose \
-		heap/bias_*.nc \
-		heap/cropped/trace*.nc \
-		heap/cru_cat/*.nc \
-		heap/cru_mean/*.nc \
-		heap/cru_orig/*.nc \
-		heap/crujra_orig/*.nc \
-		heap/cru_regrid/*.nc \
-		heap/debiased/trace.*.nc \
-		heap/downscaled/**trace*.nc \
-		heap/grid_template.nc \
-		heap/modern_trace_*.nc \
-		heap/split/**.nc \
-		PET0.RegridWeightGen.Log \
-		2>/dev/null; \
-		exit 0
-	@find heap -name '*.nc.pid*.nc*.tmp' -delete -print 2>/dev/null; exit 0
-	@rm --dir --verbose \
-		heap/cropped \
-		heap/cru_cat \
-		heap/cru_mean \
-		heap/cru_orig \
-		heap/crujra_orig \
-		heap/cru_regrid \
-		heap/debiased \
-		heap/downscaled \
-		heap/split \
-		2>/dev/null; \
-		exit 0
-	@rm --verbose \
-		cru_orig \
-		crujra_orig \
-		heap \
-		output \
-		trace_orig \
-		2>/dev/null; \
-		exit 0
-
-clean_install : clean
-	@rm --recursive --verbose \
-		$(MINICONDA) \
-		$(CONDA_INSTALLER)
-
 ###############################################################################
 ## INSTALLATION
 ###############################################################################
@@ -352,16 +169,6 @@ scripts/rescale.py : $(PYTHON) $(TERMCOLOR) $(YAML) $(NCO) options.yaml heap/gri
 scripts/symlink_dir.py : $(PYTHON) $(TERMCOLOR) $(YAML) options.yaml
 
 ###############################################################################
-## GLOBAL DEFINES
-###############################################################################
-
-# Regrid the first prerequisite file and save it in rule target.
-define RESCALE_RULE =
-@mkdir --parents "$$(dirname @<)"
-@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/rescale.py $< $@
-endef
-
-###############################################################################
 ## SYMLINK INPUT & OUTPUT DIRECTORIES
 ###############################################################################
 
@@ -379,98 +186,6 @@ output : scripts/symlink_dir.py options.yaml
 
 trace_orig : scripts/symlink_dir.py options.yaml
 	@$(PYTHON) scripts/symlink_dir.py '$@'
-
-###############################################################################
-## DECOMPRESS CRU FILES
-###############################################################################
-
-# `pv` ("pipe viewer") shows the progress.
-define UNZIP_RULE =
-@mkdir --parents $$(dirname $@)
-@echo "Unzipping $<..."
-@pv $< | gunzip --verbose --decompress --synchronous --stdout > $@
-endef
-
-heap/cru_orig/%.nc : cru_orig/%.nc.gz
-	$(UNZIP_RULE)
-
-heap/crujra_orig/%.nc : crujra_orig/%.nc.gz
-	$(UNZIP_RULE)
-
-###############################################################################
-## CONCATENATE AND AGGREGATE CRU FILES
-###############################################################################
-
-heap/cru_cat/pre.nc : cru_orig $(patsubst cru_orig/%.nc.gz, heap/cru_orig/%.nc, $(CRU_PRE)) $(NCO)
-	@mkdir --parents 'heap/cru_cat'
-	@echo "Concatenating CRU precipitation..."
-	@env PATH="$(BIN):$(PATH)" \
-	  ncrcat $(filter heap/cru_orig/%, $^) $@
-
-heap/cru_cat/tmp.nc : cru_orig $(patsubst cru_orig/%.nc.gz, heap/cru_orig/%.nc, $(CRU_TMP)) $(NCO)
-	@mkdir --parents 'heap/cru_cat'
-	@echo "Concatenating CRU temperature..."
-	@env PATH="$(BIN):$(PATH)" \
-	  ncrcat $(filter heap/cru_orig/%, $^) $@
-
-heap/cru_cat/wet.nc : cru_orig $(patsubst cru_orig/%.nc.gz, heap/cru_orig/%.nc, $(CRU_WET)) $(NCO)
-	@mkdir --parents 'heap/cru_cat'
-	@echo "Concatenating CRU wet days..."
-	@env PATH="$(BIN):$(PATH)" \
-	  ncrcat $(filter heap/cru_orig/%, $^) $@
-
-###############################################################################
-## AGGREGATE CRU FILES
-###############################################################################
-
-# Calculate the monthly averages over all years so that we have only 12 values
-# in each file.
-
-heap/cru_mean/%.nc : heap/cru_cat/%.nc
-	@mkdir --parents 'heap/cru_mean'
-	@echo "Calculating monthly means over total time period in CRU:"
-	@echo "$< => $@"
-	@env PATH="$(BIN):$(PATH)" \
-		cdo ymonmean $< $@
-
-# Calculate the day-to-day standard deviation of daily precipitation sum as
-# monthly means.
-heap/crujra/monthly_std.nc : $(CRUJRA_UNZIPPED) scripts/aggregate_crujra.sh
-	@env PATH="$(BIN):$(PATH)" \
-		scripts/aggregate_crujra.sh
-
-###############################################################################
-## REGRID CRU FILES
-###############################################################################
-
-heap/cru_regrid/%.nc : heap/cru_mean/%.nc scripts/rescale.py
-	$(RESCALE_RULE)
-
-heap/crujra/monthly_std_regrid.nc : heap/crujra/monthly_std.nc scripts/rescale.py
-	$(RESCALE_RULE)
-
-###############################################################################
-## AGGREGATE MODERN TRACE DATA
-###############################################################################
-
-heap/modern_trace_TREFHT.nc : trace_orig scripts/aggregate_modern_trace.py
-	@$(PYTHON) scripts/aggregate_modern_trace.py TREFHT
-
-heap/modern_trace_FSDS.nc : trace_orig scripts/aggregate_modern_trace.py
-	@$(PYTHON) scripts/aggregate_modern_trace.py FSDS
-
-heap/modern_trace_PRECL.nc : trace_orig scripts/aggregate_modern_trace.py
-	@$(PYTHON) scripts/aggregate_modern_trace.py PRECL
-
-heap/modern_trace_PRECC.nc : trace_orig scripts/aggregate_modern_trace.py
-	@$(PYTHON) scripts/aggregate_modern_trace.py PRECC
-
-heap/modern_trace_PRECT.nc : heap/modern_trace_PRECL.nc heap/modern_trace_PRECC.nc $(NCO) scripts/add_PRECC_PRECL.sh
-	@env PATH="$(BIN):$(PATH)" \
-		scripts/add_PRECC_PRECL.sh \
-		heap/modern_trace_PRECC.nc \
-		heap/modern_trace_PRECL.nc \
-		heap/modern_trace_PRECT.nc
 
 ###############################################################################
 ## REGRID MODERN TRACE DATA
@@ -494,19 +209,6 @@ heap/bias_PRECT.nc : heap/cru_regrid/pre.nc heap/modern_trace_PRECT_regrid.nc sc
 
 heap/bias_TREFHT.nc : heap/cru_regrid/tmp.nc heap/modern_trace_TREFHT_regrid.nc scripts/calculate_bias.py
 	@$(PYTHON) scripts/calculate_bias.py "TREFHT"
-
-###############################################################################
-## CROPPING
-###############################################################################
-
-# For each original TraCE file there is a rule to create the corresponding
-# cropped NetCDF file (with the same name) in heap/cropped.
-heap/cropped/%.nc : trace_orig/%.nc scripts/crop_file.py
-	@mkdir --parents heap/cropped
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/crop_file.py $< $@
-
-heap/grid_template.nc : heap/cru_mean/tmp.nc scripts/crop_file.py
-	@env PATH="$(BIN):$(PATH)" $(PYTHON) scripts/crop_file.py $< $@
 
 ###############################################################################
 ## SPLIT INTO 100 YEARS FILES

@@ -1,3 +1,5 @@
+#!/bin/python
+
 from termcolor import cprint
 import os
 import sys
@@ -36,14 +38,8 @@ def get_monthly_means(trace_file):
     data = data.groupby('time').mean('time')
     return data
 
-
 def aggregate_modern_trace(target, source, env):
-    """
-    Calculate 12 monthly means from monthly values from TraCE file over time.
-
-    This function is designed as a SCons action to be executed by a
-    SCons builder.
-    """
+    """ TODO """
     # Calculate averages and write new NetCDF files to heap directory.
     cprint("Aggregating monthly averages from file '%s'." % source,
            "green")
@@ -51,4 +47,3 @@ def aggregate_modern_trace(target, source, env):
     cprint("Writing file '%s'." % target, "green")
     dataset.to_netcdf(target)
     dataset.close()
-    return None  # Success.
