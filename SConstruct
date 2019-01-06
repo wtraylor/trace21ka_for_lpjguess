@@ -1,6 +1,10 @@
 import sys
 import os
+
+# The following functions are from python files in the subdirectory
+# "site_scons/".
 from aggregate_modern_trace import aggregate_modern_trace
+from calculate_bias import calculate_bias
 
 
 ### User Options #######################################################
@@ -63,9 +67,11 @@ builders['ConcatCruFiles'] = Builder('ncrcat $SOURCES $TARGET',
 # Calculate the monthly averages over all years so that we have only 12 values
 # in each file.
 builders['AggCru'] = Builder('cdo ymonmean $SOURCE $TARGET',
-                                   prefix='cru_mean/', suffix='.nc',
-                                   src_prefix='cru_cat/', src_suffix='.nc')
+                             prefix='cru_mean/', suffix='.nc',
+                             src_prefix='cru_cat/', src_suffix='.nc')
 
+builders['CalcBias'] = Builder(calculate_bias,
+                               src_prefix='rescaled/')
 
 ### Files ##############################################################
 
@@ -112,19 +118,13 @@ for f in trace_files:
 env.Crop(os.path.join(cropped_dir, 'grid_template.nc'),
          os.path.join(cru_mean, 'tmp.nc'))
 
-rescaled = os.path.join(heap, 'rescaled')
 for f in cru_mean_files:
-    env.Rescale(os.path.join(rescaled, f),
-                os.path.join(cru_mean, f))
+    env.Rescale(f, os.path.join(cru_mean, f))
 
 # TODO: I don’t fully understand the following rule, copied from Makefile.
-env.Rescale(os.path.join(rescaled, 'monthly_std.nc'),
-            os.path.join(crujra, 'monthly_std.nc'))
+env.Rescale('monthly_std.nc', os.path.join(crujra, 'monthly_std.nc'))
 
-for var in ['FSDS', 'PRECT', 'TREFHT']:
-    env.Rescale(
-
-for var in ['TREFHT', 'FSDS', 'PRECL', 'PRECC']:
+for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
     source = "trace.36.400BP-1990CE.cam2.h0.%s.2160101-2204012.nc" % var
     env.AggModernTrace('modern_trace_%s.nc' % var, source)
 
@@ -132,6 +132,9 @@ for var in ['TREFHT', 'FSDS', 'PRECL', 'PRECC']:
 env.Command('modern_trace_PRECT.nc',
             ['modern_trace_PRECC.nc', 'modern_trace_PRECL.nc'],
             './scripts/add_PRECC_PRECL.sh $SOURCES $TARGET')
+
+for var in ['FSDS', 'PRECT', 'TREFHT']:
+    env.Rescale('modern_trace_%s.nc' % var, 'modern_trace_%s.nc' % var)
 
 # Calculate the day-to-day standard deviation of daily precipitation sum as
 # monthly means.
@@ -145,3 +148,15 @@ for var in ['pre', 'tmp', 'wet']:
     files_with_var = [f for f in cru_files if var in f]
     env.ConcatCruFiles(target='%s.nc' % var,
                        source=files_with_var)
+
+for trace_var in ['FSDS', 'PRECT', 'TREFHT']:
+    # The CRU variables corresponding to the TraCE variables.
+    cru_vars = yaml.load(open("options.yaml"))["cru_vars"]
+    if not trace_var in cru_vars:
+        print("Variable '%s' not mapped to a CRU variables." % trace_var)
+        sys.exit(1)
+    cru_file = "heap/cru_regrid/%s.nc" % cru_vars[trace_var]
+    trace_file = "modern_trace_%s" % trace_var
+    bias_file = "bias_%s.nc" % trace_var
+    env.CalcBias(target=bias_file,
+                 source=[trace_file, cru_file])

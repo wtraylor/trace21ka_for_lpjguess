@@ -169,38 +169,6 @@ scripts/rescale.py : $(PYTHON) $(TERMCOLOR) $(YAML) $(NCO) options.yaml heap/gri
 scripts/symlink_dir.py : $(PYTHON) $(TERMCOLOR) $(YAML) options.yaml
 
 ###############################################################################
-## SYMLINK INPUT & OUTPUT DIRECTORIES
-###############################################################################
-
-cru_orig : scripts/symlink_dir.py options.yaml
-	@$(PYTHON) scripts/symlink_dir.py '$@'
-
-crujra_orig : scripts/symlink_dir.py options.yaml
-	@$(PYTHON) scripts/symlink_dir.py '$@'
-
-heap : scripts/symlink_dir.py options.yaml
-	@$(PYTHON) scripts/symlink_dir.py '$@'
-
-output : scripts/symlink_dir.py options.yaml
-	@$(PYTHON) scripts/symlink_dir.py '$@'
-
-trace_orig : scripts/symlink_dir.py options.yaml
-	@$(PYTHON) scripts/symlink_dir.py '$@'
-
-###############################################################################
-## REGRID MODERN TRACE DATA
-###############################################################################
-
-heap/modern_trace_FSDS_regrid.nc : heap/modern_trace_FSDS.nc scripts/rescale.py
-	$(RESCALE_RULE)
-
-heap/modern_trace_PRECT_regrid.nc : heap/modern_trace_PRECT.nc scripts/rescale.py
-	$(RESCALE_RULE)
-
-heap/modern_trace_TREFHT_regrid.nc : heap/modern_trace_TREFHT.nc scripts/rescale.py
-	$(RESCALE_RULE)
-
-###############################################################################
 ## CALCULATE BIAS
 ###############################################################################
 

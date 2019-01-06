@@ -59,7 +59,6 @@ File Structure
     + `add_PRECC_PRECL.sh`: Add the CCSM3 precipitation variables `PRECC` and `PRECL` to create a new file with `PRECT`.
 	+ `aggregate_crujra.sh`: Create a NetCDF file with the mean monthly day-to-day standard deviation of precipitation from the CRU JRA dataset.
     + `aggregate_modern_trace.py`: Create monthly means of the TraCE-21ka output of most recent times and write it to NetCDF files in the heap.
-    + `calculate_bias.py <VAR>`: Create a NetCDF file containing the monthly bias of TraCE compared to the CRUNCEP data.
 	+ `debias.py`: TODO
 	+ `cf_attributes.py`: TODO
 	+ `download_crujra.py`: A little python script for downloading the required CRU JRA files. This is not automatically called by `make`.
