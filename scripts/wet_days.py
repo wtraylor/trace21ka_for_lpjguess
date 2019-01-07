@@ -1,5 +1,3 @@
-#!/bin/python
-
 import numpy as np
 from scipy.stats import gamma
 
@@ -46,3 +44,33 @@ def calc_wet_days(trace_prec, cru_std, days):
     wet_days = np.ceil(wet_days)
     # Make sure that number of wet days does not exceed total number of days.
     return np.where(wet_days > days, days, wet_days)
+
+
+def add_wet_days_to_dataset(trace, prec_std):
+    """Add a variable 'wet_days' to monthly precipitation TraCE dataset.
+
+    Args:
+        trace: xarray dataset of TraCE file with monthly precipitation.
+        prec_std: xarray dataset with monthly standard deviation of daily
+            modern precipitation. The dataset has 12 values (one for each
+            month) per grid cell.
+    """
+    # Arbitrary number for missing values.
+    NODATA = -9999
+    # Create a numpy array of the same shape, but with missing values.
+    wet_values = np.full_like(trace[var].values, NODATA, dtype='int32')
+    # Create an array that holds the month number (0 to 11) for each index in
+    # the original TraCE time dimension.
+    months_array = range(12) * (len(trace['time']) // 12)
+    # Do the same for the number of days within each month.
+    days_per_month = [31,28,31,30,31,30,31,31,30,31,30,31]
+    days_per_month_array = days_per_month  * (len(trace['time']) // 12)
+    for i, (month, days) in enumerate(zip(months_array, days_per_month_array)):
+        mean_daily_prec = trace[var][i] / float(days)
+        wet_values[i] = calc_wet_days(mean_daily_prec,
+                                      cru_prec_std[month],
+                                      days)
+    set_attributes(wet_values, "wet_days")
+    wet_values.attrs['_FillValue'] = NODATA
+    wet_values.attrs['missing_value'] = NODATA
+    trace['wet'] = wet_values

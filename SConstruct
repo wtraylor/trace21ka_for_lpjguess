@@ -1,13 +1,16 @@
-import sys
 import os
+import sys
+print(sys.version_info)
+import yaml
 
 # The following functions are from python files in the subdirectory
 # "site_scons/".
 from aggregate_modern_trace import aggregate_modern_trace
 from calculate_bias import calculate_bias
+from debias import debias_trace_file_action
 
 
-### User Options #######################################################
+# User Options #########################################################
 
 # List all directories where the original climate files are stored. The
 # directories (“repositories”) will be searched in the order you declare them
@@ -26,17 +29,19 @@ out_dir = 'output'
 heap = 'heap'
 
 
-### Initialize Environment #############################################
+# Initialize Environment ###############################################
 
 # Here, we just create the environment. The builders are appended later.
 env = Environment()
 
-# The VariantDir() function specifies where to save the output files. The `src_dir` should be set to '.' because input files are taken from a variety of directories, which are given by the Repository() call.
+# The VariantDir() function specifies where to save the output files. The
+# `src_dir` should be set to '.' because input files are taken from a variety
+# of directories, which are given by the Repository() call.
 VariantDir(variant_dir=out_dir, src_dir='.')
 VariantDir(variant_dir=heap, src_dir='.')
 
 
-### Builders ###########################################################
+# Builders #############################################################
 
 builders = env['BUILDERS']
 
@@ -73,26 +78,42 @@ builders['AggCru'] = Builder('cdo ymonmean $SOURCE $TARGET',
 builders['CalcBias'] = Builder(calculate_bias,
                                src_prefix='rescaled/')
 
-### Files ##############################################################
+# TODO: Create emitter to properly create CDO’s prefix for output files.
+# TODO: What are the output files? Length of TraCE files varies, so how can we
+# know the output files? Should I write an xarray script myself?
+builders['SplitFile'] = Builder('cdo splitsel,1200 $SOURCE $TARGET')
+
+builders['Debias'] = Builder(debias_trace_file_action, prefix='debiased/',
+                             src_prefix='rescaled/')
+
+
+# Files ################################################################
+
 
 def get_original_cru_file_names():
-    """ Create list of original CRU files between 1900 and 1990. """
+    """Create list of original CRU files between 1900 and 1990."""
     years = [(y+1, y+10) for y in range(1920, 1971, 10)]
     vars = ['pre', 'wet', 'tmp']
-    # Combine every time segment (decade) with each every variable.
+    # Combine every time segment (decade) with every variable.
     years_vars = tuple((y1, y2, v) for (y1, y2) in years for v in vars)
     return ["cru_ts4.01.%d.%d.%s.dat.nc" % (y1, y2, v) for (y1, y2, v) in
-            years_vars)
+            years_vars]
+
+def get_trace_file_names():
+    """Create a list of all 
 
 # List of original CRU files from 1990 to 1990.
 cru_files = get_original_cru_file_names()
 
 # List of CRU-JRA files from 1958 to 1990.
 crujra_files = ["crujra.V1.1.5d.pre.%d.365d.noc.nc" % y for y in
-                range(1958,1991)]
+                range(1958, 1991)]
+
+def 
+trace_files = ["
 
 
-### Rules ##############################################################
+# Rules ################################################################
 
 # The calls to Scons builder functions are comparable to Makefile rules. The
 # first argument is the target and the second is the source (like prerequisites
@@ -105,24 +126,35 @@ crujra_files = ["crujra.V1.1.5d.pre.%d.365d.noc.nc" % y for y in
 # targets.
 # Default()
 
-for f in crujra_files: env.Unzip(f)
-for f in cru_files: env.Unzip(f)
+for f in crujra_files:
+    env.Unzip(f)
+for f in cru_files:
+    env.Unzip(f)
+
+def get_trace_split_files(trace_file):
+    """ Get list of file names after splitting the TraCE file. """
+    # TODO: Implement this
+    return trace_file + "_split"
 
 for f in trace_files:
     cropped = env.Crop(f)
-    # TODO: split files
-    env.Rescale(f, cropped)
-    # TODO: Continue processing the cropped file
+    split_files = get_trace_split_files(f)
+    split = env.SplitFile(split_files)
+    rescaled = env.Rescale(split)
+    # The final step is debiasing:
+    final = os.path.join(out_dir, f)
+    if "PRECT" in f:
+        env.Debias(target=final, source=rescaled + ["bias_PRECT.nc"])
+    elif "TREFHT" in f:
+        env.Debias(target=final, source=rescaled + ["bias_TREFHT.nc"])
+    else:
+        env.Finalize(target=final, source=rescaled)
 
 # TODO: where does cru_mean come from?
-env.Crop(os.path.join(cropped_dir, 'grid_template.nc'),
-         os.path.join(cru_mean, 'tmp.nc'))
+env.Crop('grid_template.nc', os.path.join('cru_mean', 'tmp.nc'))
 
 for f in cru_mean_files:
-    env.Rescale(f, os.path.join(cru_mean, f))
-
-# TODO: I don’t fully understand the following rule, copied from Makefile.
-env.Rescale('monthly_std.nc', os.path.join(crujra, 'monthly_std.nc'))
+    env.Rescale(f, os.path.join('cru_mean', f))
 
 for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
     source = "trace.36.400BP-1990CE.cam2.h0.%s.2160101-2204012.nc" % var
@@ -143,19 +175,23 @@ env.Command('./scripts/aggregate_crujra.sh',
             target='crujra/monthly_std.nc',
             source=crujra_files)
 
+# TODO: I don’t fully understand the following rule, copied from Makefile.
+env.Rescale('monthly_std.nc', os.path.join('crujra', 'monthly_std.nc'))
+
 for var in ['pre', 'tmp', 'wet']:
     # Filter list of all CRU files to file names containing `var`.
     files_with_var = [f for f in cru_files if var in f]
     env.ConcatCruFiles(target='%s.nc' % var,
                        source=files_with_var)
 
-for trace_var in ['FSDS', 'PRECT', 'TREFHT']:
+# TODO: Calculate bias for FSDS?
+for trace_var in ['PRECT', 'TREFHT']:
     # The CRU variables corresponding to the TraCE variables.
     cru_vars = yaml.load(open("options.yaml"))["cru_vars"]
-    if not trace_var in cru_vars:
+    if trace_var not in cru_vars:
         print("Variable '%s' not mapped to a CRU variables." % trace_var)
         sys.exit(1)
-    cru_file = "heap/cru_regrid/%s.nc" % cru_vars[trace_var]
+    cru_file = "%s.nc" % cru_vars[trace_var]
     trace_file = "modern_trace_%s" % trace_var
     bias_file = "bias_%s.nc" % trace_var
     env.CalcBias(target=bias_file,

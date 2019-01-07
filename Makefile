@@ -169,16 +169,6 @@ scripts/rescale.py : $(PYTHON) $(TERMCOLOR) $(YAML) $(NCO) options.yaml heap/gri
 scripts/symlink_dir.py : $(PYTHON) $(TERMCOLOR) $(YAML) options.yaml
 
 ###############################################################################
-## CALCULATE BIAS
-###############################################################################
-
-heap/bias_PRECT.nc : heap/cru_regrid/pre.nc heap/modern_trace_PRECT_regrid.nc scripts/calculate_bias.py
-	@$(PYTHON) scripts/calculate_bias.py "PRECT"
-
-heap/bias_TREFHT.nc : heap/cru_regrid/tmp.nc heap/modern_trace_TREFHT_regrid.nc scripts/calculate_bias.py
-	@$(PYTHON) scripts/calculate_bias.py "TREFHT"
-
-###############################################################################
 ## SPLIT INTO 100 YEARS FILES
 ###############################################################################
 
@@ -193,26 +183,6 @@ heap/split/%000000.nc : heap/cropped/%.nc $(CDO)
 	@echo "Splitting file '$<' into 100-years slices."
 	@env PATH="$(BIN):$(PATH)" \
 		cdo splitsel,1200 $< $(patsubst %.nc, %, $@)
-
-###############################################################################
-## DOWNSCALE TRACE FILES
-###############################################################################
-
-# For every split file, there is a downscaled target.
-heap/downscaled/%.nc : heap/split/%.nc scripts/rescale.py
-	$(RESCALE_RULE)
-
-###############################################################################
-## DEBIAS TRACE FILES
-###############################################################################
-
-$(DEBIASED_PRECT) : heap/debiased/%.nc : heap/downscaled/%.nc heap/bias_PRECT.nc scripts/debias.py
-	@mkdir --parents 'heap/debiased'
-	@$(PYTHON) scripts/debias.py $< $@
-
-$(DEBIASED_TREFHT) : heap/debiased/%.nc : heap/downscaled/%.nc heap/bias_TREFHT.nc scripts/debias.py
-	@mkdir --parents 'heap/debiased'
-	@$(PYTHON) scripts/debias.py $< $@
 
 ###############################################################################
 ## CALCULATING PRECC + PRECL = PRECT
