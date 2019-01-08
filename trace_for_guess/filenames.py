@@ -1,4 +1,4 @@
-def get_original_cru_file_names():
+def get_cru_filenames():
     """Create list of original CRU files between 1900 and 1990."""
     years = [(y+1, y+10) for y in range(1920, 1971, 10)]
     vars = ['pre', 'wet', 'tmp']
@@ -7,8 +7,13 @@ def get_original_cru_file_names():
     return ["cru_ts4.01.%d.%d.%s.dat.nc" % (y1, y2, v) for (y1, y2, v) in
             years_vars]
 
-def get_trace_file_names():
-    """Create a list of all original TraCE-21ka NetCDF file names."""
+def get_crujra_filenames():
+    """Create a list of all relevant original CRU-JRA filenames."""
+    # TODO
+    return list()
+
+def get_trace_filenames():
+    """Create a list of all original TraCE-21ka NetCDF filenames."""
     vars = ['FSDS', 'PRECC', 'PRECT', 'TREFHT']
     l = list()
     for v in vars:
