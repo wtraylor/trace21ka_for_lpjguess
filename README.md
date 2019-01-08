@@ -19,16 +19,13 @@ Requirements
 
 - A Linux terminal on a 64bit machine.
 
-- A _make_ implementation, e.g. `gmake`.
-
 - Some command line tools: `gunzip`, `pv`, `wget`
 
-- A working internet connection for the automatic download of [Miniconda](https://conda.io/miniconda.html) and Python packages.
+- Python 3. The required packages can be installed with `pip install -r requirements.txt`.
 
-On Ubuntu run `sudo apt install make wget`
+- [nco](http://nco.sourceforge.net/)
 
-Python and all other necessary software ([nco](http://nco.sourceforge.net/), [cdo](https://code.mpimet.mpg.de/projects/cdo)) are installed through Miniconda automatically and run from local binaries.
-This way, no system-wide installations are required.
+- [cdo](https://code.mpimet.mpg.de/projects/cdo)
 
 How to Use
 ----------
@@ -43,28 +40,20 @@ How to Use
 
 4) Customize `options.yaml` to your own needs.
 
-5) Run `make` from within this directory (where `Makefile` resides).
-Only run `make` from an interactive shell.
+5) Run `./prepare_trace_for_guess`.
 
 There will be some temporary files produced.
 They are stored in the “heap” directory.
-It needs a lot of free space.
-You can create a symbolic link if you like to store the temporary files on another partition: `ln --force --symbolic /path/to/my/heap heap`
 
 File Structure
 --------------
 
-- `heap/`: Directory for temporary files. This can be a symbolic link, too (see above).
 - `scripts/`:
     + `add_PRECC_PRECL.sh`: Add the CCSM3 precipitation variables `PRECC` and `PRECL` to create a new file with `PRECT`.
 	+ `aggregate_crujra.sh`: Create a NetCDF file with the mean monthly day-to-day standard deviation of precipitation from the CRU JRA dataset.
     + `aggregate_modern_trace.py`: Create monthly means of the TraCE-21ka output of most recent times and write it to NetCDF files in the heap.
-	+ `debias.py`: TODO
-	+ `cf_attributes.py`: TODO
 	+ `download_crujra.py`: A little python script for downloading the required CRU JRA files. This is not automatically called by `make`.
-	+ `rescale.py`: TODO
 	+ `symlink_dir.py`: Create a symbolic link in the repository root that points to a directory with downloaded NetCDF files. The path to the this directory is specified in `options.yaml`.
-	+ `wet_days.py`: TODO
 
 Project Outline
 ---------------
