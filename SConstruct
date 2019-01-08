@@ -8,6 +8,7 @@ import yaml
 from aggregate_modern_trace import aggregate_modern_trace
 from calculate_bias import calculate_bias
 from debias import debias_trace_file_action
+import filenames
 
 
 # User Options #########################################################
@@ -89,19 +90,6 @@ builders['Debias'] = Builder(debias_trace_file_action, prefix='debiased/',
 
 # Files ################################################################
 
-
-def get_original_cru_file_names():
-    """Create list of original CRU files between 1900 and 1990."""
-    years = [(y+1, y+10) for y in range(1920, 1971, 10)]
-    vars = ['pre', 'wet', 'tmp']
-    # Combine every time segment (decade) with every variable.
-    years_vars = tuple((y1, y2, v) for (y1, y2) in years for v in vars)
-    return ["cru_ts4.01.%d.%d.%s.dat.nc" % (y1, y2, v) for (y1, y2, v) in
-            years_vars]
-
-def get_trace_file_names():
-    """Create a list of all 
-
 # List of original CRU files from 1990 to 1990.
 cru_files = get_original_cru_file_names()
 
@@ -109,8 +97,7 @@ cru_files = get_original_cru_file_names()
 crujra_files = ["crujra.V1.1.5d.pre.%d.365d.noc.nc" % y for y in
                 range(1958, 1991)]
 
-def 
-trace_files = ["
+trace_files = get_trace_file_names()
 
 
 # Rules ################################################################
