@@ -1,3 +1,59 @@
 #!/usr/bin/env python
+"""Downscale and debias TraCE-21ka NetCDF files for use in LPJ-GUESS.
 
-import trace_for_guess
+See README.md for more details.
+"""
+
+import os
+import yaml
+from termcolor import cprint
+from trace_for_guess import
+aggregate_modern_trace,
+aggregate_monthly_means,
+cat_files,
+crop_file_list,
+unzip_files_if_needed
+
+opts = yaml.load(open("options.yaml"))
+heap = opts["directories"]["heap"]  # Temporary directory to store files.
+cropped = os.path.join(heap, "cropped")  # Subdirectory for cropped files.
+extent = opts["region"]["lon"] + opts["region"]["lat"]
+# TODO: Check if region is valid.
+
+crujra_files = unzip_files_if_needed(
+    filenames=get_crujra_filenames(),
+    orig_dir=opts["directories"]["crujra_orig"],
+    unzip_dir=os.path.join(heap, "unzipped"))
+crujra_files = crop_file_list(crujra_files, cropped, extent)
+# TODO Calculate precipitation standard deviation
+
+cru_files = unzip_files_if_needed(
+    filenames=get_cru_filenames(),
+    orig_dir=opts["directories"]["cru_orig"],
+    unzip_dir=heap)
+cru_mean_files = dict()  # Aggregated CRU files with variable as key.
+for var in ['pre', 'tmp', 'wet']:
+    # Filter list of all CRU files to file names containing `var`.
+    files_with_var = [f for f in cru_files if var in f]
+    cat = cat_files(filelist=files_with_var,
+                    out_file=os.path.join(heap, '%s_cat.nc' % var))
+    aggregated = os.path.join(heaps, "%s_mean.nc" % var)
+    cru_mean_files[var] = aggregate_monthly_means(in_file=cat,
+                                                  out_file=aggregated)
+
+# Only select TraCE files that are in the desired time frame _plus_ the
+# youngest files for calculating bias.
+trace_files = list()  # TODO
+
+for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
+    source = "trace.36.400BP-1990CE.cam2.h0.%s.2160101-2204012.nc" % var
+    aggregate_modern_trace('modern_trace_%s.nc' % var, source)
+
+for f in trace_files:
+    # Crop
+    # Split
+    # Rescale
+    # Debias
+    # Add Wet Days
+    # Set Metadata
+    # Compress
