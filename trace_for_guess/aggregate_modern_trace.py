@@ -1,7 +1,6 @@
 from termcolor import cprint
-import os
-import sys
 import xarray as xr
+
 
 def drop_superfluous_trace_vars(data):
     """Drop all unneeded data variables from a TraCE-21ka xarray dataset."""
@@ -37,18 +36,21 @@ def get_monthly_means(trace_file):
     return data
 
 
-def aggregate_modern_trace(target, source, env):
-    """
-    Calculate 12 monthly means from monthly values from TraCE file over time.
+def aggregate_modern_trace(trace_file, out_file):
+    """Calculate 12 monthly means from values from TraCE file over time.
 
-    This function is designed as a SCons action to be executed by a
-    SCons builder.
+    Args:
+        trace_file: Path to original TraCE-21ka NetCDF file.
+        out_file: Path to output file (will be overwritten).
+
+    Raises:
+        FileNotFoundError: The file `trace_file` wasn’t found.
     """
-    # Calculate averages and write new NetCDF files to heap directory.
-    cprint("Aggregating monthly averages from file '%s'." % source,
+    cprint("Aggregating monthly averages from file '%s'." % trace_file,
            "green")
-    dataset = get_monthly_means(trace_file=source)
-    cprint("Writing file '%s'." % target, "green")
-    dataset.to_netcdf(target)
+    if not os.path.isfile(trace_file):
+        raise FileNotFoundError("Input file doesn’t exist: '%s'" % trace_file)
+    dataset = get_monthly_means(trace_file)
+    cprint("Writing file '%s'." % out_file, "green")
+    dataset.to_netcdf(out_file)
     dataset.close()
-    return None  # Success.
