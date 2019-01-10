@@ -1,20 +1,5 @@
 #!/bin/bash
 
-# Arguments:
-# 1) PRECC (input)
-# 2) PRECL (input)
-# 3) PRECT (output)
-
-# Exit on failure of any command.
-set -e
-
-echo "Adding PRECC and PRECL to PRECT:"
-echo -e "  '$1'\n+ '$2'\n= '$3'"
-
-PRECC="$1"
-PRECL="$2"
-PRECT="$3"
-
 # First copy PRECC file into output location so that we can rename its
 # variable, matching the variable of the other operand.
 cp "$PRECC" "$PRECT"

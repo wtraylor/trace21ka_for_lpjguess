@@ -15,13 +15,19 @@ crop_file_list,
 get_crujra_filenames,
 get_cru_filenames,
 get_trace_filenames,
+rescale_file,
 unzip_files_if_needed
 
 opts = yaml.load(open("options.yaml"))
-heap = opts["directories"]["heap"]  # Temporary directory to store files.
-cropped = os.path.join(heap, "cropped")  # Subdirectory for cropped files.
 extent = opts["region"]["lon"] + opts["region"]["lat"]
 # TODO: Check if region is valid.
+
+# Directories:
+heap = opts["directories"]["heap"]  # Any intermediary files
+cropped_dir = os.path.join(heap, "cropped")  # Cropped files
+debiased_dir = os.path.join(heap, "debiased")
+rescaled_dir = os.path.join(heap, "split")  # Rescaled files
+split_dir = os.path.join(heap, "split")  # Split, but not yet regridded files
 
 
 # PREPARE CRU and CRU-JRA files ########################################
@@ -31,7 +37,7 @@ crujra_files = unzip_files_if_needed(
     filenames=get_crujra_filenames(),
     orig_dir=opts["directories"]["crujra_orig"],
     unzip_dir=os.path.join(heap, "unzipped"))
-crujra_files = crop_file_list(crujra_files, cropped, extent)
+crujra_files = crop_file_list(crujra_files, cropped_dir, extent)
 # TODO Calculate precipitation standard deviation
 
 cru_files = unzip_files_if_needed(
@@ -62,12 +68,21 @@ for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
     source = "trace.36.400BP-1990CE.cam2.h0.%s.2160101-2204012.nc" % var
     aggregate_modern_trace('modern_trace_%s.nc' % var, source)
 
-trace_files = crop_file_list(crujra_files, cropped, extent)
+trace_files = crop_file_list(crujra_files, cropped_dir, extent)
 split_trace_files = list()
 for f in trace_files:
-    split_trace_files += split_file(filename=f, out_dir=heap)
-    # Rescale
-    # Debias
-    # Add Wet Days
+    split_trace_files += split_file(filename=f, out_dir=split_dir)
+
+for f in split_trace_files:
+    f = rescale_file(in_file=f,
+                     out_file=os.path.join(rescaled_dir,
+                                           os.path.basename(f)),
+                     template_file=regrid_template_file,
+                     alg=opts["regrid_algorithm"])
+
+debias_file(in_file=f,
+            bias_file=,#TODO
+            out_file=os.path.join(debiased_dir,
+                                  os.path.basename(f)))
     # Set Metadata
     # Compress
