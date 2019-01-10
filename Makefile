@@ -172,18 +172,6 @@ scripts/symlink_dir.py : $(PYTHON) $(TERMCOLOR) $(YAML) options.yaml
 ## SPLIT INTO 100 YEARS FILES
 ###############################################################################
 
-# Create 100 years files (1200 time steps, 12*100 months) for each cropped file.
-# The split files are named with a suffix to the original file name:
-# *000000.nc,: *000001.nc,: *000002.nc, etc.
-# The original TraCE files are of varying time length, so the number of created
-# split files is not known beforehand. Therefore, we use the first split file
-# (index 000000) as a representative target for all split files.
-heap/split/%000000.nc : heap/cropped/%.nc $(CDO)
-	@mkdir --parents heap/split
-	@echo "Splitting file '$<' into 100-years slices."
-	@env PATH="$(BIN):$(PATH)" \
-		cdo splitsel,1200 $< $(patsubst %.nc, %, $@)
-
 ###############################################################################
 ## CALCULATING PRECC + PRECL = PRECT
 ###############################################################################

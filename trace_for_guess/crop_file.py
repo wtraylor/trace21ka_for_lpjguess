@@ -1,6 +1,7 @@
+from shutil import which
+from subprocess import run
 from termcolor import cprint
 import os
-import subprocess
 
 
 def crop_file(in_file, out_file, ext):
@@ -17,18 +18,21 @@ def crop_file(in_file, out_file, ext):
 
     Raises:
         FileNotFoundError: `in_file` doesn’t exist.
+        RuntimeError: Executable `ncks` is not in the PATH.
         RuntimeError: NCKS failed or no output file was created.
     """
     cprint("Cropping file '%s'..." % in_file, "green")
     if not os.path.isfile(in_file):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % in_file)
-    status = subprocess.run(["ncks",
-                             "--overwrite",
-                             "--dimension", "lon,%.2f,%.2f" % (ext[0], ext[1]),
-                             "--dimension", "lat,%.2f,%.2f" % (ext[0],
-                                                               ext[1]),
-                             in_file,
-                             out_file]).returncode
+    if which("ncks") is None:
+        raise RuntimeError("Executable `ncks` not found.")
+    status = run(["ncks",
+                  "--overwrite",
+                  "--dimension", "lon,%.2f,%.2f" % (ext[0], ext[1]),
+                  "--dimension", "lat,%.2f,%.2f" % (ext[0],
+                                                    ext[1]),
+                  in_file,
+                  out_file]).returncode
     if status != 0:
         raise RuntimeError("Cropping with `ncks` failed: Bad return code.")
     if not os.path.isfile(out_file):

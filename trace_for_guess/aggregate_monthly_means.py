@@ -1,4 +1,5 @@
 from os.path import isfile
+from shutil import which
 from subprocess import run
 
 
@@ -17,11 +18,14 @@ def aggregate_monthly_means(in_file, out_file):
 
     Raises:
         FileNotFoundError: The file `in_file` wasn’t found.
+        RuntimeError: The `cdo` command is not in the PATH.
         RuntimeError: The `cdo` command returned an error or the output
             file wasn’t created.
     """
     if not isfile(in_file):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % in_file)
+    if which("cdo") is None:
+        raise RuntimeError("Executable `cdo` not found.")
     status = run(["cdo", "ymonmean", in_file, out_file])
     if status != 0:
         raise RuntimeError("Cropping with `ncks` failed: Bad return code.")

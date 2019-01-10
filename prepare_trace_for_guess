@@ -12,6 +12,9 @@ aggregate_modern_trace,
 aggregate_monthly_means,
 cat_files,
 crop_file_list,
+get_crujra_filenames,
+get_cru_filenames,
+get_trace_filenames,
 unzip_files_if_needed
 
 opts = yaml.load(open("options.yaml"))
@@ -19,6 +22,10 @@ heap = opts["directories"]["heap"]  # Temporary directory to store files.
 cropped = os.path.join(heap, "cropped")  # Subdirectory for cropped files.
 extent = opts["region"]["lon"] + opts["region"]["lat"]
 # TODO: Check if region is valid.
+
+
+# PREPARE CRU and CRU-JRA files ########################################
+
 
 crujra_files = unzip_files_if_needed(
     filenames=get_crujra_filenames(),
@@ -41,17 +48,24 @@ for var in ['pre', 'tmp', 'wet']:
     cru_mean_files[var] = aggregate_monthly_means(in_file=cat,
                                                   out_file=aggregated)
 
+
+# PREPARE TraCE-21ka files #############################################
+
+
+# TODO:
 # Only select TraCE files that are in the desired time frame _plus_ the
 # youngest files for calculating bias.
-trace_files = list()  # TODO
+
+trace_files = get_trace_filenames()
 
 for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
     source = "trace.36.400BP-1990CE.cam2.h0.%s.2160101-2204012.nc" % var
     aggregate_modern_trace('modern_trace_%s.nc' % var, source)
 
+trace_files = crop_file_list(crujra_files, cropped, extent)
+split_trace_files = list()
 for f in trace_files:
-    # Crop
-    # Split
+    split_trace_files += split_file(filename=f, out_dir=heap)
     # Rescale
     # Debias
     # Add Wet Days

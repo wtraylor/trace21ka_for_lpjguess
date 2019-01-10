@@ -1,6 +1,6 @@
+from subprocess import run
 from termcolor import cprint
 import os
-import subprocess
 
 
 def rescale_file(in_file, out_file, template_file, alg):
@@ -19,6 +19,9 @@ def rescale_file(in_file, out_file, template_file, alg):
 
     Raises:
         FileNotFoundError: If `in_file` or `template_file` doesn’t exist.
+        RuntimeError: The `cdo` command is not in the PATH.
+        RuntimeError: The `ncremap` command failed or produced no output
+            file.
     """
     cprint("Regridding '%s'..." % in_file, "green")
     if not os.path.isfile(in_file):
@@ -26,11 +29,13 @@ def rescale_file(in_file, out_file, template_file, alg):
     if not os.path.isfile(template_file):
         raise FileNotFoundError("Template file doesn’t exist: '%s'" %
                                 template_file)
-    status = subprocess.run(["ncremap",
-                             "--algorithm=%s" % alg,
-                             "--template_file=%s" % template_file,
-                             "--input_file=%s" % in_file,
-                             "--output_file=%s" % out_file])
+    if which("ncremap") is None:
+        raise RuntimeError("Executable `ncremap` not found.")
+    status = run(["ncremap",
+                  "--algorithm=%s" % alg,
+                  "--template_file=%s" % template_file,
+                  "--input_file=%s" % in_file,
+                  "--output_file=%s" % out_file])
     if status != 0:
         raise RuntimeError("Regridding with `ncremap` failed: Bad return "
                            "code.")
