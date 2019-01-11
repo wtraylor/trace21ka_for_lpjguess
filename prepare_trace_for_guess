@@ -66,7 +66,7 @@ trace_files = get_trace_filenames()
 
 for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
     source = "trace.36.400BP-1990CE.cam2.h0.%s.2160101-2204012.nc" % var
-    aggregate_modern_trace('modern_trace_%s.nc' % var, source)
+    aggregate_modern_trace(trace_file=source, outfile='modern_trace_%s.nc' % var)
 
 trace_files = crop_file_list(crujra_files, cropped_dir, extent)
 split_trace_files = list()

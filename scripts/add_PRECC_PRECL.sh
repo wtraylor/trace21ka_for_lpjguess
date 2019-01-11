@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# First copy PRECC file into output location so that we can rename its
-# variable, matching the variable of the other operand.
-cp "$PRECC" "$PRECT"
-ncrename --variable PRECC,PRECL "$PRECT"
-
 # Now we can add the matching variable name "PRECL".
 ncbo --overwrite --op_typ='add' -o "$PRECT" "$PRECL" "$PRECT"
 
