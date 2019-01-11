@@ -1,15 +1,3 @@
-# The directory or symbolic link for original, temporary, and output files.
-cru_orig
-cru_orig/
-crujra_orig
-crujra_orig/
-heap
-heap/
-output
-output/
-trace_orig
-trace_orig/
-
 /Miniconda3-latest-Linux-x86_64.sh
 /miniconda3/
 
