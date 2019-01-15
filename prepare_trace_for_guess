@@ -5,29 +5,38 @@ See README.md for more details.
 """
 
 import os
+import re
+import sys
 import yaml
 from termcolor import cprint
 from trace_for_guess import
+add_precc_and_precl_to_prect,
 aggregate_modern_trace,
 aggregate_monthly_means,
 cat_files,
 crop_file_list,
 get_crujra_filenames,
 get_cru_filenames,
+get_modern_trace_filename,
 get_trace_filenames,
 rescale_file,
 unzip_files_if_needed
 
-opts = yaml.load(open("options.yaml"))
-extent = opts["region"]["lon"] + opts["region"]["lat"]
+if not os.path.isfile('options.yaml'):
+    cprint("Couldn’t find options file in './options.yaml'.", 'red')
+    sys.exit()
+
+opts = yaml.load(open('options.yaml'))
+extent = opts['region']['lon'] + opts['region']['lat']
 # TODO: Check if region is valid.
 
 # Directories:
-heap = opts["directories"]["heap"]  # Any intermediary files
-cropped_dir = os.path.join(heap, "cropped")  # Cropped files
-debiased_dir = os.path.join(heap, "debiased")
-rescaled_dir = os.path.join(heap, "split")  # Rescaled files
-split_dir = os.path.join(heap, "split")  # Split, but not yet regridded files
+heap = opts['directories']['heap']  # Any intermediary files
+cropped_dir = os.path.join(heap, 'cropped')  # Cropped files
+debiased_dir = os.path.join(heap, 'debiased')
+rescaled_dir = os.path.join(heap, 'split')  # Rescaled files
+split_dir = os.path.join(heap, 'split')  # Split, but not yet regridded files
+trace_dir = opts['directories']['trace_orig']
 
 
 # PREPARE CRU and CRU-JRA files ########################################
@@ -35,14 +44,14 @@ split_dir = os.path.join(heap, "split")  # Split, but not yet regridded files
 
 crujra_files = unzip_files_if_needed(
     filenames=get_crujra_filenames(),
-    orig_dir=opts["directories"]["crujra_orig"],
-    unzip_dir=os.path.join(heap, "unzipped"))
+    orig_dir=opts['directories']['crujra_orig'],
+    unzip_dir=os.path.join(heap, 'unzipped'))
 crujra_files = crop_file_list(crujra_files, cropped_dir, extent)
 # TODO Calculate precipitation standard deviation
 
 cru_files = unzip_files_if_needed(
     filenames=get_cru_filenames(),
-    orig_dir=opts["directories"]["cru_orig"],
+    orig_dir=opts['directories']['cru_orig'],
     unzip_dir=heap)
 cru_mean_files = dict()  # Aggregated CRU files with variable as key.
 for var in ['pre', 'tmp', 'wet']:
@@ -50,7 +59,7 @@ for var in ['pre', 'tmp', 'wet']:
     files_with_var = [f for f in cru_files if var in f]
     cat = cat_files(filelist=files_with_var,
                     out_file=os.path.join(heap, '%s_cat.nc' % var))
-    aggregated = os.path.join(heaps, "%s_mean.nc" % var)
+    aggregated = os.path.join(heaps, '%s_mean.nc' % var)
     cru_mean_files[var] = aggregate_monthly_means(in_file=cat,
                                                   out_file=aggregated)
 
@@ -58,17 +67,32 @@ for var in ['pre', 'tmp', 'wet']:
 # PREPARE TraCE-21ka files #############################################
 
 
-# TODO:
-# Only select TraCE files that are in the desired time frame _plus_ the
-# youngest files for calculating bias.
-
-trace_files = get_trace_filenames()
-
+# Create means for modern TraCE files. We need them to calculate the bias.
 for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
-    source = "trace.36.400BP-1990CE.cam2.h0.%s.2160101-2204012.nc" % var
-    aggregate_modern_trace(trace_file=source, outfile='modern_trace_%s.nc' % var)
+    out_file = f'modern_trace_{var}.nc'
+    aggregate_modern_trace(trace_file=get_modern_trace_filename(var),
+                           out_file=out_file)
+add_precc_and_precl_to_prect(precc_file='modern_trace_PRECC.nc',
+                             precc_file='modern_trace_PRECL.nc',
+                             prect_file='modern_trace_PRECT.nc')
 
-trace_files = crop_file_list(crujra_files, cropped_dir, extent)
+# Calculate bias for all variables specified in "options.yaml".
+for trace_var in opts['cru_vars']:
+    cru_var = opts['cru_vars'][trace_var]
+
+# Create all PRECT files in the "heap".
+for prect in get_trace_filenames(['PRECT']):
+    precc = os.path.join(trace_dir, re.sub('PRECT', 'PRECC', prect))
+    precl = os.path.join(trace_dir, re.sub('PRECT', 'PRECL', prect))
+    add_precc_and_precl_to_prect(precc_file=precc,
+                                 precl_file=precl,
+                                 prect_file=os.path.join(heap, prect))
+
+
+trace_files = get_trace_filenames(['FSDS', 'PRECT', 'TREFHT'])
+
+# Crop, split and rescale all TraCE files.
+trace_files = crop_file_list(trace_files, cropped_dir, extent)
 split_trace_files = list()
 for f in trace_files:
     split_trace_files += split_file(filename=f, out_dir=split_dir)
@@ -78,7 +102,7 @@ for f in split_trace_files:
                      out_file=os.path.join(rescaled_dir,
                                            os.path.basename(f)),
                      template_file=regrid_template_file,
-                     alg=opts["regrid_algorithm"])
+                     alg=opts['regrid_algorithm'])
 
 debias_file(in_file=f,
             bias_file=,#TODO

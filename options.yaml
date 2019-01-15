@@ -54,7 +54,7 @@ nc_attributes:
     standard_name: 'longitude'
     units: 'degrees_east'
   prec:
-    long_name: 'Monthly precipitation amount'
+    long_name: 'Total (convective and large-scale) precipitation rate (liq + ice)'
     standard_name: 'precipitation_amount'
     units: 'kg m-2'
   radiation:

@@ -27,8 +27,8 @@ def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
     cprint("Calculating bias:", "green")
     cprint("%s x %s -> %s" (trace_file, cru_file, bias_file), "green")
     if not isfile(trace_file):
-        raise FileNotFoundError("TraCE-21ka mean file doesn’t exist: '%s'"
-                                % trace_file)
+        raise FileNotFoundError(
+            "TraCE-21ka mean file doesn’t exist: '%s'" % trace_file)
     if not isfile(cru_file):
         raise FileNotFoundError("CRU mean file doesn’t exist: '%s'" % cru_file)
     # Open and load the files completely. They need to be in the RAM for
