@@ -1,6 +1,7 @@
-from subprocess import run
-from termcolor import cprint
 import os
+from subprocess import run
+
+from termcolor import cprint
 
 
 def rescale_file(in_file, out_file, template_file, alg):

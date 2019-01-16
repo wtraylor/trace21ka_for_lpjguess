@@ -1,6 +1,7 @@
 import os
-from termcolor import cprint
 from zipfile import ZipFile
+
+from termcolor import cprint
 
 
 def unzip(filename: str, targetdir: str) -> None:

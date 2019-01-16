@@ -10,12 +10,3 @@ def find_file(filename):
     Raises:
         FileNotFoundError: `filename` was not found.
     """
-
-
-
-
-
-
-
-
-

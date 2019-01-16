@@ -3,12 +3,13 @@
 # This script will download all CRU JRA-55 files (version 1.1.5) into the
 # CRU-JRA directory specified in "options.yaml".
 
+import os
 from shutil import which
 from subprocess import run
 from sys import exit
-from termcolor import cprint
-import os
+
 import yaml
+from termcolor import cprint
 
 folder = yaml.load(open("options.yaml"))["directories"]["crujra_orig"]
 

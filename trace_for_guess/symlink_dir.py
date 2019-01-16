@@ -3,10 +3,11 @@
 # Command-line arguments:
 # 1) "destination" of symbolic link, equals field name in options.yaml.
 
-from termcolor import cprint
 import os
 import sys
+
 import yaml
+from termcolor import cprint
 
 # Name of this script file.
 scriptfile = os.path.basename(__file__) + ": "

@@ -66,4 +66,3 @@ def get_trace_filenames(variables: list):
               'trace.35.01400-00401BP.cam2.h0.%s.2060101-2160012.nc' % v,
               'trace.36.400BP-1990CE.cam2.h0.%s.2160101-2204012.nc' % v]
     return l
-

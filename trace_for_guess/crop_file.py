@@ -1,7 +1,8 @@
+import os
 from shutil import which
 from subprocess import run
+
 from termcolor import cprint
-import os
 
 
 def crop_file(in_file, out_file, ext):

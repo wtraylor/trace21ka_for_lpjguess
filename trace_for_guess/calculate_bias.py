@@ -1,5 +1,7 @@
-from termcolor import cprint
 from os.path import isfile
+
+from termcolor import cprint
+
 import xarray as xr
 
 

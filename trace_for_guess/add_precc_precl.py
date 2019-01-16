@@ -1,8 +1,9 @@
 import os
 import shutil
+from subprocess import run
+
 import yaml
 from termcolor import cprint
-from subprocess import run
 
 
 def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):

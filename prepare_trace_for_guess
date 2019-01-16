@@ -7,20 +7,16 @@ See README.md for more details.
 import os
 import re
 import sys
+
 import yaml
 from termcolor import cprint
-from trace_for_guess import
-add_precc_and_precl_to_prect,
-aggregate_modern_trace,
-aggregate_monthly_means,
-cat_files,
-crop_file_list,
-get_crujra_filenames,
-get_cru_filenames,
-get_modern_trace_filename,
-get_trace_filenames,
-rescale_file,
-unzip_files_if_needed
+
+from trace_for_guess import (add_precc_and_precl_to_prect,
+                             aggregate_modern_trace, aggregate_monthly_means,
+                             cat_files, crop_file_list, get_cru_filenames,
+                             get_crujra_filenames, get_modern_trace_filename,
+                             get_trace_filenames, rescale_file,
+                             unzip_files_if_needed)
 
 if not os.path.isfile('options.yaml'):
     cprint("Couldn’t find options file in './options.yaml'.", 'red')
