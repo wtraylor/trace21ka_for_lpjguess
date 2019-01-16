@@ -3,3 +3,7 @@
 
 # Temporary file created by `ncremap`
 PET0.RegridWeightGen.Log
+
+# Python cache
+__pycache__/
+*.pyc
