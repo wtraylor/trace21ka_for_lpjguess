@@ -19,41 +19,32 @@ Requirements
 
 - A Linux terminal on a 64bit machine.
 
-- Some command line tools: `gunzip`, `pv`, `wget`
-
-- Python 3. The required packages can be installed with `pip install -r requirements.txt`.
-
-- [nco](http://nco.sourceforge.net/)
-
-- [cdo](https://code.mpimet.mpg.de/projects/cdo)
+- Optional: A Miniconda installation <https://www.anaconda.com/download/>
 
 How to Use
 ----------
 
 1) Download the data sets. Do not change the original file names.
 
-    - Download the TraCE-21ka monthly datasets for the CCSM3 variables `PRECC`, `PRECL`, `TREFHT`, `CLOUD`, and `FSDS` for your time period from [earthsystemgrid.org](https://www.earthsystemgrid.org/dataset/ucar.cgd.ccsm3.trace.html). All files need to be in one directory with their original file name.
+    - Download the TraCE-21ka monthly datasets for the CCSM3 variables `PRECC`, `PRECL`, `TREFHT`, `CLOUD`, and `FSDS` for your time period from [earthsystemgrid.org](https://www.earthsystemgrid.org/dataset/ucar.cgd.ccsm3.trace.html).
 
     - Download the global monthly CRU TS 4.01 data set in 0.5° resolution as the original zip files from [crudata.uea.ac.uk](https://crudata.uea.ac.uk/cru/data/hrg/). Save all files with their original name in one directory. You will need the following variables: `pre`, `tmp`, `wet`
 
-    - Download the CRU JRA-55 precipitation (`pre`) data set from [vesg.ipsl.upmc.fr](https://vesg.ipsl.upmc.fr/thredds/catalog/work/p529viov/crujra/catalog.html). Only the years 1958 to 2017 are used. You can use the download script `scripts/download_crujra.py`. Have all files in one directory.
+	- Download the CRU JRA-55 precipitation (`pre`) data set from [vesg.ipsl.upmc.fr](https://vesg.ipsl.upmc.fr/thredds/catalog/work/p529viov/crujra/catalog.html). Only the years 1958 to 2017 are used. You can use the download script `make download_crujra` (requires `wget` to be installed).
 
-4) Customize `options.yaml` to your own needs.
+2) Customize `options.yaml` to your own needs.
+Be careful not to keep other files in your "heap" or "output" directory since they will be deleted with `make clean`.
 
-5) Run `./prepare_trace_for_guess`.
+3) Open a terminal in the root of this repository (where the `Makefile` lies).
 
-There will be some temporary files produced.
-They are stored in the “heap” directory.
+  - If you don’t have Miniconda or Anaconda installed in your system yet, you can install `miniconda` through your package manager or download it manually (<https://conda.io/miniconda.html>). Alternatively run `make install_conda`, which will download and extract a Miniconda installation for Linux 64-bit into a subdirectory.
 
-File Structure
---------------
+  - Run `make create_environment`. This will create a local Conda environment for this little project in the subdirectory `conda_environment` and install all dependencies.
 
-- `scripts/`:
-    + `add_PRECC_PRECL.sh`: Add the CCSM3 precipitation variables `PRECC` and `PRECL` to create a new file with `PRECT`.
-	+ `aggregate_crujra.sh`: Create a NetCDF file with the mean monthly day-to-day standard deviation of precipitation from the CRU JRA dataset.
-    + `aggregate_modern_trace.py`: Create monthly means of the TraCE-21ka output of most recent times and write it to NetCDF files in the heap.
-	+ `download_crujra.py`: A little python script for downloading the required CRU JRA files. This is not automatically called by `make`.
-	+ `symlink_dir.py`: Create a symbolic link in the repository root that points to a directory with downloaded NetCDF files. The path to the this directory is specified in `options.yaml`.
+  - Then you can run the actual script: `make run`. If you encounter problems or need to interrupt the script, you can restart it again. But if you change something in `options.yaml`, you should probably run `make clean` 
+
+  - When you are done, you can delete the environment with `make delete_environment` and clean up the files with `make clean`.
+
 
 Project Outline
 ---------------
