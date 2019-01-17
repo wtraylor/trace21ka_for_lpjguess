@@ -22,18 +22,18 @@ region:
 # http://www.earthsystemmodeling.org/esmf_releases/public/ESMF_6_3_0rp1/ESMF_refdoc/node3.html#SECTION03020000000000000000
 regrid_algorithm: 'bilinear'
 
-# For the following directories, symbolic links will be created:
 directories:
-  # Directory of original CRU files.
-  cru_orig: "/mnt/firell/data/cru_ts4.01"
-  # Directory of original CRU JRA-55 precipitation files.
-  crujra_orig: "/mnt/firell/data/crujra"
+  # List of directories containing all original files: CRU, CRU-JRA-55
+  # precipitation, TraCE-21ka.
+  # For any given file, all directories will be searched recursively.
+  input:
+    - '/mnt/firell/data/cru_ts4.01'
+    - '/mnt/firell/data/crujra'
+    - '/mnt/firell/data/trace'
   # Directory for temporary files.
   heap: "/mnt/firell/heap"
   # Directory for final output files.
   output: "/mnt/firell/output"
-  # Directory of original TraCE files.
-  trace_orig: "/mnt/firell/data/trace"
 
 ###############################################################################
 ###############################################################################
