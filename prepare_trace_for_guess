@@ -26,7 +26,7 @@ from trace_for_guess.crop import crop_file_list
 from trace_for_guess.filenames import (get_cru_filenames, get_crujra_filenames,
                                        get_modern_trace_filename,
                                        get_trace_filenames)
-from trace_for_guess.find_input import find_file
+from trace_for_guess.find_input import find_files
 from trace_for_guess.rescale import rescale_file
 from trace_for_guess.split import split_file
 from trace_for_guess.unzip import unzip_files_if_needed
