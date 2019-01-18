@@ -17,12 +17,19 @@ import sys
 import yaml
 from termcolor import cprint
 
-from trace_for_guess import (add_precc_and_precl_to_prect,
-                             aggregate_modern_trace, aggregate_monthly_means,
-                             calculate_bias, cat_files, crop_file_list,
-                             get_cru_filenames, get_crujra_filenames,
-                             get_modern_trace_filename, get_trace_filenames,
-                             rescale_file, unzip_files_if_needed)
+from trace_for_guess.add_precc_precl import add_precc_and_precl_to_prect
+from trace_for_guess.aggregate_modern_trace import aggregate_modern_trace
+from trace_for_guess.aggregate_monthly_means import aggregate_monthly_means
+from trace_for_guess.calculate_bias import calculate_bias
+from trace_for_guess.concatenate import cat_files
+from trace_for_guess.crop import crop_file_list
+from trace_for_guess.filenames import (get_cru_filenames, get_crujra_filenames,
+                                       get_modern_trace_filename,
+                                       get_trace_filenames)
+from trace_for_guess.find_input import find_file
+from trace_for_guess.rescale import rescale_file
+from trace_for_guess.split import split_file
+from trace_for_guess.unzip import unzip_files_if_needed
 
 if not os.path.isfile('options.yaml'):
     cprint("Couldn’t find options file in './options.yaml'.", 'red')
