@@ -42,16 +42,27 @@ def aggregate_modern_trace(trace_file, out_file):
 
     Args:
         trace_file: Path to original TraCE-21ka NetCDF file.
-        out_file: Path to output file (will be overwritten).
+        out_file: Path to output file (will *not* be overwritten).
+
+    Returns:
+        The created output file (equals `out_file`).
 
     Raises:
         FileNotFoundError: The file `trace_file` wasn’t found.
+        RuntimeError: Output file was not created.
     """
-    cprint("Aggregating monthly averages from file '%s'." % trace_file,
-           "green")
+    cprint(f"Aggregating monthly averages from file '{trace_file}'.", 'yellow')
     if not os.path.isfile(trace_file):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % trace_file)
+    if os.path.isfile(out_file):
+        cprint(f"Output file '{out_file}' already exists. Skipping.", 'cyan')
+        return out_file
     dataset = get_monthly_means(trace_file)
-    cprint("Writing file '%s'." % out_file, "green")
+    cprint("Writing file '%s'." % out_file, 'yellow')
     dataset.to_netcdf(out_file)
     dataset.close()
+    if os.path.isfile(out_file):
+        cprint(f"Successfully created output file '{out_file}'.", 'green')
+    else
+        raise RuntimeError(f"Output file '{out_file}' was not created.")
+    return out_file

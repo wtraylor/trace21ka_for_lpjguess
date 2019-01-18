@@ -14,7 +14,7 @@ from termcolor import cprint
 folder = yaml.load(open("options.yaml"))["directories"]["crujra_orig"]
 
 if not os.path.isdir(folder):
-    cprint("Creating directory '%s'." % folder)
+    cprint("Creating directory '%s'." % folder, 'yellow')
     os.makedirs(folder)
 
 if which('wget') is None:
@@ -25,10 +25,10 @@ url_prefix = "https://vesg.ipsl.upmc.fr/thredds/fileServer/work/p529viov/crujra/
 
 for year in range(1958, 2018):
     filename = "crujra.V1.1.5d.pre.%d.365d.noc.nc.gz" % year
-    cprint("Downloading '%s'..." % filename, "green")
+    cprint("Downloading '%s'..." % filename, 'yellow')
     run(["wget",
          "--directory-prefix=%s" % folder,
          "%s%s" % (url_prefix, filename)])
 
-cprint("Finished downloading.")
+cprint('Finished downloading.', 'green')
 exit(0)

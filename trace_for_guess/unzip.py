@@ -6,7 +6,7 @@ from termcolor import cprint
 
 def unzip(filename: str, targetdir: str) -> None:
     """Decompress a zip file into a target directory."""
-    cprint("Unzipping '%s' into '%s'..." % (filename, targetdir))
+    cprint("Unzipping '%s' into '%s'..." % (filename, targetdir), 'yellow')
     with ZipFile(filename, "r") as zip_ref:
         zip_ref.extractall(targetdir)
 

@@ -9,7 +9,7 @@ def rescale_file(in_file, out_file, template_file, alg):
 
     Args:
         in_file: Path of input file.
-        out_file: Output file path. It will be overwritten without warning.
+        out_file: Output file path. It will not be overwritten.
         template_file: Path to a NetCDF file that has the desired grid
             resolution.
         alg: ESMF regrid algorithm. See here:
@@ -24,12 +24,14 @@ def rescale_file(in_file, out_file, template_file, alg):
         RuntimeError: The `ncremap` command failed or produced no output
             file.
     """
-    cprint("Regridding '%s'..." % in_file, "green")
+    cprint("Regridding '%s'..." % in_file, 'yellow')
     if not os.path.isfile(in_file):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % in_file)
     if not os.path.isfile(template_file):
         raise FileNotFoundError("Template file doesn’t exist: '%s'" %
                                 template_file)
+    if os.path.isfile(out_file):
+        cprint(f"Output file '{out_file}' already exists. Skipping.", 'cyan')
     if which("ncremap") is None:
         raise RuntimeError("Executable `ncremap` not found.")
     status = run(["ncremap",
@@ -43,4 +45,5 @@ def rescale_file(in_file, out_file, template_file, alg):
     if not os.path.isfile(out_file):
         raise RuntimeError("Regridding with `ncremap` failed: No output file "
                            "created.")
+    cprint(f"Successfully created '{out_file}'.", 'green')
     return out_file

@@ -10,7 +10,7 @@ def cat_files(filelist, out_file):
 
     Args:
         filelist: List of input file paths.
-        out_file: Path to concatenated output file (will be overwritten).
+        out_file: Path to concatenated output file (will *not* be overwritten).
 
     Returns:
         The output file (equals `out_file`).
@@ -21,16 +21,20 @@ def cat_files(filelist, out_file):
         RuntimeError: The command `ncrcat` produced an error or the output
             file wasn’t created.
     """
-    cprint("Concatenating files to '%s'..." % out_file)
+    cprint(f"Concatenating files {filelist} to '{out_file}'...", 'yellow')
     for f in filelist:
         if not os.path.isfile(f):
             raise FileNotFoundError("Input file not found: '%s'" % f)
+    if os.path.exists(out_file):
+        cprint('Output file already exists. Skipping.', 'cyan')
+        return out_file
     if which("ncrcat") is None:
-        raise RuntimeError("The command `ncrcat` could not be found.")
-    status = subprocess.run(["ncrcat"] + filelist + [out_file])
+        raise RuntimeError('The command `ncrcat` could not be found.')
+    status = subprocess.run(['ncrcat'] + filelist + [out_file])
     if status != 0:
-        raise RuntimeError("The command `ncrcat` failed.")
+        raise RuntimeError('The command `ncrcat` failed.')
     if not os.path.isfile(out_file):
-        raise RuntimeError("The command `ncrcat` didn’t produce an output "
-                           "file.")
+        raise RuntimeError('The command `ncrcat` didn’t produce an output '
+                           'file.')
+    cprint(f"Created file '{out_file}'.", 'green')
     return out_file

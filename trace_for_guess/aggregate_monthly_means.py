@@ -11,7 +11,7 @@ def aggregate_monthly_means(in_file, out_file):
 
     Args:
         in_file: Input NetCDF file path.
-        out_file: Path to output file (will be overwritten).
+        out_file: Path to output file (will *not* be overwritten).
 
     Returns:
         The output file (equals `out_file`).
@@ -24,12 +24,16 @@ def aggregate_monthly_means(in_file, out_file):
     """
     if not isfile(in_file):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % in_file)
-    if which("cdo") is None:
-        raise RuntimeError("Executable `cdo` not found.")
-    status = run(["cdo", "ymonmean", in_file, out_file])
+    if which('cdo') is None:
+        raise RuntimeError('Executable `cdo` not found.')
+    if os.path.isfile(out_file):
+        cprint(f"File '{out_file}' already exists. Skipping.", 'cyan')
+        return out_file
+    status = run(['cdo', 'ymonmean', in_file, out_file])
     if status != 0:
-        raise RuntimeError("Cropping with `ncks` failed: Bad return code.")
+        raise RuntimeError('Cropping with `ncks` failed: Bad return code.')
     if not isfile(out_file):
-        raise RuntimeError("Cropping with `ncks` failed: No output file "
-                           "created.")
+        raise RuntimeError('Cropping with `ncks` failed: No output file '
+                           'created.')
+    cprint(f"Successfully created '{out_file}'.", 'green')
     return out_file
