@@ -1,3 +1,7 @@
+help:
+	@echo 'Please choose a target for the make command.'
+	@echo 'See README.md for your options.'
+
 ###############################################################################
 ## VARIABLES
 ###############################################################################
