@@ -72,9 +72,9 @@ def get_cru_filenames():
 
 
 def get_crujra_filenames():
-    """Create a list of all relevant original CRU-JRA filenames."""
-    # TODO
-    return list()
+    """Create a list of all original CRU-JRA filenames from 1958 to 1990."""
+    return [f'crujra.V1.1.5d.pre.{year}.365d.noc.nc' for year in
+            range(1958, 1991)]
 
 
 def get_modern_trace_filename(var: str):
