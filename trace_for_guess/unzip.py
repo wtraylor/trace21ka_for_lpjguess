@@ -3,6 +3,8 @@ from zipfile import ZipFile
 
 from termcolor import cprint
 
+from trace_for_guess.find_input import find_files
+
 
 def unzip(filename, targetdir):
     """Decompress a zip file into a target directory."""
@@ -28,16 +30,16 @@ def unzip_files_if_needed(filenames, unzip_dir):
     Raises:
         FileNotFoundError: A file in `filenames` wasn’t found.
     """
-    l = list()  # Result list.
+    result = list()  # Result list.
     for f in filenames:
         try:
-            l += [find_files(f)]
+            result += [find_files(f)]
         except FileNotFoundError:
             try:
                 filepath = find_files(f + '.gz')
                 unzip(filename=filepath, targetdir=unzip_dir)
-                l += os.path.join(unzip_dir, f)
+                result += os.path.join(unzip_dir, f)
             except FileNotFoundError:
                 raise FileNotFoundError("Unable to find plain or compressed "
                                         f"file '{f}' in input directories.")
-    return l
+    return result
