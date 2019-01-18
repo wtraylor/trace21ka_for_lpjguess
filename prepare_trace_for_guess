@@ -28,6 +28,7 @@ if not os.path.isfile('options.yaml'):
     cprint("Couldn’t find options file in './options.yaml'.", 'red')
     sys.exit()
 
+cprint("Loading options from 'options.yaml'.", 'yellow')
 opts = yaml.load(open('options.yaml'))
 extent = opts['region']['lon'] + opts['region']['lat']
 # TODO: Check if region is valid.
