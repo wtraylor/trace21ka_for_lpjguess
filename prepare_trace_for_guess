@@ -42,7 +42,7 @@ split_dir = os.path.join(heap, 'split')  # Split, but not yet regridded files
 trace_dir = opts['directories']['trace_orig']
 
 
-# PREPARE CRU and CRU-JRA files ########################################
+# Prepare CRU and CRU-JRA files ########################################
 
 
 crujra_files = unzip_files_if_needed(
@@ -68,7 +68,7 @@ for var in ['pre', 'tmp', 'wet']:
     # NOTE: We assume that the CRU files are in the desired resolution.
 
 
-# PREPARE TraCE-21ka files #############################################
+# Calculate Bias Files #################################################
 
 
 # Create means for modern TraCE files. We need them to calculate the bias.
@@ -84,7 +84,7 @@ for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
 modern_trace_files['PRECT'] = add_precc_and_precl_to_prect(
     precc_file=modern_trace_files['PRECC'],
     precl_file=modern_trace_files['PRECL'],
-    prect_file=get_modern_trace_filename('PRECT')
+    prect_file='modern_trace_PRECT.nc'
 )
 del modern_trace_files['PRECC']
 del modern_trace_files['PRECL']
@@ -111,6 +111,10 @@ for trace_var in opts['cru_vars']:
             bias_file=os.path.join(heap, f'bias_{trace_var}.nc')
         )
 
+
+# Prepare TraCE-21ka Files #############################################
+
+
 # Create all PRECT files in the "heap".
 for prect in get_trace_filenames(['PRECT']):
     precc = os.path.join(trace_dir, re.sub('PRECT', 'PRECC', prect))
@@ -128,15 +132,15 @@ for f in trace_files:
     split_trace_files += split_file(filename=f, out_dir=split_dir)
 
 for f in split_trace_files:
+    trace_var = ... # TODO
     f = rescale_file(in_file=f,
                      out_file=os.path.join(rescaled_dir,
                                            os.path.basename(f)),
                      template_file=regrid_template_file,
                      alg=opts['regrid_algorithm'])
-
-debias_file(in_file=f,
-            bias_file=,#TODO
-            out_file=os.path.join(debiased_dir,
-                                  os.path.basename(f)))
+    debias_file(in_file=f,
+                bias_file=bias_files[trace_var],
+                out_file=os.path.join(debiased_dir,
+                                      os.path.basename(f)))
     # Set Metadata
     # Compress

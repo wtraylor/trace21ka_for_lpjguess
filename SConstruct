@@ -1,81 +1,11 @@
-builders['CalcBias'] = Builder(calculate_bias,
-                               src_prefix='rescaled/')
-
-# TODO: Create emitter to properly create CDO’s prefix for output files.
-# TODO: What are the output files? Length of TraCE files varies, so how can we
-# know the output files? Should I write an xarray script myself?
-builders['SplitFile'] = Builder('cdo splitsel,1200 $SOURCE $TARGET')
-
 builders['Debias'] = Builder(debias_trace_file_action, prefix='debiased/',
                              src_prefix='rescaled/')
 
 
-# Files ################################################################
-
-# List of original CRU files from 1990 to 1990.
-cru_files = get_original_cru_file_names()
-
-# List of CRU-JRA files from 1958 to 1990.
-crujra_files = ["crujra.V1.1.5d.pre.%d.365d.noc.nc" % y for y in
-                range(1958, 1991)]
-
-trace_files = get_trace_file_names()
-
-
 # Rules ################################################################
-
-# The calls to Scons builder functions are comparable to Makefile rules. The
-# first argument is the target and the second is the source (like prerequisites
-# in Make). The builder function itself defines the commands to be executed.
-# Some builder functions automatically define the source(s), either based on
-# suffix patterns or emitter functions.
-# TODO: Explain the production chain within each for loop.
-
-# TODO: Set the files that are ready for LPJ-GUESS in `out_dir` as default
-# targets.
-# Default()
-
-for f in crujra_files:
-    env.Unzip(f)
-for f in cru_files:
-    env.Unzip(f)
-
-def get_trace_split_files(trace_file):
-    """ Get list of file names after splitting the TraCE file. """
-    # TODO: Implement this
-    return trace_file + "_split"
-
-for f in trace_files:
-    cropped = env.Crop(f)
-    split_files = get_trace_split_files(f)
-    split = env.SplitFile(split_files)
-    rescaled = env.Rescale(split)
-    # The final step is debiasing:
-    final = os.path.join(out_dir, f)
-    if "PRECT" in f:
-        env.Debias(target=final, source=rescaled + ["bias_PRECT.nc"])
-    elif "TREFHT" in f:
-        env.Debias(target=final, source=rescaled + ["bias_TREFHT.nc"])
-    else:
-        env.Finalize(target=final, source=rescaled)
 
 # TODO: where does cru_mean come from?
 env.Crop('grid_template.nc', os.path.join('cru_mean', 'tmp.nc'))
-
-for f in cru_mean_files:
-    env.Rescale(f, os.path.join('cru_mean', f))
-
-for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
-    source = "trace.36.400BP-1990CE.cam2.h0.%s.2160101-2204012.nc" % var
-    env.AggModernTrace('modern_trace_%s.nc' % var, source)
-
-# TODO: Use miniconda environment
-env.Command('modern_trace_PRECT.nc',
-            ['modern_trace_PRECC.nc', 'modern_trace_PRECL.nc'],
-            './scripts/add_PRECC_PRECL.sh $SOURCES $TARGET')
-
-for var in ['FSDS', 'PRECT', 'TREFHT']:
-    env.Rescale('modern_trace_%s.nc' % var, 'modern_trace_%s.nc' % var)
 
 # Calculate the day-to-day standard deviation of daily precipitation sum as
 # monthly means.
