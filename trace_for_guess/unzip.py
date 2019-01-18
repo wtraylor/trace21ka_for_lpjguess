@@ -33,13 +33,18 @@ def unzip_files_if_needed(filenames, unzip_dir):
     result = list()  # Result list.
     for f in filenames:
         try:
+            # Try to find unzipped file.
             result += [find_files(f)]
+            continue
         except FileNotFoundError:
-            try:
-                filepath = find_files(f + '.gz')
-                unzip(filename=filepath, targetdir=unzip_dir)
-                result += os.path.join(unzip_dir, f)
-            except FileNotFoundError:
-                raise FileNotFoundError("Unable to find plain or compressed "
-                                        f"file '{f}' in input directories.")
+            pass
+        try:
+            # Try to find the zipped file.
+            filepath = find_files(f + '.gz')
+            unzip(filename=filepath, targetdir=unzip_dir)
+            result += os.path.join(unzip_dir, f)
+        except FileNotFoundError as ex:
+            print("Unable to find plain or compressed "
+                                    f"file '{f}' in input directories.")
+            raise ex
     return result
