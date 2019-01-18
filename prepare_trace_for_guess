@@ -19,10 +19,10 @@ from termcolor import cprint
 
 from trace_for_guess import (add_precc_and_precl_to_prect,
                              aggregate_modern_trace, aggregate_monthly_means,
-                             cat_files, crop_file_list, get_cru_filenames,
-                             get_crujra_filenames, get_modern_trace_filename,
-                             get_trace_filenames, rescale_file,
-                             unzip_files_if_needed)
+                             calculate_bias, cat_files, crop_file_list,
+                             get_cru_filenames, get_crujra_filenames,
+                             get_modern_trace_filename, get_trace_filenames,
+                             rescale_file, unzip_files_if_needed)
 
 if not os.path.isfile('options.yaml'):
     cprint("Couldn’t find options file in './options.yaml'.", 'red')
@@ -62,26 +62,54 @@ for var in ['pre', 'tmp', 'wet']:
     files_with_var = [f for f in cru_files if var in f]
     cat = cat_files(filelist=files_with_var,
                     out_file=os.path.join(heap, '%s_cat.nc' % var))
-    aggregated = os.path.join(heaps, '%s_mean.nc' % var)
+    aggregated = os.path.join(heap, '%s_mean.nc' % var)
     cru_mean_files[var] = aggregate_monthly_means(in_file=cat,
                                                   out_file=aggregated)
+    # NOTE: We assume that the CRU files are in the desired resolution.
 
 
 # PREPARE TraCE-21ka files #############################################
 
 
 # Create means for modern TraCE files. We need them to calculate the bias.
+# NOTE: We calculate the means first and then add PRECC and PRECL in the
+# assumption that the order doesn’t make a difference.
+modern_trace_files = dict()
 for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
     out_file = f'modern_trace_{var}.nc'
-    aggregate_modern_trace(trace_file=get_modern_trace_filename(var),
-                           out_file=out_file)
-add_precc_and_precl_to_prect(precc_file='modern_trace_PRECC.nc',
-                             precc_file='modern_trace_PRECL.nc',
-                             prect_file='modern_trace_PRECT.nc')
+    modern_trace_files[var] = aggregate_modern_trace(
+        trace_file=get_modern_trace_filename(var), out_file=out_file
+    )
+# Merge PRECC and PRECL into PRECT.
+modern_trace_files['PRECT'] = add_precc_and_precl_to_prect(
+    precc_file=modern_trace_files['PRECC'],
+    precl_file=modern_trace_files['PRECL'],
+    prect_file=get_modern_trace_filename('PRECT')
+)
+del modern_trace_files['PRECC']
+del modern_trace_files['PRECL']
+# Rescale modern TraCE files in heap/rescaled.
+for var in modern_trace_files:
+    modern_trace_files[var] = rescale_file(
+        in_file=modern_trace_files[var],
+        out_file=os.path.join(rescaled_dir,
+                              os.path.basename(modern_trace_files[var])),
+        template_file=regrid_template_file,
+        alg=opts['regrid_algorithm']
+    )
 
 # Calculate bias for all variables specified in "options.yaml".
+bias_files = dict()  # TraCE vs. CRU bias files with TraCE variable as key.
 for trace_var in opts['cru_vars']:
     cru_var = opts['cru_vars'][trace_var]
+    if trace_var in f:
+        bias_files[trace_var] = calculate_bias(
+            trace_file=f,
+            trace_var=trace_var,
+            cru_file=cru_mean_files[cru_var],
+            cru_var=cru_var,
+            bias_file=os.path.join(heap, f'bias_{trace_var}.nc')
+        )
 
 # Create all PRECT files in the "heap".
 for prect in get_trace_filenames(['PRECT']):
@@ -90,7 +118,6 @@ for prect in get_trace_filenames(['PRECT']):
     add_precc_and_precl_to_prect(precc_file=precc,
                                  precl_file=precl,
                                  prect_file=os.path.join(heap, prect))
-
 
 trace_files = get_trace_filenames(['FSDS', 'PRECT', 'TREFHT'])
 
