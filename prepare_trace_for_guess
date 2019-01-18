@@ -39,7 +39,6 @@ cropped_dir = os.path.join(heap, 'cropped')  # Cropped files
 debiased_dir = os.path.join(heap, 'debiased')
 rescaled_dir = os.path.join(heap, 'split')  # Rescaled files
 split_dir = os.path.join(heap, 'split')  # Split, but not yet regridded files
-trace_dir = opts['directories']['trace_orig']
 
 
 # Prepare CRU and CRU-JRA files ########################################
@@ -47,14 +46,12 @@ trace_dir = opts['directories']['trace_orig']
 
 crujra_files = unzip_files_if_needed(
     filenames=get_crujra_filenames(),
-    orig_dir=opts['directories']['crujra_orig'],
     unzip_dir=os.path.join(heap, 'unzipped'))
 crujra_files = crop_file_list(crujra_files, cropped_dir, extent)
 # TODO Calculate precipitation standard deviation
 
 cru_files = unzip_files_if_needed(
     filenames=get_cru_filenames(),
-    orig_dir=opts['directories']['cru_orig'],
     unzip_dir=heap)
 cru_mean_files = dict()  # Aggregated CRU files with variable as key.
 for var in ['pre', 'tmp', 'wet']:
@@ -117,13 +114,15 @@ for trace_var in opts['cru_vars']:
 
 # Create all PRECT files in the "heap".
 for prect in get_trace_filenames(['PRECT']):
-    precc = os.path.join(trace_dir, re.sub('PRECT', 'PRECC', prect))
-    precl = os.path.join(trace_dir, re.sub('PRECT', 'PRECL', prect))
+    precc = find_files(re.sub('PRECT', 'PRECC', prect))
+    precl = find_files(re.sub('PRECT', 'PRECL', prect))
     add_precc_and_precl_to_prect(precc_file=precc,
                                  precl_file=precl,
                                  prect_file=os.path.join(heap, prect))
 
-trace_files = get_trace_filenames(['FSDS', 'PRECT', 'TREFHT'])
+# All the original TraCE-21ka files. We assume they are not zipped because they
+# come as plain NetCDF files from earthsystemgrid.org.
+trace_files = find_files(get_trace_filenames(['FSDS', 'PRECT', 'TREFHT']))
 
 # Crop, split and rescale all TraCE files.
 trace_files = crop_file_list(trace_files, cropped_dir, extent)
