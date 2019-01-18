@@ -35,10 +35,23 @@ extent = opts['region']['lon'] + opts['region']['lat']
 
 # Directories:
 heap = opts['directories']['heap']  # Any intermediary files
+out_dir = opts['directories']['output']  # All output files
 cropped_dir = os.path.join(heap, 'cropped')  # Cropped files
 debiased_dir = os.path.join(heap, 'debiased')
 rescaled_dir = os.path.join(heap, 'split')  # Rescaled files
 split_dir = os.path.join(heap, 'split')  # Split, but not yet regridded files
+
+if not os.path.isdir(heap):
+    cprint(f"Heap directory '{heap}' does not exist yet. I will create it.",
+           'yellow')
+    os.mkdir(heap)
+    assert(os.path.isdir(heap))
+
+if not os.path.isdir(out_dir):
+    cprint(f"Output directory '{out_dir}' does not exist yet. I will create "
+           "it.", 'yellow')
+    os.mkdir(out_dir)
+    assert(os.path.isdir(out_dir))
 
 
 # Prepare CRU and CRU-JRA files ########################################
