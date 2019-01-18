@@ -27,13 +27,13 @@ directories:
   # precipitation, TraCE-21ka.
   # For any given file, all directories will be searched recursively.
   input:
-    - '/mnt/firell/data/cru_ts4.01'
-    - '/mnt/firell/data/crujra'
-    - '/mnt/firell/data/trace'
+    - '/mnt/zathras/data/cru_ts4.01'
+    - '/mnt/zathras/data/crujra'
+    - '/mnt/zathras/data/trace'
   # Directory for temporary files.
-  heap: "/mnt/firell/heap"
+  heap: "/mnt/zathras/trace_for_guess/heap"
   # Directory for final output files.
-  output: "/mnt/firell/output"
+  output: "/mnt/zathras/trace_for_guess/output"
 
 ###############################################################################
 ###############################################################################
