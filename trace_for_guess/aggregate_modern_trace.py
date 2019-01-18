@@ -1,3 +1,5 @@
+import os
+
 from termcolor import cprint
 
 import xarray as xr
@@ -63,6 +65,6 @@ def aggregate_modern_trace(trace_file, out_file):
     dataset.close()
     if os.path.isfile(out_file):
         cprint(f"Successfully created output file '{out_file}'.", 'green')
-    else
+    else:
         raise RuntimeError(f"Output file '{out_file}' was not created.")
     return out_file

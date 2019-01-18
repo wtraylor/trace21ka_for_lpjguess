@@ -65,5 +65,5 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
             os.remove(prect_file)
         raise RuntimeError(f"Failed to set attribute for file '{prect_file}"
                            "with `ncrename`.")
-    cprint(f"Successfully created '{out_file}'.", 'green')
+    cprint(f"Successfully created '{prect_file}'.", 'green')
     return prect_file
