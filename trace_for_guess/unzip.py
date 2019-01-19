@@ -1,16 +1,41 @@
+import gzip
 import os
-from zipfile import ZipFile
+import re
+import shutil
 
 from termcolor import cprint
 
 from trace_for_guess.find_input import find_files
 
 
-def unzip(filename, targetdir):
-    """Decompress a zip file into a target directory."""
-    cprint("Unzipping '%s' into '%s'..." % (filename, targetdir), 'yellow')
-    with ZipFile(filename, "r") as zip_ref:
-        zip_ref.extractall(targetdir)
+def gunzip(filename, targetdir):
+    """Decompress a gzip-compressed file into a target directory.
+    Args:
+        filename: Full path to gzip file.
+        targetdir: Directory to decompress file into.
+
+    Returns:
+        The output file name.
+
+    Raises:
+        FileNotFoundError: `filename` does not exist.
+    """
+    # We delete the .gz suffix and put the decompressed file into `targetdir`.
+    if not os.path.isfile(filename):
+        raise FileNotFoundError(f"File '{filename}' does not exist.")
+    targetfile = os.path.join(
+        targetdir, re.sub('\\.gz$', '', os.path.basename(filename))
+    )
+    cprint(f"Decompressing '{filename}' to '{targetdir}'...", 'yellow')
+    try:
+        with open(targetfile, 'xb') as o, gzip.open(filename, 'rb') as i:
+            shutil.copyfileobj(i, o)
+    except:
+        # Clean up target file.
+        if os.path.isfile(targetfile):
+            cprint(f"Removing file '{targetfile}'...", 'red')
+            os.remove(targetfile)
+        raise
 
 
 def unzip_files_if_needed(filenames, unzip_dir):
@@ -31,6 +56,9 @@ def unzip_files_if_needed(filenames, unzip_dir):
         FileNotFoundError: A file in `filenames` wasn’t found.
     """
     result = list()  # Result list.
+    if not os.path.isdir(unzip_dir):
+        cprint(f"Creating directory '{unzip_dir}'.", 'yellow')
+        os.makedirs(unzip_dir)
     for f in filenames:
         try:
             # Try to find unzipped file.
@@ -41,10 +69,9 @@ def unzip_files_if_needed(filenames, unzip_dir):
         try:
             # Try to find the zipped file.
             filepath = find_files(f + '.gz')
-            unzip(filename=filepath, targetdir=unzip_dir)
-            result += os.path.join(unzip_dir, f)
+            result += [gunzip(filename=filepath, targetdir=unzip_dir)]
         except FileNotFoundError as ex:
-            print("Unable to find plain or compressed "
-                                    f"file '{f}' in input directories.")
+            cprint("Unable to find plain or compressed "
+                   f"file '{f}' in input directories.", 'red')
             raise ex
     return result
