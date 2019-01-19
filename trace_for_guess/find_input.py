@@ -23,7 +23,8 @@ def find_files(filenames):
             empty string.
     """
     opts = yaml.load(open('options.yaml'))
-    dirs = opts['directories']['input'] + [opts['directories']['heap']]
+    unzipped_dir = os.path.join(opts['directories']['heap'], 'unzipped')
+    dirs = opts['directories']['input'] + [unzipped_dir]
     if not dirs:
         raise RuntimeError("No input directories defined in 'options.yaml'.")
     # Expand '~' for home directory and environment variables like '$HOME'.
