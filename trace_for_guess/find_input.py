@@ -7,6 +7,8 @@ import yaml
 def find_files(filenames):
     """Find file(s) recursively in the directories given in 'options.yaml'.
 
+    Additionally to input directories search also the heap directory.
+
     Args:
         filenames: List of filenames (or one file name string).
 
@@ -20,7 +22,8 @@ def find_files(filenames):
         ValueError: The input list is empty or one of the file names is an
             empty string.
     """
-    dirs = yaml.load(open('options.yaml'))['directories']['input']
+    opts = yaml.load(open('options.yaml'))
+    dirs = opts['directories']['input'] + [opts['directories']['heap']]
     if not dirs:
         raise RuntimeError("No input directories defined in 'options.yaml'.")
     # Expand '~' for home directory and environment variables like '$HOME'.
