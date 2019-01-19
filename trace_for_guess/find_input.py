@@ -17,7 +17,8 @@ def find_files(filenames):
         FileNotFoundError: One of the requested files could not be found.
         NotADirectoryError: One of the input directory paths is invalid.
         RuntimeError: No directories in 'options.yaml'.
-        ValueError: The input list is empty.
+        ValueError: The input list is empty or one of the file names is an
+            empty string.
     """
     dirs = yaml.load(open('options.yaml'))['directories']['input']
     if not dirs:
@@ -38,6 +39,8 @@ def find_files(filenames):
         raise ValueError("Parameter 'filenames' is an empty list.")
     result = list()
     for f in filenames:
+        if not f:
+            raise ValueError("An input filename is an empty string.")
         found = False
         iterator = iter(dirs)
         while not found:
