@@ -58,5 +58,6 @@ def crop_file_list(filelist, out_dir, ext):
     Returns:
         List of paths to cropped files.
     """
+    cprint(f"Cropping the following files: {filelist}", 'yellow')
     return [crop_file(f, os.path.join(out_dir, os.path.basename(f)), ext)
             for f in filelist]

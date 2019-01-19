@@ -62,13 +62,16 @@ def unzip_files_if_needed(filenames, unzip_dir):
     for f in filenames:
         try:
             # Try to find unzipped file.
-            result += [find_files(f)]
-            continue
+            found = find_files(f)
+            result += [found]
+            cprint(f"Found input file: '{found}'", 'green')
+            continue  # On to the next file.
         except FileNotFoundError:
             pass
         try:
             # Try to find the zipped file.
             filepath = find_files(f + '.gz')
+            cprint(f"Found zipped input file: '{filepath}'", 'green')
             result += [gunzip(filename=filepath, targetdir=unzip_dir)]
         except FileNotFoundError as ex:
             cprint("Unable to find plain or compressed "

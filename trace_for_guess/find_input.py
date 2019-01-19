@@ -46,16 +46,20 @@ def find_files(filenames):
         if not f:
             raise ValueError("An input filename is an empty string.")
         found = False
+        # Iterate through all directories and search with glob through them.
         iterator = iter(dirs)
         while not found:
             try:
                 d = next(iterator)
             except StopIteration:
                 break
-            found = glob.glob(os.path.join(d, '**', f))
+            # Search first within the directory d directly and then look in all
+            # subdirectories.
+            found = (glob.glob(os.path.join(d, f))
+                     + glob.glob(os.path.join(d, '**', f)))
             if found:
                 result += [found[0]]  # Take the first hit.
-                break
+                break  # Leave directory loop.
         if not found:
             raise FileNotFoundError(f"Could not find file '{f}' anywhere in "
                                     f"input directories {dirs}.")
