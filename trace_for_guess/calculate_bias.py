@@ -38,9 +38,9 @@ def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
     cprint(f"'{trace_file}' x '{cru_file}' -> '{bias_file}'", 'yellow')
     # Open and load the files completely. They need to be in the RAM for
     # calculation.
+    trace = xr.open_dataset(trace_file, decode_times=False).load()
+    cru = xr.open_dataset(cru_file, decode_times=False).load()
     try:
-        trace = xr.open_dataset(trace_file, decode_times=False).load()
-        cru = xr.open_dataset(cru_file, decode_times=False).load()
         # The values of the 'time' dimensions of the CRU and the TraCE dataset
         # must match in order to perform calculation. So we just overwrite the
         # values with 0 to 11 as the month numbers, assuming that the CRU
@@ -55,14 +55,15 @@ def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
             bias = trace[trace_var] / cru[trace_var]
         else:
             raise NotImplementedError("Arithmetic operation not defined for"
-                                    "variable '%s'." % trace_var)
+                                      "variable '%s'." % trace_var)
             bias.to_netcdf(bias_file, mode='w')
+        bias.close()
     except:
         if os.path.isfile(bias_file):
             cprint(f"Removing file '{bias_file}'.", 'red')
+            bias.close()
             os.remove(bias_file)
     finally:
         trace.close()
         cru.close()
-        bias.close()
     return bias_file
