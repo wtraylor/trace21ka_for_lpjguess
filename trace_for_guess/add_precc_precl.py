@@ -34,13 +34,14 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
         return prect_file
     cprint("Adding PRECC and PRECL to PRECT: '%s'" % prect_file, 'yellow')
     # First copy PRECC file into output location so that we can rename its
-    # variable to match the variable of the other operand.
+    # variable to match the variable of the other operand. If the names of the
+    # variables don’t match, NCO will not be able to add them.
     try:
         shutil.copy2(precc_file, prect_file)
         assert(os.path.isfile(prect_file))
         subprocess.run(['ncrename', '--variable PRECC,PRECL', prect_file],
                        check=True)
-        # Now we can add the matching variable name "PRECL".
+        # Now we can add the values of the variable "PRECL".
         subprocess.run(['ncbo', '--op_typ=add', f'-o {prect_file}', precl_file,
                         prect_file], check=True)
         # Finally we need to name the sum appropriately "PRECT".
