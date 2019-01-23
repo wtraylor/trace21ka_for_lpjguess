@@ -31,7 +31,7 @@ def debias_trace_file(trace_file, bias_file, out_file):
         raise FileNotFoundError("Input TraCE file does not exist: '%s'" %
                                 trace_file)
     if os.path.isfile(out_file):
-        cprint('Output file already exists. Skipping.', 'cyan')
+        cprint(f"Skipping: '{out_file}'", 'cyan')
     # The TraCE map as xarray Dataset.
     trace = xr.open_dataset(trace_file, decode_times=False)
     # Find the variable in the TraCE file.

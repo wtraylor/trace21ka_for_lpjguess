@@ -25,7 +25,7 @@ def cat_files(filelist, out_file):
         if not os.path.isfile(f):
             raise FileNotFoundError("Input file not found: '%s'" % f)
     if os.path.exists(out_file):
-        cprint(f"Output file '{out_file}' already exists. Skipping.", 'cyan')
+        cprint(f"Skipping: '{out_file}'", 'cyan')
         return out_file
     if shutil.which("ncrcat") is None:
         raise RuntimeError('The command `ncrcat` could not be found.')

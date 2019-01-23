@@ -31,7 +31,7 @@ def rescale_file(in_file, out_file, template_file, alg):
         raise FileNotFoundError("Template file doesn’t exist: '%s'" %
                                 template_file)
     if os.path.isfile(out_file):
-        cprint(f"Output file '{out_file}' already exists. Skipping.", 'cyan')
+        cprint(f"Skipping: '{out_file}'", 'cyan')
     if which("ncremap") is None:
         raise RuntimeError("Executable `ncremap` not found.")
     try:

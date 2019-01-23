@@ -29,7 +29,7 @@ def aggregate_monthly_means(in_file, out_file):
     if shutil.which('cdo') is None:
         raise RuntimeError('Executable `cdo` not found.')
     if os.path.isfile(out_file):
-        cprint(f"File '{out_file}' already exists. Skipping.", 'cyan')
+        cprint(f"Skipping: '{out_file}'", 'cyan')
         return out_file
     cprint(f"Aggregating monthly means from '{in_file}', writing to "
            "'{out_file}'...", 'yellow')

@@ -26,7 +26,7 @@ def crop_file(in_file, out_file, ext):
     if not os.path.isfile(in_file):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % in_file)
     if os.path.isfile(out_file):
-        cprint(f"Output file '{out_file}' already exists. Skipping.", 'cyan')
+        cprint(f"Skipping: '{out_file}'", 'cyan')
         return out_file
     cprint("Cropping file '%s'..." % in_file, 'yellow')
     if which("ncks") is None:

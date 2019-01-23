@@ -31,7 +31,7 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
     if not os.path.isfile(prect_file):
         raise FileNotFoundError("Could not find PRECT file: '%s'" % prect_file)
     if os.path.isfile(prect_file):
-        cprint('PRECT file already exists. Skipping.', 'cyan')
+        cprint(f"Skipping: '{prect_file}'", 'cyan')
         return prect_file
     # First copy PRECC file into output location so that we can rename its
     # variable to match the variable of the other operand.

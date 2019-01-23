@@ -57,7 +57,7 @@ def aggregate_modern_trace(trace_file, out_file):
     if not os.path.isfile(trace_file):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % trace_file)
     if os.path.isfile(out_file):
-        cprint(f"Output file '{out_file}' already exists. Skipping.", 'cyan')
+        cprint(f"Skipping: '{out_file}'", 'cyan')
         return out_file
     dataset = get_monthly_means(trace_file)
     cprint("Writing file '%s'." % out_file, 'yellow')
