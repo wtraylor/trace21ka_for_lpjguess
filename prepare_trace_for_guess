@@ -95,7 +95,8 @@ modern_trace_files = dict()
 for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
     out_file = f'modern_trace_{var}.nc'
     modern_trace_files[var] = aggregate_modern_trace(
-        trace_file=get_modern_trace_filename(var), out_file=out_file
+        trace_file=find_files(get_modern_trace_filename(var)),
+        out_file=out_file
     )
 # Merge PRECC and PRECL into PRECT.
 modern_trace_files['PRECT'] = add_precc_and_precl_to_prect(
