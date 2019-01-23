@@ -57,5 +57,10 @@ def crop_file_list(filelist, out_dir, ext):
     Returns:
         List of paths to cropped files.
     """
+    if not os.path.isdir(out_dir):
+        cprint(f"Directory '{out_dir}' does not exist yet. I will create it.",
+               'yellow')
+        os.makedirs(out_dir)
+        assert(os.path.isdir(out_dir))
     return [crop_file(f, os.path.join(out_dir, os.path.basename(f)), ext)
             for f in filelist]
