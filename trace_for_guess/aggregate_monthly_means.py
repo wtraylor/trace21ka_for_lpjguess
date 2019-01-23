@@ -29,6 +29,8 @@ def aggregate_monthly_means(in_file, out_file):
     if os.path.isfile(out_file):
         cprint(f"File '{out_file}' already exists. Skipping.", 'cyan')
         return out_file
+    cprint(f"Aggregating monthly means from '{in_file}', writing to "
+           "'{out_file}'...", 'yellow')
     status = subprocess.run(['cdo', 'ymonmean', in_file, out_file])
     if status != 0:
         raise RuntimeError('Aggregating with `cdo ymonmean` failed: Bad '
