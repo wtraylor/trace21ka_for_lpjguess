@@ -40,32 +40,14 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
         assert(os.path.isfile(prect_file))
         subprocess.run(['ncrename', '--variable PRECC,PRECL', prect_file],
                        check=True)
-    except:
-        if os.path.isfile(prect_file):
-            cprint(f"Removing file '{prect_file}'.", 'red')
-            os.remove(prect_file)
-        raise
-    # Now we can add the matching variable name "PRECL".
-    try:
+        # Now we can add the matching variable name "PRECL".
         subprocess.run(['ncbo', '--op_typ=add', f'-o {prect_file}', precl_file,
                         prect_file], check=True)
-    except:
-        if os.path.isfile(prect_file):
-            cprint(f"Removing file '{prect_file}'.", 'red')
-            os.remove(prect_file)
-        raise
-    # Finally we need to name the sum appropriately "PRECT".
-    try:
+        # Finally we need to name the sum appropriately "PRECT".
         subprocess.run(['ncrename', '--variable PRECL,PRECT', prect_file],
                        check=True)
-    except:
-        if os.path.isfile(prect_file):
-            cprint(f"Removing file '{prect_file}'.", 'red')
-            os.remove(prect_file)
-        raise
-    long_name = yaml.load(
-        open('options.yaml'))['nc_attributes']['prec']['long_name']
-    try:
+        long_name = yaml.load(
+            open('options.yaml'))['nc_attributes']['prec']['long_name']
         subprocess.run(['ncatted', '--overwrite',
                         f'--attribute long_name,PRECT,m,c,"{long_name}"',
                         prect_file], check=True)
