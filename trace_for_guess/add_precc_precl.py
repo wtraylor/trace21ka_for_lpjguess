@@ -1,3 +1,4 @@
+import glob
 import os
 import shutil
 import subprocess
@@ -40,23 +41,26 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
     try:
         shutil.copy2(precc_file, prect_file)
         assert(os.path.isfile(prect_file))
-        subprocess.run(['ncrename', '--overwrite', '--variable=PRECC,PRECL', prect_file],
-                       check=True)
-        # Now we can add the values of the variable "PRECL".
-        subprocess.run(['ncbo', '--op_typ=add', f'-o {prect_file}', precl_file,
+        subprocess.run(['ncrename', '--overwrite', '--variable=PRECC,PRECL',
                         prect_file], check=True)
+        # Now we can add the values of the variable "PRECL".
+        subprocess.run(['ncbo', '--overwrite', '--op_typ=add', precl_file,
+                        prect_file, prect_file], check=True)
         # Finally we need to name the sum appropriately "PRECT".
-        subprocess.run(['ncrename', '--variable PRECL,PRECT', prect_file],
+        subprocess.run(['ncrename', '--variable', 'PRECL,PRECT', prect_file],
                        check=True)
         long_name = yaml.load(
             open('options.yaml'))['nc_attributes']['prec']['long_name']
         subprocess.run(['ncatted', '--overwrite',
-                        f'--attribute long_name,PRECT,m,c,"{long_name}"',
+                        '--attribute', f'long_name,PRECT,m,c,"{long_name}"',
                         prect_file], check=True)
     except:
         if os.path.isfile(prect_file):
             cprint(f"Removing file '{prect_file}'.", 'red')
             os.remove(prect_file)
+        for f in glob.glob(f'{prect_file}.pid*.tmp'):
+            cprint(f"Removing file '{f}'.", 'red')
+            os.remove(f)
         raise
     cprint(f"Successfully created '{prect_file}'.", 'green')
     return prect_file
