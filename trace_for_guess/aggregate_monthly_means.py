@@ -1,6 +1,6 @@
-from os.path import isfile
-from shutil import which
-from subprocess import run
+import os.path
+import shutil
+import subprocess
 
 
 def aggregate_monthly_means(in_file, out_file):
@@ -22,14 +22,14 @@ def aggregate_monthly_means(in_file, out_file):
         RuntimeError: The `cdo` command returned an error or the output
             file wasn’t created.
     """
-    if not isfile(in_file):
+    if not os.path.isfile(in_file):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % in_file)
-    if which('cdo') is None:
+    if shutil.which('cdo') is None:
         raise RuntimeError('Executable `cdo` not found.')
     if os.path.isfile(out_file):
         cprint(f"File '{out_file}' already exists. Skipping.", 'cyan')
         return out_file
-    status = run(['cdo', 'ymonmean', in_file, out_file])
+    status = subprocess.run(['cdo', 'ymonmean', in_file, out_file])
     if status != 0:
         raise RuntimeError('Cropping with `ncks` failed: Bad return code.')
     if not isfile(out_file):
