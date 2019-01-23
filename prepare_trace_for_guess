@@ -72,7 +72,7 @@ crujra_files = crop_file_list(crujra_files, cropped_dir, extent)
 
 cru_files = unzip_files_if_needed(
     filenames=get_cru_filenames(),
-    unzip_dir=heap)
+    unzip_dir=os.path.join(heap, 'unzipped'))
 cru_mean_files = dict()  # Aggregated CRU files with variable as key.
 for var in ['pre', 'tmp', 'wet']:
     # Filter list of all CRU files to file names containing `var`.
