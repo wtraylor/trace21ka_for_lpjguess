@@ -66,4 +66,6 @@ def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
     finally:
         trace.close()
         cru.close()
+    assert(os.path.isfile(bias_file))
+    cprint(f"Successfully created '{bias_file}'.", 'green')
     return bias_file
