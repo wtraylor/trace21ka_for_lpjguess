@@ -28,8 +28,8 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
     cprint("Adding PRECC and PRECL to PRECT: '%s'" % prect_file, 'yellow')
     if not os.path.isfile(precc_file):
         raise FileNotFoundError("Could not find PRECC file: '%s'" % precc_file)
-    if not os.path.isfile(prect_file):
-        raise FileNotFoundError("Could not find PRECT file: '%s'" % prect_file)
+    if not os.path.isfile(precl_file):
+        raise FileNotFoundError("Could not find PRECL file: '%s'" % precl_file)
     if os.path.isfile(prect_file):
         cprint(f"Skipping: '{prect_file}'", 'cyan')
         return prect_file
