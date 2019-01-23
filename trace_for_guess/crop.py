@@ -23,12 +23,12 @@ def crop_file(in_file, out_file, ext):
         RuntimeError: Executable `ncks` is not in the PATH.
         RuntimeError: NCKS failed or no output file was created.
     """
-    cprint("Cropping file '%s'..." % in_file, 'yellow')
     if not os.path.isfile(in_file):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % in_file)
     if os.path.isfile(out_file):
         cprint(f"Output file '{out_file}' already exists. Skipping.", 'cyan')
         return out_file
+    cprint("Cropping file '%s'..." % in_file, 'yellow')
     if which("ncks") is None:
         raise RuntimeError("Executable `ncks` not found.")
     status = run(["ncks",
