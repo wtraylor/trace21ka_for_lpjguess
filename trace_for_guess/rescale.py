@@ -32,6 +32,7 @@ def rescale_file(in_file, out_file, template_file, alg):
                                 template_file)
     if os.path.isfile(out_file):
         cprint(f"Skipping: '{out_file}'", 'cyan')
+        return out_file
     if shutil.which("ncremap") is None:
         raise RuntimeError("Executable `ncremap` not found.")
     cprint("Regridding '%s'..." % in_file, 'yellow')
