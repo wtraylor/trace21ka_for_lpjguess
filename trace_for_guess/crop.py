@@ -62,5 +62,15 @@ def crop_file_list(filelist, out_dir, ext):
                'yellow')
         os.makedirs(out_dir)
         assert(os.path.isdir(out_dir))
-    return [crop_file(f, os.path.join(out_dir, os.path.basename(f)), ext)
-            for f in filelist]
+    result_list = list()
+    for f in filelist:
+        try:
+            out_file = os.path.join(out_dir, os.path.basename(f))
+            result_list += crop_file(f, out_file, ext)
+            assert(os.path.is_file(out_file))
+        except exception as e:
+            if os.path.isfile(out_file):
+                cprint(f"Removing file '{out_file}'...", 'red')
+                os.remove(out_file)
+            raise
+
