@@ -1,6 +1,6 @@
 import os
-from shutil import which
-from subprocess import run
+import shutil
+import subprocess
 
 from termcolor import cprint
 
@@ -28,7 +28,7 @@ def cat_files(filelist, out_file):
     if os.path.exists(out_file):
         cprint('Output file already exists. Skipping.', 'cyan')
         return out_file
-    if which("ncrcat") is None:
+    if shutil.which("ncrcat") is None:
         raise RuntimeError('The command `ncrcat` could not be found.')
     status = subprocess.run(['ncrcat'] + filelist + [out_file])
     if status != 0:
