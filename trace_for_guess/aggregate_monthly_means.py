@@ -31,12 +31,19 @@ def aggregate_monthly_means(in_file, out_file):
         return out_file
     cprint(f"Aggregating monthly means from '{in_file}', writing to "
            "'{out_file}'...", 'yellow')
-    status = subprocess.run(['cdo', 'ymonmean', in_file, out_file])
-    if status != 0:
-        raise RuntimeError('Aggregating with `cdo ymonmean` failed: Bad '
-                           'return code.')
-    if not isfile(out_file):
-        raise RuntimeError('Aggregating with `cdo ymonmean` failed: No output'
-                           'file created.')
+    try:
+        status = subprocess.run(['cdo', 'ymonmean', in_file, out_file])
+        if status != 0:
+            raise RuntimeError('Aggregating with `cdo ymonmean` failed: Bad '
+                            'return code.')
+        if not isfile(out_file):
+            raise RuntimeError('Aggregating with `cdo ymonmean` failed: No output'
+                            'file created.')
+    except:
+        if os.path.isfile(out_file):
+            cprint(f"Removing file '{out_file}'.", 'red')
+            os.remove(out_file)
+        raise
+    assert(os.path.isfile(out_file))
     cprint(f"Successfully created '{out_file}'.", 'green')
     return out_file
