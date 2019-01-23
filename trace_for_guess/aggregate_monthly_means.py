@@ -2,6 +2,8 @@ import os.path
 import shutil
 import subprocess
 
+from termcolor import cprint
+
 
 def aggregate_monthly_means(in_file, out_file):
     """Calculate the mean over all years for each month using CDO.
@@ -35,10 +37,10 @@ def aggregate_monthly_means(in_file, out_file):
         status = subprocess.run(['cdo', 'ymonmean', in_file, out_file])
         if status != 0:
             raise RuntimeError('Aggregating with `cdo ymonmean` failed: Bad '
-                            'return code.')
-        if not isfile(out_file):
-            raise RuntimeError('Aggregating with `cdo ymonmean` failed: No output'
-                            'file created.')
+                               'return code.')
+        if not os.path.isfile(out_file):
+            raise RuntimeError('Aggregating with `cdo ymonmean` failed: No '
+                               'output file created.')
     except:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
