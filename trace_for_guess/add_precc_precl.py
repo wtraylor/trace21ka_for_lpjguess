@@ -32,14 +32,15 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
     if os.path.isfile(prect_file):
         cprint(f"Skipping: '{prect_file}'", 'cyan')
         return prect_file
-    cprint("Adding PRECC and PRECL to PRECT: '%s'" % prect_file, 'yellow')
+    cprint('Adding PRECC and PRECL to PRECT:', 'yellow')
+    cprint(f"'{precc_file}' + '{precl_file}' -> '{prect_file}'", 'yellow')
     # First copy PRECC file into output location so that we can rename its
     # variable to match the variable of the other operand. If the names of the
     # variables don’t match, NCO will not be able to add them.
     try:
         shutil.copy2(precc_file, prect_file)
         assert(os.path.isfile(prect_file))
-        subprocess.run(['ncrename', '--variable PRECC,PRECL', prect_file],
+        subprocess.run(['ncrename', '--overwrite', '--variable=PRECC,PRECL', prect_file],
                        check=True)
         # Now we can add the values of the variable "PRECL".
         subprocess.run(['ncbo', '--op_typ=add', f'-o {prect_file}', precl_file,
