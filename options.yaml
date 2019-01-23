@@ -41,6 +41,12 @@ directories:
 # Don’t change this unless you know what you are doing.
 #
 
+# Variables in the CRU NetCDF files as they correspond to the TraCE-21ka
+# variables. The CRU files are also named like their variables.
+cru_vars:
+  PRECT: 'pre'
+  TREFHT: 'tmp'
+
 # NetCDF attributes as they shall appear in the output files.
 nc_attributes:
   # TODO: cloud cover
@@ -73,9 +79,3 @@ nc_attributes:
     long_name: 'wet_days'
     standard_name: 'number_of_days_with_lwe_thickness_of_precipitation_amount_above_threshold'
     units: 'count'
-
-# Variables in the CRU NetCDF files as they correspond to the TraCE-21ka
-# variables. The CRU files are also named like their variables.
-cru_vars:
-  PRECT: 'pre'
-  TREFHT: 'tmp'
