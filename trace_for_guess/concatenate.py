@@ -30,11 +30,17 @@ def cat_files(filelist, out_file):
         return out_file
     if shutil.which("ncrcat") is None:
         raise RuntimeError('The command `ncrcat` could not be found.')
-    status = subprocess.run(['ncrcat'] + filelist + [out_file])
-    if status != 0:
-        raise RuntimeError('The command `ncrcat` failed.')
-    if not os.path.isfile(out_file):
-        raise RuntimeError('The command `ncrcat` didn’t produce an output '
-                           'file.')
+    try:
+        status = subprocess.run(['ncrcat'] + filelist + [out_file])
+        if status != 0:
+            raise RuntimeError('The command `ncrcat` failed.')
+        if not os.path.isfile(out_file):
+            raise RuntimeError('The command `ncrcat` didn’t produce an output '
+                            'file.')
+    except:
+        if os.path.isfile(out_file):
+            cprint(f"Removing file '{out_file}'.", 'red')
+            os.remove(out_file)
+        raise
     cprint(f"Created file '{out_file}'.", 'green')
     return out_file
