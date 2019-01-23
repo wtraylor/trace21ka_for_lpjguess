@@ -28,6 +28,7 @@ directories:
   # For any given file, all directories will be searched recursively.
   input:
     - '/mnt/zathras/data/'
+    - '/mnt/zathras/research_data/TraCE-21ka/'
   # Directory for temporary files.
   heap: "/mnt/zathras/trace_for_guess/heap"
   # Directory for final output files.
