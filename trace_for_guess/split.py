@@ -1,7 +1,7 @@
 import os
+import shutil
+import subprocess
 from glob import glob
-from shutil import which
-from subprocess import run
 
 from termcolor import cprint
 
@@ -35,11 +35,19 @@ def split_file(filename, out_dir):
     # output directory.
     stub_name = os.path.splitext(os.path.basename(filename))[0]
     stub_path = os.path.join(out_dir, stub_name)
-    if which("cdo") is None:
+    if shutil.which("cdo") is None:
         raise RuntimeError("Executable `cdo` not found.")
-    status = run(["cdo", "splitsel,1200", filename, stub_path])
-    if status != 0:
-        raise RuntimeError("Splitting with `cdo` failed: Bad return code.")
-    out_files = glob(stub_path)
-    cprint(f'Created the following files: {out_files}.', 'green')
+    try:
+        subprocess.run(["cdo", "splitsel,1200", filename, stub_path],
+                       check=True)
+    except:
+        for f in glob(stub_path + '*'):
+            cprint(f"Removing file '{f}'.", 'red')
+            os.remove(f)
+        raise
+    out_files = glob(stub_path + '*')
+    if not out_files:
+        raise RuntimeError('The command `cdo splitsel` didn’t produce an '
+                           'output files.')
+    cprint(f'Created the following files: {out_files}', 'green')
     return out_files
