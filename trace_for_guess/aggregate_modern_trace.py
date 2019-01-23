@@ -53,12 +53,12 @@ def aggregate_modern_trace(trace_file, out_file):
         FileNotFoundError: The file `trace_file` wasn’t found.
         RuntimeError: Output file was not created.
     """
-    cprint(f"Aggregating monthly averages from file '{trace_file}'.", 'yellow')
     if not os.path.isfile(trace_file):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % trace_file)
     if os.path.isfile(out_file):
         cprint(f"Skipping: '{out_file}'", 'cyan')
         return out_file
+    cprint(f"Aggregating monthly averages from file '{trace_file}'.", 'yellow')
     dataset = get_monthly_means(trace_file)
     cprint("Writing file '%s'." % out_file, 'yellow')
     dataset.to_netcdf(out_file)
