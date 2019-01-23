@@ -42,5 +42,6 @@ def cat_files(filelist, out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
             os.remove(out_file)
         raise
+    assert(os.path.isfile(out_file))
     cprint(f"Created file '{out_file}'.", 'green')
     return out_file
