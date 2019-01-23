@@ -16,7 +16,7 @@ def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
         trace_var: NetCDF variable in the TraCE file.
         cru_file: The CRU NetCDF file with modern monthly averages.
         cru_var: NetCDF variable in the CRU file.
-        bias_file: Path to output file (will be overwritten).
+        bias_file: Path to output file (will not be overwritten).
 
     Returns:
         Path to output file (equals `bias_file`).
