@@ -64,6 +64,11 @@ if not os.path.isdir(out_dir):
 # Prepare CRU and CRU-JRA files ########################################
 
 
+regrid_template_file = unzip_files_if_needed(
+    filenames=[opts['regrid_template_file']],
+    unzip_dir=os.path.join(heap, 'unzipped')
+)[0]
+
 crujra_files = unzip_files_if_needed(
     filenames=get_crujra_filenames(),
     unzip_dir=os.path.join(heap, 'unzipped'))
