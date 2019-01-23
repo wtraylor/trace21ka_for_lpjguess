@@ -25,7 +25,6 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
             found.
         RuntimeError: The `ncrename` command has failed or produced not output.
     """
-    cprint("Adding PRECC and PRECL to PRECT: '%s'" % prect_file, 'yellow')
     if not os.path.isfile(precc_file):
         raise FileNotFoundError("Could not find PRECC file: '%s'" % precc_file)
     if not os.path.isfile(precl_file):
@@ -33,6 +32,7 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
     if os.path.isfile(prect_file):
         cprint(f"Skipping: '{prect_file}'", 'cyan')
         return prect_file
+    cprint("Adding PRECC and PRECL to PRECT: '%s'" % prect_file, 'yellow')
     # First copy PRECC file into output location so that we can rename its
     # variable to match the variable of the other operand.
     try:
