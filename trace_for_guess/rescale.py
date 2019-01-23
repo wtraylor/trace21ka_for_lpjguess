@@ -25,7 +25,6 @@ def rescale_file(in_file, out_file, template_file, alg):
         RuntimeError: The `ncremap` command failed or produced no output
             file.
     """
-    cprint("Regridding '%s'..." % in_file, 'yellow')
     if not os.path.isfile(in_file):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % in_file)
     if not os.path.isfile(template_file):
@@ -35,6 +34,7 @@ def rescale_file(in_file, out_file, template_file, alg):
         cprint(f"Skipping: '{out_file}'", 'cyan')
     if shutil.which("ncremap") is None:
         raise RuntimeError("Executable `ncremap` not found.")
+    cprint("Regridding '%s'..." % in_file, 'yellow')
     try:
         subprocess.run(["ncremap",
                         "--algorithm=%s" % alg,
