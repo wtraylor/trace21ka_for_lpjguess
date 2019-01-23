@@ -31,9 +31,10 @@ def aggregate_monthly_means(in_file, out_file):
         return out_file
     status = subprocess.run(['cdo', 'ymonmean', in_file, out_file])
     if status != 0:
-        raise RuntimeError('Cropping with `ncks` failed: Bad return code.')
+        raise RuntimeError('Aggregating with `cdo ymonmean` failed: Bad '
+                           'return code.')
     if not isfile(out_file):
-        raise RuntimeError('Cropping with `ncks` failed: No output file '
-                           'created.')
+        raise RuntimeError('Aggregating with `cdo ymonmean` failed: No output'
+                           'file created.')
     cprint(f"Successfully created '{out_file}'.", 'green')
     return out_file
