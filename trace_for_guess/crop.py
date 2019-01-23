@@ -33,8 +33,7 @@ def crop_file(in_file, out_file, ext):
     status = run(["ncks",
                   "--overwrite",
                   "--dimension", "lon,%.2f,%.2f" % (ext[0], ext[1]),
-                  "--dimension", "lat,%.2f,%.2f" % (ext[0],
-                                                    ext[1]),
+                  "--dimension", "lat,%.2f,%.2f" % (ext[2], ext[3]),
                   in_file,
                   out_file]).returncode
     if status != 0:

@@ -12,9 +12,9 @@
 # Geographic extent of study area.
 region:
   # Longitude: 0° to 360° E
-  lon: [130, 230]
+  lon: [50, 80]
   # Latitude: -90° to +90° N
-  lat: [50, 80]
+  lat: [130, 230]
 
 # Interpolation algorithm for regridding
 # (downscaling) the NetCDF files.
