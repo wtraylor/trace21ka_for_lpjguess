@@ -26,13 +26,13 @@ def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
         NotImplementedError: The variable in the TraCE file is not
             implemented.
     """
-    cprint('Calculating bias:', 'yellow')
-    cprint("%s x %s -> %s" (trace_file, cru_file, bias_file), 'yellow')
     if not isfile(trace_file):
         raise FileNotFoundError(
             "TraCE-21ka mean file doesn’t exist: '%s'" % trace_file)
     if not isfile(cru_file):
         raise FileNotFoundError("CRU mean file doesn’t exist: '%s'" % cru_file)
+    cprint('Calculating bias:', 'yellow')
+    cprint(f"'{trace_file}' x '{cru_file}' -> '{bias_file}'", 'yellow')
     # Open and load the files completely. They need to be in the RAM for
     # calculation.
     trace = xr.open_dataset(trace_file, decode_times=False).load()
