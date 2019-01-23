@@ -1,5 +1,5 @@
 import os
-from subprocess import run
+import subprocess
 
 from termcolor import cprint
 
@@ -34,14 +34,17 @@ def rescale_file(in_file, out_file, template_file, alg):
         cprint(f"Output file '{out_file}' already exists. Skipping.", 'cyan')
     if which("ncremap") is None:
         raise RuntimeError("Executable `ncremap` not found.")
-    status = run(["ncremap",
-                  "--algorithm=%s" % alg,
-                  "--template_file=%s" % template_file,
-                  "--input_file=%s" % in_file,
-                  "--output_file=%s" % out_file])
-    if status != 0:
-        raise RuntimeError("Regridding with `ncremap` failed: Bad return "
-                           "code.")
+    try:
+        subprocess.run(["ncremap",
+                        "--algorithm=%s" % alg,
+                        "--template_file=%s" % template_file,
+                        "--input_file=%s" % in_file,
+                        "--output_file=%s" % out_file], check=True)
+    except:
+        if os.path.isfile(out_file):
+            cprint(f"Removing file '{out_file}'.", 'red')
+            os.remove(out_file)
+        raise
     if not os.path.isfile(out_file):
         raise RuntimeError("Regridding with `ncremap` failed: No output file "
                            "created.")
