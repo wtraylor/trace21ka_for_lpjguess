@@ -1,4 +1,5 @@
 import os
+from glob import glob
 from shutil import which
 from subprocess import run
 
@@ -67,10 +68,13 @@ def crop_file_list(filelist, out_dir, ext):
         try:
             out_file = os.path.join(out_dir, os.path.basename(f))
             result_list += crop_file(f, out_file, ext)
-            assert(os.path.is_file(out_file))
-        except exception as e:
+            assert(os.path.isfile(out_file))
+        except:
             if os.path.isfile(out_file):
-                cprint(f"Removing file '{out_file}'...", 'red')
+                cprint(f"Removing file '{out_file}'.", 'red')
                 os.remove(out_file)
+            # Remove temporary file created by ncks.
+            for g in glob(f'{out_file}.pid*.ncks.tmp'):
+                cprint(f"Removing file '{g}'.", 'red')
+                os.remove(g)
             raise
-
