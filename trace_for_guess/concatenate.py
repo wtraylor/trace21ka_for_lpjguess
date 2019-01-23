@@ -39,6 +39,6 @@ def cat_files(filelist, out_file):
         raise
     if not os.path.isfile(out_file):
         raise RuntimeError('The command `ncrcat` didn’t produce an output '
-                        'file.')
+                           'file.')
     cprint(f"Created file '{out_file}'.", 'green')
     return out_file
