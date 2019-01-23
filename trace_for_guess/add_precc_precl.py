@@ -1,6 +1,6 @@
 import os
 import shutil
-from subprocess import run
+import subprocess
 
 import yaml
 from termcolor import cprint
@@ -35,35 +35,44 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
         return prect_file
     # First copy PRECC file into output location so that we can rename its
     # variable to match the variable of the other operand.
-    shutil.copy2(precc_file, prect_file)
-    if not os.path.isfile(prect_file):
-        raise RuntimeError(
-            f"Copying file from '{precc_file}' to '{prect_file}' failed.")
-    status = run('ncrename', '--variable PRECC,PRECL', prect_file)
-    if status != 0:
-        raise RuntimeError('Command `ncrename` failed.')
+    try:
+        shutil.copy2(precc_file, prect_file)
+        assert(os.path.isfile(prect_file))
+        subprocess.run(['ncrename', '--variable PRECC,PRECL', prect_file],
+                       check=True)
+    except:
+        if os.path.isfile(prect_file):
+            cprint(f"Removing file '{prect_file}'.", 'red')
+            os.remove(prect_file)
+        raise
     # Now we can add the matching variable name "PRECL".
-    status = run('ncbo', ['--op_typ=add', f'-o {prect_file}', precl_file,
-                          prect_file])
-    if status != 0:
+    try:
+        subprocess.run(['ncbo', '--op_typ=add', f'-o {prect_file}', precl_file,
+                        prect_file], check=True)
+    except:
         if os.path.isfile(prect_file):
+            cprint(f"Removing file '{prect_file}'.", 'red')
             os.remove(prect_file)
-        raise RuntimeError('Command `ncbo` failed.')
+        raise
     # Finally we need to name the sum appropriately "PRECT".
-    status = run('ncrename', '--variable PRECL,PRECT', prect_file)
-    if status != 0:
+    try:
+        subprocess.run(['ncrename', '--variable PRECL,PRECT', prect_file],
+                       check=True)
+    except:
         if os.path.isfile(prect_file):
+            cprint(f"Removing file '{prect_file}'.", 'red')
             os.remove(prect_file)
-        raise RuntimeError("Failed to rename PRECL to PRECT in file "
-                           "'{prect_file}' with `ncrename`.")
+        raise
     long_name = yaml.load(
         open('options.yaml'))['nc_attributes']['prec']['long_name']
-    status = run('ncatted', '--overwrite',
-                 f'--attribute long_name,PRECT,m,c,"{long_name}"', prect_file)
-    if status != 0:
+    try:
+        subprocess.run(['ncatted', '--overwrite',
+                        f'--attribute long_name,PRECT,m,c,"{long_name}"',
+                        prect_file], check=True)
+    except:
         if os.path.isfile(prect_file):
+            cprint(f"Removing file '{prect_file}'.", 'red')
             os.remove(prect_file)
-        raise RuntimeError(f"Failed to set attribute for file '{prect_file}"
-                           "with `ncrename`.")
+        raise
     cprint(f"Successfully created '{prect_file}'.", 'green')
     return prect_file
