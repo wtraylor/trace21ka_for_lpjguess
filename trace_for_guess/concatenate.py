@@ -31,17 +31,14 @@ def cat_files(filelist, out_file):
         raise RuntimeError('The command `ncrcat` could not be found.')
     cprint(f"Concatenating files {filelist} to '{out_file}'...", 'yellow')
     try:
-        status = subprocess.run(['ncrcat'] + filelist + [out_file])
-        if status != 0:
-            raise RuntimeError('The command `ncrcat` failed.')
-        if not os.path.isfile(out_file):
-            raise RuntimeError('The command `ncrcat` didn’t produce an output '
-                            'file.')
+        subprocess.run(['ncrcat'] + filelist + [out_file], check=True)
     except:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
             os.remove(out_file)
         raise
-    assert(os.path.isfile(out_file))
+    if not os.path.isfile(out_file):
+        raise RuntimeError('The command `ncrcat` didn’t produce an output '
+                        'file.')
     cprint(f"Created file '{out_file}'.", 'green')
     return out_file
