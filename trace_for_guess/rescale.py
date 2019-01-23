@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 
 from termcolor import cprint
@@ -32,7 +33,7 @@ def rescale_file(in_file, out_file, template_file, alg):
                                 template_file)
     if os.path.isfile(out_file):
         cprint(f"Skipping: '{out_file}'", 'cyan')
-    if which("ncremap") is None:
+    if shutil.which("ncremap") is None:
         raise RuntimeError("Executable `ncremap` not found.")
     try:
         subprocess.run(["ncremap",
