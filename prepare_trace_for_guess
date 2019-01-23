@@ -125,14 +125,14 @@ for var in modern_trace_files:
 bias_files = dict()  # TraCE vs. CRU bias files with TraCE variable as key.
 for trace_var in opts['cru_vars']:
     cru_var = opts['cru_vars'][trace_var]
-    if trace_var in f:
-        bias_files[trace_var] = calculate_bias(
-            trace_file=f,
-            trace_var=trace_var,
-            cru_file=cru_mean_files[cru_var],
-            cru_var=cru_var,
-            bias_file=os.path.join(heap, f'bias_{trace_var}.nc')
-        )
+    trace_file = modern_trace_files[var]
+    bias_files[trace_var] = calculate_bias(
+        trace_file=trace_file,
+        trace_var=trace_var,
+        cru_file=cru_mean_files[cru_var],
+        cru_var=cru_var,
+        bias_file=os.path.join(heap, f'bias_{trace_var}.nc')
+    )
 
 
 # Prepare TraCE-21ka Files #############################################
