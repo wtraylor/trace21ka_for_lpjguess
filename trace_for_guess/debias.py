@@ -69,5 +69,6 @@ def debias_trace_file(trace_file, bias_file, out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
             os.remove(out_file)
         raise
+    assert os.path.isfile(out_file)
     cprint(f"Successfully created '{out_file}'.", 'green')
     return out_file
