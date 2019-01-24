@@ -188,9 +188,10 @@ for trace_var in split_trace_files:
                                                os.path.basename(f)),
                          template_file=regrid_template_file,
                          alg=opts['regrid_algorithm'])
-        debias_trace_file(in_file=f,
-                          bias_file=bias_files[trace_var],
-                          out_file=os.path.join(debiased_dir,
-                                                os.path.basename(f)))
+        if trace_var in bias_files:
+            f = debias_trace_file(in_file=f,
+                                bias_file=bias_files[trace_var],
+                                out_file=os.path.join(debiased_dir,
+                                                        os.path.basename(f)))
         # Set Metadata
         # Compress
