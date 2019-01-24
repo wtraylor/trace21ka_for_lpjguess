@@ -177,7 +177,8 @@ for var in trace_files:
     split_trace_files[var] = list()
     cprint(f"Going to split TraCE files of variable '{var}'.", 'yellow')
     for f in trace_files[var]:
-        convert_time_unit(f)
+        f = convert_time_unit(f, os.path.join(heap, 'converted_time',
+                                              os.path.basename(f)))
         split_trace_files[var] += split_file(filename=f, out_dir=split_dir)
 
 for trace_var in split_trace_files:
