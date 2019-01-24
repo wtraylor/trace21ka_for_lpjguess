@@ -30,6 +30,10 @@ def split_file(filename, out_dir):
     """
     if not os.path.isfile(filename):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % filename)
+    if not os.path.isdir(out_dir):
+        cprint(f"Directory '{out_dir}' does not exist yet. I will create it.",
+               'yellow')
+        os.makedirs(out_dir)
     # Remove the file extension from `filename` and use it as a stub in the
     # output directory.
     stub_name = os.path.splitext(os.path.basename(filename))[0] + '_'
