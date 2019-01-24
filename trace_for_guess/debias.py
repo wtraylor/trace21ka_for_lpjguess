@@ -30,6 +30,7 @@ def debias_trace_file(trace_file, bias_file, out_file):
                                 trace_file)
     if os.path.isfile(out_file):
         cprint(f"Skipping: '{out_file}'", 'cyan')
+        return out_file
     out_dir = os.path.dirname(out_file)
     if not os.path.isdir(out_dir):
         cprint(f"Directory '{out_dir}' does not exist yet. I will create it.",
