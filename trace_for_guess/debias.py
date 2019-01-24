@@ -1,9 +1,9 @@
 import os
 
+import xarray as xr
 from termcolor import cprint
 
-import xarray as xr
-from wet_days import add_wet_days_to_dataset
+from trace_for_guess.wet_days import add_wet_days_to_dataset
 
 
 def debias_trace_file(trace_file, bias_file, prec_std_file, out_file):
