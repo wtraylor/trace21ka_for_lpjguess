@@ -30,8 +30,7 @@ def debias_trace_file(trace_file, bias_file, out_file):
                                 trace_file)
     if os.path.isfile(out_file):
         cprint(f"Skipping: '{out_file}'", 'cyan')
-    cprint('Debias TraCE file:', 'yellow')
-    cprint("'%s' => '%s'" % (trace_file, out_file), 'yellow')
+    cprint(f"Debiasing TraCE file '{trace_file}'...", 'yellow')
     try:
         with xr.open_dataset(trace_file, decode_times=False) as trace:
             # Find the variable in the TraCE file.
@@ -64,6 +63,5 @@ def debias_trace_file(trace_file, bias_file, out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
             os.remove(out_file)
         raise
-    assert os.path.isfile(out_file), 'No output created.'
     cprint(f"Successfully created '{out_file}'.", 'green')
     return out_file
