@@ -5,7 +5,7 @@ import xarray as xr
 from scipy.stats import gamma
 from termcolor import cprint
 
-from trace_for_guess.cf_attributes import set_attributes
+from trace_for_guess.netcdf_metadata import set_attributes
 
 
 def get_gamma_cdf(x, xmean, xstd):
