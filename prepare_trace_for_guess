@@ -29,6 +29,7 @@ from trace_for_guess.filenames import (get_cru_filenames, get_crujra_filenames,
                                        get_modern_trace_filename,
                                        get_trace_filenames)
 from trace_for_guess.find_input import find_files
+from trace_for_guess.prec_standard_deviation import get_prec_standard_deviation
 from trace_for_guess.rescale import rescale_file
 from trace_for_guess.split import split_file
 from trace_for_guess.unzip import unzip_files_if_needed
@@ -87,7 +88,8 @@ crujra_files = unzip_files_if_needed(
     filenames=get_crujra_filenames(),
     unzip_dir=heap_input)
 crujra_files = crop_file_list(crujra_files, cropped_dir, extent)
-# TODO Calculate precipitation standard deviation
+prec_std_file = get_prec_standard_deviation(crujra_files,
+                                            os.path.join(heap, 'prec_std.nc'))
 
 cru_files = unzip_files_if_needed(
     filenames=get_cru_filenames(),
@@ -194,7 +196,7 @@ for var in trace_files:
                                   bias_file=bias_files[var],
                                   out_file=os.path.join(debiased_dir,
                                                         os.path.basename(f)))
-        if var == 'PRECT':
-            add_wet_days_to_file(f, prec_std_file)
+        # if var == 'PRECT':
+        #     add_wet_days_to_file(f, prec_std_file)
         # set_metadata(f, var)
         # Compress
