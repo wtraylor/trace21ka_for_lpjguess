@@ -23,8 +23,6 @@ def debias_trace_file(trace_file, bias_file, out_file):
         NotImplementedError: The NetCDF variable in the TraCE file is unknown.
         RuntimeError: No output file was produced.
     """
-    cprint('Debias TraCE file:', 'yellow')
-    cprint("'%s' => '%s'" % (trace_file, out_file), 'yellow')
     if not os.path.isfile(bias_file):
         raise FileNotFoundError("Bias file does not exist: '%s'" % bias_file)
     if not os.path.isfile(trace_file):
@@ -32,6 +30,8 @@ def debias_trace_file(trace_file, bias_file, out_file):
                                 trace_file)
     if os.path.isfile(out_file):
         cprint(f"Skipping: '{out_file}'", 'cyan')
+    cprint('Debias TraCE file:', 'yellow')
+    cprint("'%s' => '%s'" % (trace_file, out_file), 'yellow')
     # The TraCE map as xarray Dataset.
     trace = xr.open_dataset(trace_file, decode_times=False)
     # Find the variable in the TraCE file.
