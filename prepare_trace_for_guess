@@ -169,29 +169,29 @@ trace_files = dict()  # Key is the variable, value is a list of file paths.
 for var in ['FSDS', 'PRECT', 'TREFHT']:
     trace_files[var] = find_files(get_trace_filenames([var]))
 
-# Crop, split and rescale all TraCE files.
+split_trace_files = dict()
 for var in trace_files:
     cprint(f"Going to crop TraCE files of variable '{var}'.", 'yellow')
     trace_files[var] = crop_file_list(trace_files[var], cropped_dir, extent)
-split_trace_files = dict()
-for var in trace_files:
-    split_trace_files[var] = list()
     cprint(f"Going to split TraCE files of variable '{var}'.", 'yellow')
+    split_trace_files[var] = list()
     for f in trace_files[var]:
+        # In order for `cdo splitsel` to work, the time unit of the TraCE files
+        # must be converted from kaBP to a standard calendar.
         convert_time_unit(f)
         split_trace_files[var] += split_file(filename=f, out_dir=split_dir)
-
-for trace_var in split_trace_files:
+    cprint(f"Going to rescale and debias TraCE files of variable '{var}'.",
+           'yellow')
     for f in split_trace_files[var]:
         f = rescale_file(in_file=f,
                          out_file=os.path.join(rescaled_dir,
                                                os.path.basename(f)),
                          template_file=regrid_template_file,
                          alg=opts['regrid_algorithm'])
-        if trace_var in bias_files:
+        if var in bias_files:
             f = debias_trace_file(in_file=f,
-                                bias_file=bias_files[trace_var],
-                                out_file=os.path.join(debiased_dir,
+                                  bias_file=bias_files[var],
+                                  out_file=os.path.join(debiased_dir,
                                                         os.path.basename(f)))
         # Set Metadata
         # Compress
