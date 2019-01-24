@@ -1,7 +1,7 @@
 import os
+import shutil
+import subprocess
 from glob import glob
-from shutil import which
-from subprocess import run
 
 from termcolor import cprint
 
@@ -29,16 +29,20 @@ def crop_file(in_file, out_file, ext):
         cprint(f"Skipping: '{out_file}'", 'cyan')
         return out_file
     cprint("Cropping file '%s'..." % in_file, 'yellow')
-    if which("ncks") is None:
+    if shutil.which("ncks") is None:
         raise RuntimeError("Executable `ncks` not found.")
-    status = run(["ncks",
-                  "--overwrite",
-                  "--dimension", "lon,%.2f,%.2f" % (ext[0], ext[1]),
-                  "--dimension", "lat,%.2f,%.2f" % (ext[2], ext[3]),
-                  in_file,
-                  out_file]).returncode
-    if status != 0:
-        raise RuntimeError("Cropping with `ncks` failed: Bad return code.")
+    try:
+        subprocess.run(["ncks",
+                        "--overwrite",
+                        "--dimension", "lon,%.2f,%.2f" % (ext[0], ext[1]),
+                        "--dimension", "lat,%.2f,%.2f" % (ext[2], ext[3]),
+                        in_file,
+                        out_file], check=True)
+    except:
+        if os.path.isfile(out_file):
+            cprint(f"Removing file '{out_file}'.", 'red')
+            os.remove(out_file)
+        raise
     if not os.path.isfile(out_file):
         raise RuntimeError("Cropping with `ncks` failed: No output file "
                            "created.")
