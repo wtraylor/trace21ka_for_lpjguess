@@ -37,7 +37,7 @@ def split_file(filename, out_dir):
     # We assume that if there are any files obviously created by `cdo
     # splitsel`, these will be complete. If the creation of files had been
     # interrupted, all files would have been deleted in the except-block.
-    existing_files = os.glob(stub_path + '*')
+    existing_files = glob(stub_path + '*')
     if existing_files:
         for f in existing_files:
             cprint(f'Skipping: {f}', 'cyan')
