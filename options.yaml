@@ -76,9 +76,8 @@ nc_attributes:
     units: 'K'
   time:
     long_name: 'time'
-    standard_name: 'time'
-    units: '' # TODO
-    calendar: '' # TODO
+    units: 'days since -20050-1-1 0:0:0'
+    calendar: '365_day'  # All years are 365 days long; equivalent to "noleap"
   wet_days:
     long_name: 'wet_days'
     standard_name: 'number_of_days_with_lwe_thickness_of_precipitation_amount_above_threshold'

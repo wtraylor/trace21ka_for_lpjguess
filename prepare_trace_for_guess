@@ -22,6 +22,7 @@ from trace_for_guess.aggregate_modern_trace import aggregate_modern_trace
 from trace_for_guess.aggregate_monthly_means import aggregate_monthly_means
 from trace_for_guess.calculate_bias import calculate_bias
 from trace_for_guess.concatenate import cat_files
+from trace_for_guess.convert_time_unit import convert_time_unit
 from trace_for_guess.crop import crop_file_list
 from trace_for_guess.filenames import (get_cru_filenames, get_crujra_filenames,
                                        get_modern_trace_filename,
@@ -176,6 +177,7 @@ for var in trace_files:
     split_trace_files[var] = list()
     cprint(f"Going to split TraCE files of variable '{var}'.", 'yellow')
     for f in trace_files[var]:
+        convert_time_unit(f)
         split_trace_files[var] += split_file(filename=f, out_dir=split_dir)
 
 for trace_var in split_trace_files:
