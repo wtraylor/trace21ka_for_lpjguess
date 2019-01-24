@@ -11,7 +11,7 @@ def split_file(filename, out_dir):
 
     Create 100 years files (1200 time steps, 12*100 months) for each
     cropped file. The split files are named with a suffix to the original
-    file name: *000000.nc,: *000001.nc,: *000002.nc, etc.
+    file name: *_000000.nc,: *_000001.nc,: *_000002.nc, etc.
 
     There is no check if the output files already exist.
 
@@ -33,7 +33,7 @@ def split_file(filename, out_dir):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % filename)
     # Remove the file extension from `filename` and use it as a stub in the
     # output directory.
-    stub_name = os.path.splitext(os.path.basename(filename))[0]
+    stub_name = os.path.splitext(os.path.basename(filename))[0] + '_'
     stub_path = os.path.join(out_dir, stub_name)
     if shutil.which("cdo") is None:
         raise RuntimeError("Executable `cdo` not found.")
