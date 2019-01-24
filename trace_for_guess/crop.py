@@ -78,4 +78,5 @@ def crop_file_list(filelist, out_dir, ext):
                 cprint(f"Removing file '{g}'.", 'red')
                 os.remove(g)
             raise
+    assert(len(filelist) == len(result_list))
     return result_list
