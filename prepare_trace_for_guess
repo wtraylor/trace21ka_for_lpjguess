@@ -169,6 +169,7 @@ for var in ['FSDS', 'PRECT', 'TREFHT']:
 
 # Crop, split and rescale all TraCE files.
 for var in trace_files:
+    cprint(f"Going to crop TraCE files of variable '{var}'.", 'yellow')
     trace_files[var] = crop_file_list(trace_files[var], cropped_dir, extent)
 split_trace_files = dict()
 for var in trace_files:
