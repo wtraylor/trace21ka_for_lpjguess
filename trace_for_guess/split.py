@@ -28,13 +28,18 @@ def split_file(filename, out_dir):
         List of paths of newly creatd files, each 100 years long (or
         shorter).
     """
-    cprint(f"Splitting file '{filename}' into 100-years slices...", 'yellow')
     if not os.path.isfile(filename):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % filename)
     # Remove the file extension from `filename` and use it as a stub in the
     # output directory.
     stub_name = os.path.splitext(os.path.basename(filename))[0] + '_'
     stub_path = os.path.join(out_dir, stub_name)
+    existing_files = os.glob(stub_path + '*')
+    if existing_files:
+        for f in existing_files:
+            cprint(f'Skipping: {f}', 'cyan')
+        return existing_files
+    cprint(f"Splitting file '{filename}' into 100-years slices...", 'yellow')
     if shutil.which("cdo") is None:
         raise RuntimeError("Executable `cdo` not found.")
     try:
