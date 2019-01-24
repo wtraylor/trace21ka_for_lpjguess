@@ -71,6 +71,8 @@ if not os.path.isdir(out_dir):
 # Prepare CRU and CRU-JRA files ########################################
 
 
+cprint(f'Going to prepare input CRU and CRU-JRA files.', 'yellow')
+
 # We unzip into `heap_input` so that any unzipped files are available like
 # original input files.
 regrid_template_file = unzip_files_if_needed(
@@ -105,6 +107,7 @@ for var in ['pre', 'tmp', 'wet']:
 # Create means for modern TraCE files. We need them to calculate the bias.
 # NOTE: We calculate the means first and then add PRECC and PRECL in the
 # assumption that the order doesn’t make a difference.
+cprint(f'Going to calculate means of TraCE data from modern time.', 'yellow')
 modern_trace_files = dict()
 for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
     out_file = f'modern_trace_{var}.nc'
@@ -132,6 +135,7 @@ for var in modern_trace_files:
 
 # Calculate bias for all variables specified in "options.yaml".
 bias_files = dict()  # TraCE vs. CRU bias files with TraCE variable as key.
+cprint(f'Going to calculate bias TraCE vs. CRU.', 'yellow')
 for trace_var in opts['cru_vars']:
     cru_var = opts['cru_vars'][trace_var]
     trace_file = modern_trace_files[trace_var]
@@ -147,7 +151,9 @@ for trace_var in opts['cru_vars']:
 # Prepare TraCE-21ka Files #############################################
 
 
-# Create all PRECT files in a special directory in the "heap", which will automatically be searched like an input directory.
+# Create all PRECT files in a special directory in the "heap", which will
+# automatically be searched like an input directory.
+cprint(f'Going to calculate PRECT as PRECC + PRECL.', 'yellow')
 for prect in get_trace_filenames(['PRECT']):
     precc = find_files(re.sub('PRECT', 'PRECC', prect))
     precl = find_files(re.sub('PRECT', 'PRECL', prect))
@@ -167,6 +173,7 @@ for var in trace_files:
 split_trace_files = dict()
 for var in trace_files:
     split_trace_files[var] = list()
+    cprint(f"Going to split TraCE files of variable '{var}'.", 'yellow')
     for f in trace_files[var]:
         split_trace_files[var] += split_file(filename=f, out_dir=split_dir)
 
