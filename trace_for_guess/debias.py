@@ -65,7 +65,7 @@ def debias_trace_file(trace_file, bias_file, out_file):
                 raise NotImplementedError("No bias correction defined for "
                                           "variable '%s'." % var)
     except:
-        if os.file.isfile(out_file):
+        if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
             os.remove(out_file)
         raise

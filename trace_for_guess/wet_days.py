@@ -106,7 +106,7 @@ def add_wet_days_to_file(filename, prec_std_file):
             add_wet_days_to_dataset(trace, std)
             trace.to_netcdf(filename)
     except:
-        if os.file.isfile(filename):
+        if os.path.isfile(filename):
             cprint(f"Removing file '{filename}'.", 'red')
             os.remove(filename)
         raise
