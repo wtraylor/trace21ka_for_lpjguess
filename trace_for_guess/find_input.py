@@ -64,7 +64,7 @@ def find_files(filenames):
         if not found:
             raise FileNotFoundError(f"Could not find file '{f}' anywhere in "
                                     f"input directories {dirs}.")
-    assert(len(result) == len(filenames))
+    assert len(result) == len(filenames)
     # If the argument was only one string, we shall return only a string and
     # not a list.
     if is_list:
