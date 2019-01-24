@@ -61,5 +61,7 @@ def split_file(filename, out_dir):
     if not out_files:
         raise RuntimeError('The command `cdo splitsel` didn’t produce an '
                            'output files.')
-    cprint(f'Created the following files: {out_files}', 'green')
+    cprint('Created the following files:', 'green')
+    for f in out_files:
+        cprint('\t' + f, 'green')
     return out_files
