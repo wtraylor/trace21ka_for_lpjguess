@@ -66,13 +66,13 @@ def crop_file_list(filelist, out_dir, ext):
         cprint(f"Directory '{out_dir}' does not exist yet. I will create it.",
                'yellow')
         os.makedirs(out_dir)
-        assert(os.path.isdir(out_dir))
+        assert os.path.isdir(out_dir), 'Dir was not created.'
     result_list = list()
     for f in filelist:
         try:
             out_file = os.path.join(out_dir, os.path.basename(f))
-            result_list += crop_file(f, out_file, ext)
-            assert(os.path.isfile(out_file))
+            result_list += [crop_file(f, out_file, ext)]
+            assert os.path.isfile(result_list[-1]), 'Cropped file not created.'
         except:
             if os.path.isfile(out_file):
                 cprint(f"Removing file '{out_file}'.", 'red')
@@ -82,5 +82,8 @@ def crop_file_list(filelist, out_dir, ext):
                 cprint(f"Removing file '{g}'.", 'red')
                 os.remove(g)
             raise
-    assert(len(filelist) == len(result_list))
+    assert len(filelist) == len(result_list), \
+        'Lengths of input and return list don’t match up: '\
+        f'len(filelist)={len(filelist)} does not equal '\
+        f'len(result_list)={len(result_list)}'
     return result_list
