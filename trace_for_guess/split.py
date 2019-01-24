@@ -34,6 +34,9 @@ def split_file(filename, out_dir):
     # output directory.
     stub_name = os.path.splitext(os.path.basename(filename))[0] + '_'
     stub_path = os.path.join(out_dir, stub_name)
+    # We assume that if there are any files obviously created by `cdo
+    # splitsel`, these will be complete. If the creation of files had been
+    # interrupted, all files would have been deleted in the except-block.
     existing_files = os.glob(stub_path + '*')
     if existing_files:
         for f in existing_files:
