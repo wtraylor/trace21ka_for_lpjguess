@@ -47,12 +47,19 @@ cropped_dir = os.path.join(heap, 'cropped')  # Cropped files
 debiased_dir = os.path.join(heap, 'debiased')
 rescaled_dir = os.path.join(heap, 'rescaled')  # Rescaled files
 split_dir = os.path.join(heap, 'split')  # Split, but not yet regridded files
+heap_input = os.path.join(heap, 'input')  # Will be searched by find_files()
 
 if not os.path.isdir(heap):
     cprint(f"Heap directory '{heap}' does not exist yet. I will create it.",
            'yellow')
     os.makedirs(heap)
     assert(os.path.isdir(heap))
+
+if not os.path.isdir(heap_input):
+    cprint(f"Directory '{heap_input}' does not exist yet. I will create it.",
+           'yellow')
+    os.makedirs(heap_input)
+    assert(os.path.isdir(heap_input))
 
 if not os.path.isdir(out_dir):
     cprint(f"Output directory '{out_dir}' does not exist yet. I will create "
@@ -64,20 +71,22 @@ if not os.path.isdir(out_dir):
 # Prepare CRU and CRU-JRA files ########################################
 
 
+# We unzip into `heap_input` so that any unzipped files are available like
+# original input files.
 regrid_template_file = unzip_files_if_needed(
     filenames=[opts['regrid_template_file']],
-    unzip_dir=os.path.join(heap, 'unzipped')
+    unzip_dir=heap_input
 )[0]
 
 crujra_files = unzip_files_if_needed(
     filenames=get_crujra_filenames(),
-    unzip_dir=os.path.join(heap, 'unzipped'))
+    unzip_dir=heap_input)
 crujra_files = crop_file_list(crujra_files, cropped_dir, extent)
 # TODO Calculate precipitation standard deviation
 
 cru_files = unzip_files_if_needed(
     filenames=get_cru_filenames(),
-    unzip_dir=os.path.join(heap, 'unzipped'))
+    unzip_dir=heap_input)
 cru_mean_files = dict()  # Aggregated CRU files with variable as key.
 for var in ['pre', 'tmp', 'wet']:
     # Filter list of all CRU files to file names containing `var`.
@@ -138,13 +147,13 @@ for trace_var in opts['cru_vars']:
 # Prepare TraCE-21ka Files #############################################
 
 
-# Create all PRECT files in the "heap".
+# Create all PRECT files in a special directory in the "heap", which will automatically be searched like an input directory.
 for prect in get_trace_filenames(['PRECT']):
     precc = find_files(re.sub('PRECT', 'PRECC', prect))
     precl = find_files(re.sub('PRECT', 'PRECL', prect))
     add_precc_and_precl_to_prect(precc_file=precc,
                                  precl_file=precl,
-                                 prect_file=os.path.join(heap, prect))
+                                 prect_file=os.path.join(heap_input, prect))
 
 # All the original TraCE-21ka files. We assume they are not zipped because they
 # come as plain NetCDF files from earthsystemgrid.org.

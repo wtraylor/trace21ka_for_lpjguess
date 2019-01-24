@@ -7,7 +7,8 @@ import yaml
 def find_files(filenames):
     """Find file(s) recursively in the directories given in 'options.yaml'.
 
-    Additionally to input directories search also the heap directory.
+    Additionally to input directories search also the 'input' subdirectory of
+    the `heap` directory. It contains unzipped and PRECT files.
 
     Args:
         filenames: List of filenames (or one file name string).
@@ -23,8 +24,8 @@ def find_files(filenames):
             empty string.
     """
     opts = yaml.load(open('options.yaml'))
-    unzipped_dir = os.path.join(opts['directories']['heap'], 'unzipped')
-    dirs = opts['directories']['input'] + [unzipped_dir]
+    heap_input = os.path.join(opts['directories']['heap'], 'input')
+    dirs = opts['directories']['input'] + [heap_input]
     if not dirs:
         raise RuntimeError("No input directories defined in 'options.yaml'.")
     # Expand '~' for home directory and environment variables like '$HOME'.
