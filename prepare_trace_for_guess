@@ -32,6 +32,7 @@ from trace_for_guess.find_input import find_files
 from trace_for_guess.rescale import rescale_file
 from trace_for_guess.split import split_file
 from trace_for_guess.unzip import unzip_files_if_needed
+from trace_for_guess.wet_days import add_wet_days_to_file
 
 if not os.path.isfile('options.yaml'):
     cprint("Couldn’t find options file in './options.yaml'.", 'red')
@@ -189,9 +190,11 @@ for var in trace_files:
                          template_file=regrid_template_file,
                          alg=opts['regrid_algorithm'])
         if var in bias_files:
-            f = debias_trace_file(in_file=f,
+            f = debias_trace_file(trace_file=f,
                                   bias_file=bias_files[var],
                                   out_file=os.path.join(debiased_dir,
                                                         os.path.basename(f)))
-        # Set Metadata
+        if var == 'PRECT':
+            add_wet_days_to_file(f, prec_std_file)
+        # set_metadata(f, var)
         # Compress

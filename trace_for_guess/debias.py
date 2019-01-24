@@ -6,15 +6,13 @@ from termcolor import cprint
 from trace_for_guess.wet_days import add_wet_days_to_dataset
 
 
-def debias_trace_file(trace_file, bias_file, prec_std_file, out_file):
+def debias_trace_file(trace_file, bias_file, out_file):
     """Apply bias-correction to a TraCE-21ka file and add wet days.
 
     Args:
         trace_file: Original TraCE-21ka NetCDF file name.
         bias_file: Name of the NetCDF file with 12 bias values (1 per
             month) per grid cell.
-        prec_std_file: File with day-to-day standard deviation of
-            precipitation for each month.
         out_file: Bias-corrected output file name (will not be overwritten).
 
     Returns:
@@ -61,12 +59,6 @@ def debias_trace_file(trace_file, bias_file, prec_std_file, out_file):
             else:
                 raise NotImplementedError("No bias correction defined for "
                                           "variable '%s'." % var)
-            # Calculate wet days.
-            if var == "PRECT":
-                prec_std = xr.open_dataset(prec_std_file,
-                                           decode_times=False)
-                add_wet_days_to_dataset(trace, prec_std)
-            output.to_netcdf(out_file)
     except:
         if os.file.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
