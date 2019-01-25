@@ -13,6 +13,7 @@ from trace_for_guess.skip import skip
 # Arbitrary number for missing values.
 NODATA = 999999999
 
+
 def get_gamma_cdf(x, xmean, xstd):
     """Calculate cumulative density function of gamma distribution.
 
@@ -123,12 +124,12 @@ def create_wet_days_file(prect_file, prec_std_file, out_file):
                                 f"does not exist: '{prec_std_file}'")
     cprint(f"Adding wet days for precipitation file '{prect_file}'...",
            'yellow')
-    if not skip([prect_file, prec_std_file], out_file):
+    if skip([prect_file, prec_std_file], out_file):
         return out_file
     try:
         with xr.open_dataarray(prec_std_file, decode_times=False) as std, \
                 xr.open_dataset(prect_file, decode_times=False) as trace:
-            if not 'PRECT' in trace:
+            if 'PRECT' not in trace:
                 raise ValueError("File does not contain total precipitation"
                                  f"variable 'PRECT': '{prect_file}'.")
             da = xr.full_like(trace['PRECT'], NODATA, dtype='int32')
