@@ -195,6 +195,7 @@ for var in trace_files:
         split_trace_files[var] += split_file(filename=f, out_dir=split_dir)
     cprint(f"Going to rescale and debias TraCE files of variable '{var}'.",
            'magenta')
+    split_trace_files['WET'] = list()
     for f in split_trace_files[var]:
         f = rescale_file(in_file=f,
                          out_file=os.path.join(rescaled_dir,
@@ -208,7 +209,8 @@ for var in trace_files:
                                                         os.path.basename(f)))
         if var == 'PRECT':
             wet_days_file = re.sub('PRECT', 'WET', os.path.basename(f))
-            create_wet_days_file(f, prec_std_file,
-                                 os.path.join(out_dir, wet_days_file))
+            split_trace_files['WET'] += create_wet_days_file(
+                f, prec_std_file, os.path.join(heap, 'wet_days', wet_days_file)
+            )
         # set_metadata(f, var)
         # Compress

@@ -126,6 +126,11 @@ def create_wet_days_file(prect_file, prec_std_file, out_file):
         return out_file
     cprint(f"Adding wet days for precipitation file '{prect_file}'...",
            'yellow')
+    out_dir = os.path.dirname(out_file)
+    if not os.path.isdir(out_dir):
+        cprint(f"Directory '{out_dir}' does not exist yet. I will create it.",
+               'yellow')
+        os.makedirs(out_dir)
     try:
         with xr.open_dataarray(prec_std_file, decode_times=False) as std, \
                 xr.open_dataset(prect_file, decode_times=False) as trace:
