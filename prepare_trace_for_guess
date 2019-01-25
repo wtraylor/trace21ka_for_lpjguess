@@ -76,8 +76,7 @@ if not os.path.isdir(out_dir):
 # Prepare CRU and CRU-JRA files ########################################
 
 
-cprint(f'Going to prepare input CRU and CRU-JRA files.', 'magenta')
-
+cprint(f'Going to gather input CRU-JRA files.', 'magenta')
 # We unzip into `heap_input` so that any unzipped files are available like
 # original input files.
 regrid_template_file = unzip_files_if_needed(
@@ -88,14 +87,18 @@ regrid_template_file = unzip_files_if_needed(
 crujra_files = unzip_files_if_needed(
     filenames=get_crujra_filenames(),
     unzip_dir=heap_input)
+cprint('Going to crop CRU-JRA files and calculate precipitation standard '
+       'deviation.', 'magenta')
 crujra_files = crop_file_list(crujra_files, cropped_dir, extent)
 prec_std_file = get_prec_standard_deviation(crujra_files,
                                             os.path.join(heap, 'prec_std.nc'))
 
+cprint(f'Going to gather input CRU files.', 'magenta')
 cru_files = unzip_files_if_needed(
     filenames=get_cru_filenames(),
     unzip_dir=heap_input)
 cru_mean_files = dict()  # Aggregated CRU files with variable as key.
+cprint(f'Going to aggregate CRU files.', 'magenta')
 for var in ['pre', 'tmp', 'wet']:
     # Filter list of all CRU files to file names containing `var`.
     files_with_var = [f for f in cru_files if var in f]
