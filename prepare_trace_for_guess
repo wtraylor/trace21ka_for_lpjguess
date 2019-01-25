@@ -210,6 +210,5 @@ for var in trace_files:
             wet_days_file = re.sub('PRECT', 'WET', os.path.basename(f))
             create_wet_days_file(f, prec_std_file,
                                  os.path.join(out_dir, wet_days_file))
-            assert os.path.isfile(os.path.join(out_dir, wet_days_file))
         # set_metadata(f, var)
         # Compress
