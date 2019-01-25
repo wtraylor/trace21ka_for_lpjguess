@@ -122,10 +122,10 @@ def create_wet_days_file(prect_file, prec_std_file, out_file):
     if not os.path.isfile(prec_std_file):
         raise FileNotFoundError("File with precipitation standard deviation "
                                 f"does not exist: '{prec_std_file}'")
-    cprint(f"Adding wet days for precipitation file '{prect_file}'...",
-           'yellow')
     if skip([prect_file, prec_std_file], out_file):
         return out_file
+    cprint(f"Adding wet days for precipitation file '{prect_file}'...",
+           'yellow')
     try:
         with xr.open_dataarray(prec_std_file, decode_times=False) as std, \
                 xr.open_dataset(prect_file, decode_times=False) as trace:
