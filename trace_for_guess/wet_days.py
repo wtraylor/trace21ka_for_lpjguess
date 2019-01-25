@@ -43,7 +43,7 @@ def calc_wet_days(trace_prec, cru_std, days):
     # one particular day in the month.
     cdf = get_gamma_cdf(precip_threshold, trace_prec, cru_std)
     # This probability is inversed to get the probability for rain and then
-    # multiplied by the number of days in the month in order to get  the number
+    # multiplied by the number of days in the month in order to get the number
     # of rain days in the month.
     wet_days = (1.0 - cdf) * days
     # Number of wet days is an integer value, so we round up the float number.
@@ -52,32 +52,36 @@ def calc_wet_days(trace_prec, cru_std, days):
     return np.where(wet_days > days, days, wet_days)
 
 
-def add_wet_days_to_dataset(trace, prec_std):
+def get_wet_days_array(prect, prec_std):
     """Add a variable 'wet_days' to monthly precipitation TraCE dataset.
 
     Args:
-        trace: xarray dataset of TraCE file with monthly precipitation.
+        prect: xarray dataarray of a PRECT TraCE file with monthly
+            precipitation.
         prec_std: xarray dataarray with monthly standard deviation of daily
             modern precipitation. The dataset has 12 values (one for each
             month) per grid cell.
+
+    Returns:
+
     """
     # Arbitrary number for missing values.
     NODATA = -9999
     # Create a numpy array of the same shape, but with missing values.
-    wet_values = np.full_like(trace['PRECT'].values, NODATA, dtype='int32')
+    wet_values = np.full_like(prect.values, NODATA, dtype='int32')
     # Create an array that holds the month number (0 to 11) for each index in
     # the original TraCE time dimension.
-    months_array = [m for m in range(12)] * (len(trace['time']) // 12)
+    months_array = [m for m in range(12)] * (len(prect['time']) // 12)
     # Do the same for the number of days within each month.
     days_per_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-    days_per_month_array = days_per_month * (len(trace['time']) // 12)
+    days_per_month_array = days_per_month * (len(prect['time']) // 12)
     for i, (month, days) in enumerate(zip(months_array, days_per_month_array)):
         mean_daily_prec = trace['PRECT'][i] / float(days)
         wet_values[i] = calc_wet_days(mean_daily_prec, prec_std[month], days)
     set_attributes(wet_values, "wet_days")
     wet_values.attrs['_FillValue'] = NODATA
     wet_values.attrs['missing_value'] = NODATA
-    trace['wet'] = wet_values
+    return wet_values
 
 
 def add_wet_days_to_file(filename, prec_std_file):
@@ -104,7 +108,7 @@ def add_wet_days_to_file(filename, prec_std_file):
     try:
         with xr.open_dataarray(prec_std_file, decode_times=False) as std, \
                 xr.open_dataset(filename, decode_times=False) as trace:
-            add_wet_days_to_dataset(trace, std)
+            trace['wet'] = get_wet_days_array(trace, std)
             # Use “append” mode to substitute existing variables but not
             # overwrite the whole file.
             trace.to_netcdf(filename, mode='a', engine='netcdf4')
