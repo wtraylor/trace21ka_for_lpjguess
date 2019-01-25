@@ -1,9 +1,10 @@
 import os
+import warnings
 
 import numpy as np
+import scipy.stats
 import xarray as xr
 import yaml
-import scipy.stats
 from termcolor import cprint
 
 from trace_for_guess.netcdf_metadata import set_attributes
@@ -24,8 +25,12 @@ def get_gamma_cdf(x, xmean, xstd):
     """
     shape = np.power(xmean, 2) / np.power(xstd, 2)
     rate = np.power(xstd, 2) / xmean
-    rv = scipy.stats.gamma(shape, scale=rate)
-    return rv.cdf(x)
+    # scipy raises this “RuntimeWarning: invalid value encountered in greater”
+    # I don’t know why so I just suppress it.
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        rv = scipy.stats.gamma(shape, scale=rate)
+        return rv.cdf(x)
 
 
 def calc_wet_days(trace_prec, cru_std, days, threshold):
