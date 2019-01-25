@@ -60,8 +60,7 @@ def aggregate_modern_trace(trace_file, out_file):
         return out_file
     cprint(f"Aggregating monthly averages from file '{trace_file}'.", 'yellow')
     dataset = get_monthly_means(trace_file)
-    cprint("Writing file '%s'." % out_file, 'yellow')
-    dataset.to_netcdf(out_file)
+    dataset.to_netcdf(out_file, mode='w', engine='netcdf4')
     dataset.close()
     if os.path.isfile(out_file):
         cprint(f"Successfully created output file '{out_file}'.", 'green')

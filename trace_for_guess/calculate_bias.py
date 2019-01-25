@@ -56,7 +56,7 @@ def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
         else:
             raise NotImplementedError("Arithmetic operation not defined for"
                                       "variable '%s'." % trace_var)
-        bias.to_netcdf(bias_file, mode='w')
+        bias.to_netcdf(bias_file, mode='w', engine='netcdf4')
         bias.close()
     except:
         if os.path.isfile(bias_file):

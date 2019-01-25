@@ -104,7 +104,9 @@ def add_wet_days_to_file(filename, prec_std_file):
         with xr.open_dataset(prec_std_file, decode_times=False) as std, \
                 xr.open_dataset(filename, decode_times=False) as trace:
             add_wet_days_to_dataset(trace, std)
-            trace.to_netcdf(filename)
+            # Use “append” mode to substitute existing variables but not
+            # overwrite the whole file.
+            trace.to_netcdf(filename, mode='a', engine='netcdf4')
     except:
         if os.path.isfile(filename):
             cprint(f"Removing file '{filename}'.", 'red')
