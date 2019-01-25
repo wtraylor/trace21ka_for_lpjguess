@@ -8,6 +8,8 @@ from termcolor import cprint
 
 from trace_for_guess.netcdf_metadata import set_attributes
 
+# Arbitrary number for missing values.
+NODATA = 999999999
 
 def get_gamma_cdf(x, xmean, xstd):
     """Calculate cumulative density function of gamma distribution.
