@@ -4,7 +4,6 @@ import xarray as xr
 from termcolor import cprint
 
 from trace_for_guess.skip import skip
-from trace_for_guess.wet_days import add_wet_days_to_dataset
 
 
 def debias_trace_file(trace_file, bias_file, out_file):
@@ -64,6 +63,7 @@ def debias_trace_file(trace_file, bias_file, out_file):
             else:
                 raise NotImplementedError("No bias correction defined for "
                                           "variable '%s'." % var)
+            output.to_netcdf(out_file)
     except:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
