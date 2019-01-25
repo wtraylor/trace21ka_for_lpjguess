@@ -78,13 +78,10 @@ def skip(in_files, out_files):
             raise FileNotFoundError("File not found: '%s'" % f)
     for i in in_files:
         for o in out_files:
-            if os.path.isfile(o):
-                if is_younger(i, o):
-                    remove_outdated_files(out_files)
-                    return False
-            else:
-                # If one output file doesn’t exist, this file must definitely
-                # be created.
+            if not os.path.isfile(o):
+                remove_outdated_files(out_files)
+                return False
+            if is_younger(i, o):
                 remove_outdated_files(out_files)
                 return False
     for f in out_files:
