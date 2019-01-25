@@ -55,7 +55,7 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
         subprocess.run(['ncatted', '--overwrite',
                         '--attribute', f'long_name,PRECT,m,c,"{long_name}"',
                         prect_file], check=True)
-    except:
+    except Exception:
         if os.path.isfile(prect_file):
             cprint(f"Removing file '{prect_file}'.", 'red')
             os.remove(prect_file)

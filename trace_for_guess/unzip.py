@@ -30,7 +30,7 @@ def gunzip(filename, targetdir):
     try:
         with open(targetfile, 'xb') as o, gzip.open(filename, 'rb') as i:
             shutil.copyfileobj(i, o)
-    except:
+    except Exception:
         # Clean up target file.
         if os.path.isfile(targetfile):
             cprint(f"Removing file '{targetfile}'...", 'red')

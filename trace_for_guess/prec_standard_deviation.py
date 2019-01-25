@@ -32,7 +32,7 @@ def get_prec_standard_deviation(filelist, out_file):
         cprint('Calculating standard deviation of precipitation...', 'yellow')
         subprocess.run(['cdo', 'ymonmean', '-monstd', '-cat', filelist[0],
                         '-daysum'] + filelist[1:] + [out_file], check=True)
-    except:
+    except Exception:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
             os.remove(out_file)

@@ -39,7 +39,7 @@ def crop_file(in_file, out_file, ext):
                         "--dimension", "lat,%.2f,%.2f" % (ext[2], ext[3]),
                         in_file,
                         out_file], check=True)
-    except:
+    except Exception:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
             os.remove(out_file)
@@ -74,7 +74,7 @@ def crop_file_list(filelist, out_dir, ext):
             out_file = os.path.join(out_dir, os.path.basename(f))
             result_list += [crop_file(f, out_file, ext)]
             assert os.path.isfile(result_list[-1]), 'Cropped file not created.'
-        except:
+        except Exception:
             if os.path.isfile(out_file):
                 cprint(f"Removing file '{out_file}'.", 'red')
                 os.remove(out_file)

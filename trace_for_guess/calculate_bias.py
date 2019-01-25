@@ -58,7 +58,7 @@ def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
                                       "variable '%s'." % trace_var)
         bias.to_netcdf(bias_file, mode='w', engine='netcdf4')
         bias.close()
-    except:
+    except Exception:
         if os.path.isfile(bias_file):
             cprint(f"Removing file '{bias_file}'.", 'red')
             bias.close()

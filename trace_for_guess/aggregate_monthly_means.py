@@ -36,7 +36,7 @@ def aggregate_monthly_means(in_file, out_file):
            "'{out_file}'...", 'yellow')
     try:
         subprocess.run(['cdo', 'ymonmean', in_file, out_file], check=True)
-    except:
+    except Exception:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
             os.remove(out_file)

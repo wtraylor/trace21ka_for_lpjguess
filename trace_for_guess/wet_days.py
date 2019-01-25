@@ -85,6 +85,9 @@ def add_wet_days_to_dataset(trace, prec_std):
 def add_wet_days_to_file(filename, prec_std_file):
     """Add wet days variable to TraCE precipitation.
 
+    If the wet days variable already exists in the file, it will be
+    overwritten.
+
     Args:
         filename: Path to original TraCE-21ka NetCDF file with total
             precipitation (PRECT).
@@ -107,7 +110,7 @@ def add_wet_days_to_file(filename, prec_std_file):
             # Use “append” mode to substitute existing variables but not
             # overwrite the whole file.
             trace.to_netcdf(filename, mode='a', engine='netcdf4')
-    except:
+    except Exception:
         if os.path.isfile(filename):
             cprint(f"Removing file '{filename}'.", 'red')
             os.remove(filename)

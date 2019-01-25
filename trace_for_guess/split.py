@@ -52,7 +52,7 @@ def split_file(filename, out_dir):
     try:
         subprocess.run(["cdo", "splitsel,1200", filename, stub_path],
                        check=True)
-    except:
+    except Exception:
         for f in glob(stub_path + '*'):
             cprint(f"Removing file '{f}'.", 'red')
             os.remove(f)

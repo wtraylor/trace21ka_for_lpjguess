@@ -43,7 +43,7 @@ def rescale_file(in_file, out_file, template_file, alg):
                         "--template_file=%s" % template_file,
                         "--input_file=%s" % in_file,
                         "--output_file=%s" % out_file], check=True)
-    except:
+    except Exception:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
             os.remove(out_file)

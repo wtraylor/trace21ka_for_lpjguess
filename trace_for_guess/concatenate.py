@@ -33,7 +33,7 @@ def cat_files(filelist, out_file):
     cprint(f"Concatenating files {filelist} to '{out_file}'...", 'yellow')
     try:
         subprocess.run(['ncrcat'] + filelist + [out_file], check=True)
-    except:
+    except Exception:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
             os.remove(out_file)

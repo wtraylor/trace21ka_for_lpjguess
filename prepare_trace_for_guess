@@ -196,7 +196,7 @@ for var in trace_files:
                                   bias_file=bias_files[var],
                                   out_file=os.path.join(debiased_dir,
                                                         os.path.basename(f)))
-        # if var == 'PRECT':
-        #     add_wet_days_to_file(f, prec_std_file)
+        if var == 'PRECT':
+            add_wet_days_to_file(f, prec_std_file)
         # set_metadata(f, var)
         # Compress

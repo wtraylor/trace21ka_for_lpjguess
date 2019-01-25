@@ -40,6 +40,6 @@ def convert_time_unit(trace_file):
                         '--attribute', f'units,time,o,c,{units}',
                         '--attribute', f'calendar,time,o,c,{calendar}',
                         trace_file])
-    except:
+    except Exception:
         cprint(f"Removing file '{trace_file}'.", 'red')
         os.remove(trace_file)

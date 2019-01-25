@@ -64,7 +64,7 @@ def debias_trace_file(trace_file, bias_file, out_file):
                 raise NotImplementedError("No bias correction defined for "
                                           "variable '%s'." % var)
             output.to_netcdf(out_file, mode='w', engine='netcdf4')
-    except:
+    except Exception:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
             os.remove(out_file)
