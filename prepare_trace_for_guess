@@ -35,7 +35,7 @@ from trace_for_guess.prec_standard_deviation import get_prec_standard_deviation
 from trace_for_guess.rescale import rescale_file
 from trace_for_guess.split import split_file
 from trace_for_guess.unzip import unzip_files_if_needed
-from trace_for_guess.wet_days import add_wet_days_to_file
+from trace_for_guess.wet_days import create_wet_days_file
 
 if not os.path.isfile('options.yaml'):
     cprint("Couldn’t find options file in './options.yaml'.", 'red')
@@ -207,6 +207,9 @@ for var in trace_files:
                                   out_file=os.path.join(debiased_dir,
                                                         os.path.basename(f)))
         if var == 'PRECT':
-            add_wet_days_to_file(f, prec_std_file)
+            wet_days_file = re.sub('PRECT', 'WET', os.path.basename(f))
+            create_wet_days_file(f, prec_std_file,
+                                 os.path.join(out_dir, wet_days_file))
+            assert os.path.isfile(os.path.join(out_dir, wet_days_file))
         # set_metadata(f, var)
         # Compress

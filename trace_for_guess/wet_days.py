@@ -8,6 +8,7 @@ import yaml
 from termcolor import cprint
 
 from trace_for_guess.netcdf_metadata import set_attributes
+from trace_for_guess.skip import skip
 
 # Arbitrary number for missing values.
 NODATA = 999999999
@@ -97,43 +98,51 @@ def get_wet_days_array(prect, prec_std):
     return wet_values
 
 
-def add_wet_days_to_file(filename, prec_std_file):
-    """Add wet days variable to TraCE precipitation.
-
-    If the wet days variable already exists in the file, it will be
-    overwritten.
+def create_wet_days_file(prect_file, prec_std_file, out_file):
+    """Calculate wet days for TraCE precipitation.
 
     Args:
-        filename: Path to original TraCE-21ka NetCDF file with total
+        prect_file: Path to original TraCE-21ka NetCDF file with total
             precipitation (PRECT).
         prec_std_file: File with day-to-day standard deviation of
             precipitation for each month. Only relevant for calculating wet
             days.
+        out_file: Output NetCDF file.
+
+    Returns:
+        The newly created NetCDF file `out_file`.
+
     Raises:
-        FileNotFoundError: `filename` or `prec_std_file` not found.
+        FileNotFoundError: `prect_file` or `prec_std_file` not found.
+        ValueError: The `prect_file` does not contain the 'PRECT' variable.
     """
-    if not os.path.isfile(filename):
-        raise FileNotFoundError(f"Input file does not exist: '{filename}'")
+    if not os.path.isfile(prect_file):
+        raise FileNotFoundError(f"Input file does not exist: '{prect_file}'")
     if not os.path.isfile(prec_std_file):
         raise FileNotFoundError("File with precipitation standard deviation "
                                 f"does not exist: '{prec_std_file}'")
-    cprint(f"Adding wet days to precipitation file '{filename}'...", 'yellow')
+    cprint(f"Adding wet days for precipitation file '{prect_file}'...",
+           'yellow')
+    if not skip([prect_file, prec_std_file], out_file):
+        return out_file
     try:
         with xr.open_dataarray(prec_std_file, decode_times=False) as std, \
-                xr.open_dataset(filename, decode_times=False) as trace:
+                xr.open_dataset(prect_file, decode_times=False) as trace:
             if not 'PRECT' in trace:
                 raise ValueError("File does not contain total precipitation"
-                                 f"variable 'PRECT': '{filename}'.")
-            trace['wet'] = get_wet_days_array(trace['PRECT'], std)
-            set_attributes(trace['wet'], "wet_days")
-            trace['wet'].attrs['_FillValue'] = NODATA
-            trace['wet'].attrs['missing_value'] = NODATA
-            # Use “append” mode to substitute existing variables but not
-            # overwrite the whole file.
-            trace.to_netcdf(filename, mode='a', engine='netcdf4')
+                                 f"variable 'PRECT': '{prect_file}'.")
+            da = xr.full_like(trace['PRECT'], NODATA, dtype='int32')
+            da.values = get_wet_days_array(trace['PRECT'], std)
+            set_attributes(da, "wet_days")
+            da.attrs['_FillValue'] = NODATA
+            da.attrs['missing_value'] = NODATA
+            trace['wet'] = da
+            trace.to_netcdf(out_file, mode='w', engine='netcdf4')
     except Exception:
-        if os.path.isfile(filename):
-            cprint(f"Removing file '{filename}'.", 'red')
-            os.remove(filename)
+        if os.path.isfile(out_file):
+            cprint(f"Removing file '{out_file}'.", 'red')
+            os.remove(out_file)
         raise
-    assert os.path.isfile(filename), 'No output created.'
+    assert os.path.isfile(out_file), 'No output created.'
+    cprint(f"Successfully created '{out_file}'.", 'green')
+    return out_file
