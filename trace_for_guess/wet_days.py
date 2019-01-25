@@ -121,7 +121,10 @@ def add_wet_days_to_file(filename, prec_std_file):
     try:
         with xr.open_dataarray(prec_std_file, decode_times=False) as std, \
                 xr.open_dataset(filename, decode_times=False) as trace:
-            trace['wet'] = get_wet_days_array(trace, std)
+            if not 'PRECT' in trace:
+                raise ValueError("File does not contain total precipitation"
+                                 f"variable 'PRECT': '{filename}'.")
+            trace['wet'] = get_wet_days_array(trace['PRECT'], std)
             set_attributes(trace['wet'], "wet_days")
             trace['wet'].attrs['_FillValue'] = NODATA
             trace['wet'].attrs['missing_value'] = NODATA
