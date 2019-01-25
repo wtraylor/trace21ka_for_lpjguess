@@ -3,7 +3,7 @@ import os
 import numpy as np
 import xarray as xr
 import yaml
-from scipy.stats import gamma
+import scipy.stats
 from termcolor import cprint
 
 from trace_for_guess.netcdf_metadata import set_attributes
@@ -15,11 +15,14 @@ def get_gamma_cdf(x, xmean, xstd):
     Args:
         x: TODO
         xmean: Monthly mean precipitation.
-        xstd: Standard deviation of precipitation."""
-    shape = (xmean * xmean) / (xstd * xstd)  # α
-    rate = xstd * xstd / xmean  # β
+        xstd: Standard deviation of precipitation.
 
-    rv = gamma(shape, scale=rate)
+    Returns:
+        Cumulative density of gamma distribution.
+    """
+    shape = np.power(xmean, 2) / np.power(xstd, 2)
+    rate = np.power(xstd, 2) / xmean
+    rv = scipy.stats.gamma(shape, scale=rate)
     return rv.cdf(x)
 
 
@@ -38,7 +41,7 @@ def calc_wet_days(trace_prec, cru_std, days, threshold):
         Array with number of wet days in the month for the TraCE data.
     """
     # Catch potential zero divide.
-    almost_zero = 0.0000000000001
+    almost_zero = 0.00000001
     cru_std = np.where(cru_std == 0, almost_zero, cru_std)
     trace_prec = np.where(trace_prec == 0, almost_zero, trace_prec)
 
@@ -51,6 +54,7 @@ def calc_wet_days(trace_prec, cru_std, days, threshold):
     wet_days = (1.0 - cdf) * days
     # Number of wet days is an integer value, so we round up the float number.
     wet_days = np.ceil(wet_days)
+    wet_days = np.nan_to_num(wet_days)
     # Make sure that number of wet days does not exceed total number of days.
     return np.where(wet_days > days, days, wet_days)
 
@@ -69,8 +73,6 @@ def get_wet_days_array(prect, prec_std):
 
     """
     precip_threshold = yaml.load(open('options.yaml'))['precip_threshold']
-    # Arbitrary number for missing values.
-    NODATA = -9999
     # Create a numpy array of the same shape, but with missing values.
     wet_values = np.full_like(prect.values, NODATA, dtype='int32')
     # Create an array that holds the month number (0 to 11) for each index in
