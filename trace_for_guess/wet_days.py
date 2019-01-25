@@ -57,7 +57,7 @@ def add_wet_days_to_dataset(trace, prec_std):
 
     Args:
         trace: xarray dataset of TraCE file with monthly precipitation.
-        prec_std: xarray dataset with monthly standard deviation of daily
+        prec_std: xarray dataarray with monthly standard deviation of daily
             modern precipitation. The dataset has 12 values (one for each
             month) per grid cell.
     """
@@ -67,15 +67,13 @@ def add_wet_days_to_dataset(trace, prec_std):
     wet_values = np.full_like(trace['PRECT'].values, NODATA, dtype='int32')
     # Create an array that holds the month number (0 to 11) for each index in
     # the original TraCE time dimension.
-    months_array = range(12) * (len(trace['time']) // 12)
+    months_array = [m for m in range(12)] * (len(trace['time']) // 12)
     # Do the same for the number of days within each month.
     days_per_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     days_per_month_array = days_per_month * (len(trace['time']) // 12)
     for i, (month, days) in enumerate(zip(months_array, days_per_month_array)):
         mean_daily_prec = trace['PRECT'][i] / float(days)
-        wet_values[i] = calc_wet_days(mean_daily_prec,
-                                      prec_std[month],
-                                      days)
+        wet_values[i] = calc_wet_days(mean_daily_prec, prec_std[month], days)
     set_attributes(wet_values, "wet_days")
     wet_values.attrs['_FillValue'] = NODATA
     wet_values.attrs['missing_value'] = NODATA
@@ -102,9 +100,9 @@ def add_wet_days_to_file(filename, prec_std_file):
     if not os.path.isfile(prec_std_file):
         raise FileNotFoundError("File with precipitation standard deviation "
                                 f"does not exist: '{prec_std_file}'")
-    cprint(f"Adding wet days to precipitation file '{filename}'.", 'yellow')
+    cprint(f"Adding wet days to precipitation file '{filename}'...", 'yellow')
     try:
-        with xr.open_dataset(prec_std_file, decode_times=False) as std, \
+        with xr.open_dataarray(prec_std_file, decode_times=False) as std, \
                 xr.open_dataset(filename, decode_times=False) as trace:
             add_wet_days_to_dataset(trace, std)
             # Use “append” mode to substitute existing variables but not
