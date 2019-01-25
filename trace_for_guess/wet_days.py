@@ -75,9 +75,10 @@ def get_wet_days_array(prect, prec_std):
     # Do the same for the number of days within each month.
     days_per_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     days_per_month_array = days_per_month * (len(prect['time']) // 12)
-    for i, (month, days) in enumerate(zip(months_array, days_per_month_array)):
-        mean_daily_prec = trace['PRECT'][i] / float(days)
-        wet_values[i] = calc_wet_days(mean_daily_prec, prec_std[month], days)
+    # Iterate over every month `t` (“time step”) in the transient time series.
+    for t, (month, days) in enumerate(zip(months_array, days_per_month_array)):
+        mean_daily_prec = prect[t] / float(days)
+        wet_values[t] = calc_wet_days(mean_daily_prec, prec_std[month], days)
     set_attributes(wet_values, "wet_days")
     wet_values.attrs['_FillValue'] = NODATA
     wet_values.attrs['missing_value'] = NODATA
