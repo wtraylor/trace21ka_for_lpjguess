@@ -37,7 +37,9 @@ def calc_wet_days(trace_prec, cru_std, days):
     precip_threshold = 0.1  # [mm/day], constant
 
     # Catch potential zero divide.
-    cru_std = np.where(cru_std == 0, 0.0000000000001, cru_std)
+    almost_zero = 0.0000000000001
+    cru_std = np.where(cru_std == 0, almost_zero, cru_std)
+    trace_prec = np.where(trace_prec == 0, almost_zero, trace_prec)
 
     # Get cumulative density function: The probability that it stays dry, in
     # one particular day in the month.
