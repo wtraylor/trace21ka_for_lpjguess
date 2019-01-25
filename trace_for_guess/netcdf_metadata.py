@@ -1,9 +1,10 @@
 import os
-import xarray as xr
+import shutil
 import subprocess
 
-import shutil
+import xarray as xr
 import yaml
+from termcolor import cprint
 
 
 def set_attributes(da, var):
@@ -33,6 +34,7 @@ def set_metadata(trace_file, trace_var):
         raise FileNotFoundError(f"TraCE file doesn’t exist: '{trace_file}'")
     if shutil.which('ncatted') is None:
         raise RuntimeError("Executable `ncatted` not found.")
+    cprint(f"Standardizing metadata for file '{trace_file}'.", 'yellow')
     attributes = yaml.load(open("options.yaml"))["nc_attributes"][trace_var]
     ncatted_args = list()
     for var in attributes:
