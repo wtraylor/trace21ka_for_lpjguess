@@ -4,6 +4,8 @@ import subprocess
 
 from termcolor import cprint
 
+from trace_for_guess.skip import skip
+
 
 def cat_files(filelist, out_file):
     """Concatenate a list of NetCDF files using NCO (i.e. ncrcat).
@@ -24,8 +26,7 @@ def cat_files(filelist, out_file):
     for f in filelist:
         if not os.path.isfile(f):
             raise FileNotFoundError("Input file not found: '%s'" % f)
-    if os.path.exists(out_file):
-        cprint(f"Skipping: '{out_file}'", 'cyan')
+    if skip(filelist, out_file):
         return out_file
     if shutil.which("ncrcat") is None:
         raise RuntimeError('The command `ncrcat` could not be found.')

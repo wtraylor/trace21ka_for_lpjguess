@@ -1,8 +1,9 @@
 import os
 
+import xarray as xr
 from termcolor import cprint
 
-import xarray as xr
+from trace_for_guess.skip import skip
 
 
 def drop_superfluous_trace_vars(data):
@@ -55,8 +56,7 @@ def aggregate_modern_trace(trace_file, out_file):
     """
     if not os.path.isfile(trace_file):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % trace_file)
-    if os.path.isfile(out_file):
-        cprint(f"Skipping: '{out_file}'", 'cyan')
+    if skip(trace_file, out_file):
         return out_file
     cprint(f"Aggregating monthly averages from file '{trace_file}'.", 'yellow')
     dataset = get_monthly_means(trace_file)

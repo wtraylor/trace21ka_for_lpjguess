@@ -1,4 +1,5 @@
 import os
+
 import yaml
 
 
@@ -26,4 +27,3 @@ def set_metadata(trace_file, var):
     """
     if not os.path.isfile(trace_file):
         raise FileNotFoundError(f"TraCE file doesn’t exist: '{trace_file}'")
-

@@ -4,6 +4,8 @@ import subprocess
 
 from termcolor import cprint
 
+from trace_for_guess.skip import skip
+
 
 def aggregate_monthly_means(in_file, out_file):
     """Calculate the mean over all years for each month using CDO.
@@ -28,8 +30,7 @@ def aggregate_monthly_means(in_file, out_file):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % in_file)
     if shutil.which('cdo') is None:
         raise RuntimeError('Executable `cdo` not found.')
-    if os.path.isfile(out_file):
-        cprint(f"Skipping: '{out_file}'", 'cyan')
+    if skip(in_file, out_file):
         return out_file
     cprint(f"Aggregating monthly means from '{in_file}', writing to "
            "'{out_file}'...", 'yellow')

@@ -3,6 +3,7 @@ import os
 import xarray as xr
 from termcolor import cprint
 
+from trace_for_guess.skip import skip
 from trace_for_guess.wet_days import add_wet_days_to_dataset
 
 
@@ -28,8 +29,7 @@ def debias_trace_file(trace_file, bias_file, out_file):
     if not os.path.isfile(trace_file):
         raise FileNotFoundError("Input TraCE file does not exist: '%s'" %
                                 trace_file)
-    if os.path.isfile(out_file):
-        cprint(f"Skipping: '{out_file}'", 'cyan')
+    if skip([bias_file, trace_file], out_file):
         return out_file
     out_dir = os.path.dirname(out_file)
     if not os.path.isdir(out_dir):

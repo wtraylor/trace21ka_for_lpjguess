@@ -4,6 +4,8 @@ import subprocess
 
 from termcolor import cprint
 
+from trace_for_guess.skip import skip
+
 
 def rescale_file(in_file, out_file, template_file, alg):
     """Regrid a NetCDF file using NCO (i.e. the ncremap command).
@@ -30,8 +32,7 @@ def rescale_file(in_file, out_file, template_file, alg):
     if not os.path.isfile(template_file):
         raise FileNotFoundError("Template file doesn’t exist: '%s'" %
                                 template_file)
-    if os.path.isfile(out_file):
-        cprint(f"Skipping: '{out_file}'", 'cyan')
+    if skip([in_file, template_file], out_file):
         return out_file
     if shutil.which("ncremap") is None:
         raise RuntimeError("Executable `ncremap` not found.")

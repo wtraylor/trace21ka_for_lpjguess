@@ -6,6 +6,8 @@ import subprocess
 import yaml
 from termcolor import cprint
 
+from trace_for_guess.skip import skip
+
 
 def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
     """Build sum of the TraCE variables PRECC and PRECL using NCO commands.
@@ -30,8 +32,7 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
         raise FileNotFoundError("Could not find PRECC file: '%s'" % precc_file)
     if not os.path.isfile(precl_file):
         raise FileNotFoundError("Could not find PRECL file: '%s'" % precl_file)
-    if os.path.isfile(prect_file):
-        cprint(f"Skipping: '{prect_file}'", 'cyan')
+    if skip([precc_file, precl_file], prect_file):
         return prect_file
     cprint('Adding PRECC and PRECL to PRECT:', 'yellow')
     cprint(f"'{precc_file}' + '{precl_file}' -> '{prect_file}'", 'yellow')

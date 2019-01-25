@@ -1,8 +1,9 @@
 import os
 
+import xarray as xr
 from termcolor import cprint
 
-import xarray as xr
+from trace_for_guess.skip import skip
 
 
 def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
@@ -31,8 +32,7 @@ def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
             "TraCE-21ka mean file doesn’t exist: '%s'" % trace_file)
     if not os.path.isfile(cru_file):
         raise FileNotFoundError("CRU mean file doesn’t exist: '%s'" % cru_file)
-    if os.path.isfile(bias_file):
-        cprint(f"Skipping: '{bias_file}'", 'cyan')
+    if skip([trace_file, cru_file], bias_file):
         return bias_file
     cprint('Calculating bias:', 'yellow')
     cprint(f"'{trace_file}' x '{cru_file}' -> '{bias_file}'", 'yellow')

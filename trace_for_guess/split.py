@@ -5,6 +5,8 @@ from glob import glob
 
 from termcolor import cprint
 
+from trace_for_guess.skip import skip
+
 
 def split_file(filename, out_dir):
     """Split a NetCDF file into 100 years files.
@@ -42,9 +44,7 @@ def split_file(filename, out_dir):
     # splitsel`, these will be complete. If the creation of files had been
     # interrupted, all files would have been deleted in the except-block.
     existing_files = glob(stub_path + '*')
-    if existing_files:
-        for f in existing_files:
-            cprint(f'Skipping: {f}', 'cyan')
+    if skip(filename, existing_files):
         return existing_files
     cprint(f"Splitting file '{filename}' into 100-years slices...", 'yellow')
     if shutil.which("cdo") is None:

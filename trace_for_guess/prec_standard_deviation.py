@@ -4,6 +4,8 @@ import subprocess
 
 from termcolor import cprint
 
+from trace_for_guess.skip import skip
+
 
 def get_prec_standard_deviation(filelist, out_file):
     """Calculate day-to-day standard deviation of precipitation for each month.
@@ -24,8 +26,7 @@ def get_prec_standard_deviation(filelist, out_file):
     for f in filelist:
         if not os.path.isfile(f):
             raise FileNotFoundError(f"Cannot find file '{f}'.")
-    if os.path.isfile(out_file):
-        cprint(f"Skipping: '{out_file}'", 'cyan')
+    if skip(filelist, out_file):
         return out_file
     try:
         cprint('Calculating standard deviation of precipitation...', 'yellow')

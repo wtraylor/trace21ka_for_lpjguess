@@ -5,6 +5,8 @@ from glob import glob
 
 from termcolor import cprint
 
+from trace_for_guess.skip import skip
+
 
 def crop_file(in_file, out_file, ext):
     """Crop a NetCDF file to give rectangle using NCO.
@@ -25,8 +27,7 @@ def crop_file(in_file, out_file, ext):
     """
     if not os.path.isfile(in_file):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % in_file)
-    if os.path.isfile(out_file):
-        cprint(f"Skipping: '{out_file}'", 'cyan')
+    if skip(in_file, out_file):
         return out_file
     cprint("Cropping file '%s'..." % in_file, 'yellow')
     if shutil.which("ncks") is None:
