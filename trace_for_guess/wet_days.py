@@ -124,7 +124,7 @@ def create_wet_days_file(prect_file, prec_std_file, out_file):
                                 f"does not exist: '{prec_std_file}'")
     if skip([prect_file, prec_std_file], out_file):
         return out_file
-    cprint(f"Adding wet days for precipitation file '{prect_file}'...",
+    cprint(f"Calculating wet days for precipitation file '{prect_file}'...",
            'yellow')
     out_dir = os.path.dirname(out_file)
     if not os.path.isdir(out_dir):
