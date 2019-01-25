@@ -41,7 +41,7 @@ def calc_wet_days(trace_prec, cru_std, days):
 
     # Get cumulative density function: The probability that it stays dry, in
     # one particular day in the month.
-    cdf = get_gamma_cdf(precip_threshold, trace_prec, cru_std)
+    cdf = get_gamma_cdf(x=precip_threshold, xmean=trace_prec, xstd=cru_std)
     # This probability is inversed to get the probability for rain and then
     # multiplied by the number of days in the month in order to get the number
     # of rain days in the month.
