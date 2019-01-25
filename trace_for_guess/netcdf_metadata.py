@@ -14,8 +14,8 @@ def set_attributes(da, var):
         var: Variable name as it is defined in `options.yaml`.
     """
     attributes = yaml.load(open("options.yaml"))["nc_attributes"][var]
-    for (key, val) in attributes:
-        da.attrs[key] = val
+    for key in attributes:
+        da.attrs[key] = attributes[key]
 
 
 def set_metadata(trace_file, trace_var):
