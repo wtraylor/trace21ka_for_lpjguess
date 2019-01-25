@@ -35,11 +35,13 @@ def set_metadata(trace_file, trace_var):
         raise RuntimeError("Executable `ncatted` not found.")
     attributes = yaml.load(open("options.yaml"))["nc_attributes"][trace_var]
     ncatted_args = list()
-    for (var, a) in attributes:
-        with xr.open_dataset(f, decode_times=False) as ds:
+    for var in attributes:
+        with xr.open_dataset(trace_file, decode_times=False) as ds:
             if var not in ds:
                 continue
-        for (key, val) in attrs:
+        for key in attributes[var]:
+            val = attributes[var][key]
             ncatted_args += ['--attribute', f'{key},{var},o,c,{val}']
-    subprocess.run(['ncatted', '--overwrite'] + ncatted_args
-                    + [trace_file], check=True)
+    if ncatted_args:
+        subprocess.run(['ncatted', '--overwrite'] + ncatted_args
+                        + [trace_file], check=True)
