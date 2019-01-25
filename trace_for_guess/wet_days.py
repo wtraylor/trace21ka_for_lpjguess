@@ -84,9 +84,6 @@ def get_wet_days_array(prect, prec_std):
         mean_daily_prec = prect[t] / float(days)
         wet_values[t] = calc_wet_days(mean_daily_prec, prec_std[month], days,
                                       precip_threshold)
-    set_attributes(wet_values, "wet_days")
-    wet_values.attrs['_FillValue'] = NODATA
-    wet_values.attrs['missing_value'] = NODATA
     return wet_values
 
 
@@ -115,6 +112,9 @@ def add_wet_days_to_file(filename, prec_std_file):
         with xr.open_dataarray(prec_std_file, decode_times=False) as std, \
                 xr.open_dataset(filename, decode_times=False) as trace:
             trace['wet'] = get_wet_days_array(trace, std)
+            set_attributes(trace['wet'], "wet_days")
+            trace['wet'].attrs['_FillValue'] = NODATA
+            trace['wet'].attrs['missing_value'] = NODATA
             # Use “append” mode to substitute existing variables but not
             # overwrite the whole file.
             trace.to_netcdf(filename, mode='a', engine='netcdf4')
