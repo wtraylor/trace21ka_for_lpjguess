@@ -88,6 +88,7 @@ def get_wet_days_array(prect, prec_std):
     # Do the same for the number of days within each month.
     days_per_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     days_per_month_array = days_per_month * (len(prect['time']) // 12)
+    assert(len(days_per_month_array) == len(prect))
     # Iterate over every month `t` (“time step”) in the transient time series.
     for t, (month, days) in enumerate(zip(months_array, days_per_month_array)):
         mean_daily_prec = prect[t] / float(days)
