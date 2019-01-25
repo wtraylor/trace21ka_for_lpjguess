@@ -4,6 +4,7 @@
 See README.md for more details.
 
 Output colors with termcolor.cprint():
+    - magenta: section announcements
     - yellow: status updates
     - green: success notifications
     - cyan: skipping something
@@ -75,7 +76,7 @@ if not os.path.isdir(out_dir):
 # Prepare CRU and CRU-JRA files ########################################
 
 
-cprint(f'Going to prepare input CRU and CRU-JRA files.', 'yellow')
+cprint(f'Going to prepare input CRU and CRU-JRA files.', 'magenta')
 
 # We unzip into `heap_input` so that any unzipped files are available like
 # original input files.
@@ -112,7 +113,7 @@ for var in ['pre', 'tmp', 'wet']:
 # Create means for modern TraCE files. We need them to calculate the bias.
 # NOTE: We calculate the means first and then add PRECC and PRECL in the
 # assumption that the order doesn’t make a difference.
-cprint(f'Going to calculate means of TraCE data from modern time.', 'yellow')
+cprint(f'Going to calculate means of TraCE data from modern time.', 'magenta')
 modern_trace_files = dict()
 for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
     out_file = f'modern_trace_{var}.nc'
@@ -140,7 +141,7 @@ for var in modern_trace_files:
 
 # Calculate bias for all variables specified in "options.yaml".
 bias_files = dict()  # TraCE vs. CRU bias files with TraCE variable as key.
-cprint(f'Going to calculate bias TraCE vs. CRU.', 'yellow')
+cprint(f'Going to calculate bias TraCE vs. CRU.', 'magenta')
 for trace_var in opts['cru_vars']:
     cru_var = opts['cru_vars'][trace_var]
     trace_file = modern_trace_files[trace_var]
@@ -158,7 +159,7 @@ for trace_var in opts['cru_vars']:
 
 # Create all PRECT files in a special directory in the "heap", which will
 # automatically be searched like an input directory.
-cprint(f'Going to calculate PRECT as PRECC + PRECL.', 'yellow')
+cprint(f'Going to calculate PRECT as PRECC + PRECL.', 'magenta')
 for prect in get_trace_filenames(['PRECT']):
     precc = find_files(re.sub('PRECT', 'PRECC', prect))
     precl = find_files(re.sub('PRECT', 'PRECL', prect))
@@ -174,9 +175,9 @@ for var in ['FSDS', 'PRECT', 'TREFHT']:
 
 split_trace_files = dict()
 for var in trace_files:
-    cprint(f"Going to crop TraCE files of variable '{var}'.", 'yellow')
+    cprint(f"Going to crop TraCE files of variable '{var}'.", 'magenta')
     trace_files[var] = crop_file_list(trace_files[var], cropped_dir, extent)
-    cprint(f"Going to split TraCE files of variable '{var}'.", 'yellow')
+    cprint(f"Going to split TraCE files of variable '{var}'.", 'magenta')
     split_trace_files[var] = list()
     for f in trace_files[var]:
         # In order for `cdo splitsel` to work, the time unit of the TraCE files
@@ -184,7 +185,7 @@ for var in trace_files:
         convert_time_unit(f)
         split_trace_files[var] += split_file(filename=f, out_dir=split_dir)
     cprint(f"Going to rescale and debias TraCE files of variable '{var}'.",
-           'yellow')
+           'magenta')
     for f in split_trace_files[var]:
         f = rescale_file(in_file=f,
                          out_file=os.path.join(rescaled_dir,
