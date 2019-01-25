@@ -47,6 +47,9 @@ cru_vars:
   PRECT: 'pre'
   TREFHT: 'tmp'
 
+# For calculating wet days: The minimum amount of rain to count a day as “wet”.
+precip_threshold: 0.1  # [mm/day]
+
 # This file provides the reference grid resolution for downscaling TraCE files.
 # It is an arbitrarily chosen original CRU file.
 regrid_template_file: 'cru_ts4.01.1921.1930.pre.dat.nc'

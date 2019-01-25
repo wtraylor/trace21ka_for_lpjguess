@@ -2,6 +2,7 @@ import os
 
 import numpy as np
 import xarray as xr
+import yaml
 from scipy.stats import gamma
 from termcolor import cprint
 
@@ -22,7 +23,7 @@ def get_gamma_cdf(x, xmean, xstd):
     return rv.cdf(x)
 
 
-def calc_wet_days(trace_prec, cru_std, days):
+def calc_wet_days(trace_prec, cru_std, days, threshold):
     """Calculate wet days per month.
 
     Arguments:
@@ -31,11 +32,11 @@ def calc_wet_days(trace_prec, cru_std, days):
         cru_std: Array with standard deviation (day-to-day variability) of this
             month’s precipitation from the CRU dataset.
         days: Number of days for this month.
+        threshold: Minimum precipitation [mm/day] to count a day as “wet”.
+
     Returns:
         Array with number of wet days in the month for the TraCE data.
     """
-    precip_threshold = 0.1  # [mm/day], constant
-
     # Catch potential zero divide.
     almost_zero = 0.0000000000001
     cru_std = np.where(cru_std == 0, almost_zero, cru_std)
@@ -43,7 +44,7 @@ def calc_wet_days(trace_prec, cru_std, days):
 
     # Get cumulative density function: The probability that it stays dry, in
     # one particular day in the month.
-    cdf = get_gamma_cdf(x=precip_threshold, xmean=trace_prec, xstd=cru_std)
+    cdf = get_gamma_cdf(x=threshold, xmean=trace_prec, xstd=cru_std)
     # This probability is inversed to get the probability for rain and then
     # multiplied by the number of days in the month in order to get the number
     # of rain days in the month.
@@ -67,6 +68,7 @@ def get_wet_days_array(prect, prec_std):
     Returns:
 
     """
+    precip_threshold = yaml.load(open('options.yaml'))['precip_threshold']
     # Arbitrary number for missing values.
     NODATA = -9999
     # Create a numpy array of the same shape, but with missing values.
@@ -80,7 +82,8 @@ def get_wet_days_array(prect, prec_std):
     # Iterate over every month `t` (“time step”) in the transient time series.
     for t, (month, days) in enumerate(zip(months_array, days_per_month_array)):
         mean_daily_prec = prect[t] / float(days)
-        wet_values[t] = calc_wet_days(mean_daily_prec, prec_std[month], days)
+        wet_values[t] = calc_wet_days(mean_daily_prec, prec_std[month], days,
+                                      precip_threshold)
     set_attributes(wet_values, "wet_days")
     wet_values.attrs['_FillValue'] = NODATA
     wet_values.attrs['missing_value'] = NODATA
