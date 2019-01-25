@@ -39,7 +39,7 @@ def convert_time_unit(trace_file):
         subprocess.run(['ncatted', '--overwrite',
                         '--attribute', f'units,time,o,c,{units}',
                         '--attribute', f'calendar,time,o,c,{calendar}',
-                        trace_file])
+                        trace_file], check=True)
     except Exception:
         cprint(f"Removing file '{trace_file}'.", 'red')
         os.remove(trace_file)
