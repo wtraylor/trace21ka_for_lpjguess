@@ -83,6 +83,7 @@ Project Outline
 - [ ] Compress output files.
 - [ ] Provide example LPJ-GUESS instruction file.
 - [ ] Switch to more recent CRU 4.02
+- [ ] Create CO₂ file.
 
 Design Questions
 ----------------
