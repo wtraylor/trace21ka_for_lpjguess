@@ -19,6 +19,7 @@ import yaml
 from termcolor import cprint
 
 from trace_for_guess.add_precc_precl import add_precc_and_precl_to_prect
+from trace_for_guess.co2 import create_co2_file
 from trace_for_guess.aggregate_modern_trace import aggregate_modern_trace
 from trace_for_guess.aggregate_monthly_means import aggregate_monthly_means
 from trace_for_guess.calculate_bias import calculate_bias
