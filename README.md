@@ -29,18 +29,22 @@ Prerequisites
 Usage
 -----
 
-1) Download the data sets. Do not change the original file names.
+### Download Data
 
-    - Download the TraCE-21ka monthly datasets for the CCSM3 variables `PRECC`, `PRECL`, `TREFHT`, `CLOUD`, and `FSDS` for your time period from [earthsystemgrid.org](https://www.earthsystemgrid.org/dataset/ucar.cgd.ccsm3.trace.html).
+Important: Do not change the original file names!
 
-    - Download the global monthly CRU TS 4.01 data set in 0.5° resolution as the original zip files from [crudata.uea.ac.uk](https://crudata.uea.ac.uk/cru/data/hrg/). Save all files with their original name in one directory. You will need the following variables: `pre`, `tmp`, `wet`
+- Download the TraCE-21ka monthly datasets for the CCSM3 variables `PRECC`, `PRECL`, `TREFHT`, `CLOUD`, and `FSDS` for your time period from [earthsystemgrid.org](https://www.earthsystemgrid.org/dataset/ucar.cgd.ccsm3.trace.html).
 
-	- Download the CRU JRA-55 precipitation (`pre`) data set from [vesg.ipsl.upmc.fr](https://vesg.ipsl.upmc.fr/thredds/catalog/work/p529viov/crujra/catalog.html). Only the years 1958 to 2017 are used. You can use the download script `make download_crujra` (requires `wget` to be installed).
+- Download the global monthly CRU TS 4.01 data set in 0.5° resolution as the original zip files from [crudata.uea.ac.uk](https://crudata.uea.ac.uk/cru/data/hrg/). Save all files with their original name in one directory. You will need the following variables: `pre`, `tmp`, `wet`
 
-2) Customize `options.yaml` to your own needs.
+- Download the CRU JRA-55 precipitation (`pre`) data set from [vesg.ipsl.upmc.fr](https://vesg.ipsl.upmc.fr/thredds/catalog/work/p529viov/crujra/catalog.html). Only the years 1958 to 2017 are used. You can use the download script `make download_crujra` (requires `wget` to be installed).
+
+### Running the script
+
+1) Customize `options.yaml` to your own needs.
 Be careful not to keep other files in your "heap" or "output" directory since they will be deleted with `make clean`.
 
-3) Open a terminal in the root of this repository (where the `Makefile` lies).
+2) Open a terminal in the root of this repository (where the `Makefile` lies).
 
   - If you don’t have Miniconda or Anaconda installed in your system yet, you can install `miniconda` through your package manager or download it manually (<https://conda.io/miniconda.html>). Alternatively run `make install_conda`, which will download and extract a Miniconda installation for Linux 64-bit into a subdirectory.
 
@@ -50,6 +54,11 @@ Be careful not to keep other files in your "heap" or "output" directory since th
 
   - When you are done, you can delete the environment with `make delete_environment` and clean up the files with `make clean`.
 
+### Running LPJ-GUESS
+
+TODO: Generate instruction file or give an example.
+
+Run LPJ-GUESS with the CF input module: `guess -input cf "/path/to/my/instruction_file.ins"`
 
 Project Outline
 ---------------
