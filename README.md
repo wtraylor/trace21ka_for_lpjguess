@@ -58,6 +58,10 @@ Be careful not to keep other files in your "heap" or "output" directory since th
 
 TODO: Generate instruction file or give an example.
 
+You will need the CRU soil code file for the CF input module of LPJ-GUESS. Adjust the path to it in the generated LPJ-GUESS instruction file.
+
+In order for the CF input module to find soil codes for locations that are not in the CRU file (because those places are now inundated), increase the constant value for the variable `searchradius` (in degrees) in `modules/cfinput.cpp`. Recompile guess afterwards.
+
 Run LPJ-GUESS with the CF input module: `guess -input cf "/path/to/my/instruction_file.ins"`
 
 Project Outline
