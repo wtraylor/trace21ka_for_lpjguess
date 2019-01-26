@@ -105,16 +105,14 @@ Project Outline
 - [x] Crop TraCE data to specified region.
 - [x] Split dataset into 100 years files.
 - [x] Downscale TraCE dataset to 0.5° grid resolution.
-- [ ] Improve regridding performance by saving und reusing the weight map.
-- [ ] Add option to define custom grid resolution. 0.5° is just very high resolution!
-- [ ] Mask oceans and glaciers, based on ICE-5G.
+- [ ] Mask oceans and glaciers, based on ICE-5G?
 - [x] Bias-correct all files.
-- [ ] Calculate wet days, based on modern monthly wet days. Store them as `wet` variable in precipitation file.
-- [ ] Set standard names for all NetCDF variables.
+- [x] Calculate wet days, based on modern monthly wet days. Store them as `wet_days` variable in precipitation file.
+- [x] Set standard names for all NetCDF variables.
 - [ ] Use land IDs instead of lon/lat for LPJ-GUESS (for performance).
 - [ ] Compress output files.
-- [ ] Provide example LPJ-GUESS instruction file.
-- [ ] Switch to more recent CRU 4.02
+- [x] Provide example LPJ-GUESS instruction file.
+- [ ] Switch to more recent CRU 4.02?
 - [ ] Create CO₂ file.
 - [x] Create grid list file.
 - [ ] How to use the many small NetCDF files in LPJ-GUESS in a transient simulation?
