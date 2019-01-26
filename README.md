@@ -64,6 +64,38 @@ In order for the CF input module to find soil codes for locations that are not i
 
 Run LPJ-GUESS with the CF input module: `guess -input cf "/path/to/my/instruction_file.ins"`
 
+This is a template for an LPJ-GUESS instruction file: 
+
+```
+param "file_gridlist" (str "/data/gridlist.txt")
+
+! This file is used to obtain soil codes.
+param "file_cru"     (str "/lpj_guess/data/env/soils_lpj.dat")
+
+! Leave empty to use pre-industrial N deposition rate.
+param "file_ndep"     (str "")
+
+param "file_co2"     (str "/data/co2.txt")
+
+param "file_temp"     (str "")
+param "variable_temp" (str "TREFHT")
+
+! TODO:
+param "file_insol"      (str "")
+param "variable_insol" (str "")
+
+param "file_prec"     (str "")
+param "variable_prec" (str "PRECT")
+
+param "file_wetdays"     (str "")
+param "variable_wetdays" (str "wet_days")
+
+param "file_min_temp"      (str "")
+param "variable_min_temp"  (str "min_temp")
+param "file_max_temp"      (str "")
+param "variable_max_temp"  (str "max_temp")
+```
+
 Project Outline
 ---------------
 
@@ -84,7 +116,8 @@ Project Outline
 - [ ] Provide example LPJ-GUESS instruction file.
 - [ ] Switch to more recent CRU 4.02
 - [ ] Create CO₂ file.
-- [ ] Create grid list file.
+- [x] Create grid list file.
+- [ ] How to use the many small NetCDF files in LPJ-GUESS in a transient simulation?
 
 Design Questions
 ----------------
