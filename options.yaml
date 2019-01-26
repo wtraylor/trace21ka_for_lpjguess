@@ -18,7 +18,7 @@ region:
 
 # The time range of interest in years BP. Possible values range from 22000 BP
 # to -40 BP (i.e. 1990 CE).
-time_range: [22000, 18000]
+time_range: [18500, 18000]
 
 # Interpolation algorithm for regridding
 # (downscaling) the NetCDF files.
