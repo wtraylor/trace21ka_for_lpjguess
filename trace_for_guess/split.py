@@ -44,7 +44,7 @@ def split_file(filename, out_dir):
     # splitsel`, these will be complete. If the creation of files had been
     # interrupted, all files would have been deleted in the except-block.
     existing_files = glob(stub_path + '*')
-    if skip(filename, existing_files):
+    if existing_files and skip(filename, existing_files):
         return existing_files
     cprint(f"Splitting file '{filename}' into 100-years slices...", 'yellow')
     if shutil.which("cdo") is None:
