@@ -20,7 +20,7 @@ def convert_time_unit(trace_file):
         raise FileNotFoundError(f"Could not find TraCE file '{trace_file}'.")
     attrs = yaml.load(open('options.yaml'))['nc_attributes']['time']
     with xr.open_dataset(trace_file, decode_times=False) as ds:
-        if ds.time.attrs['calendar'] == attrs['calendar']:
+        if ds.time.attrs['units'] == attrs['units']:
             cprint(f"Time unit already converted: '{trace_file}'", 'cyan')
             return
     cprint(f"Converting kaBP time unit in TraCE file '{trace_file}'.",
