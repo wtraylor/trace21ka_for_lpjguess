@@ -1,3 +1,6 @@
+import re
+
+
 def get_cru_filenames():
     """Create list of original CRU files between 1900 and 1990."""
     years = [(y+1, y+10) for y in range(1920, 1971, 10)]
@@ -17,6 +20,35 @@ def get_crujra_filenames():
 def get_modern_trace_filename(var: str):
     """Compose the name for the most recent TraCE-21ka NetCDF file."""
     return f'trace.36.400BP-1990CE.cam2.h0.{var}.2160101-2204012.nc'
+
+
+def get_time_range_of_trace_file(filename):
+    """Get the time range in years BP covered by given TraCE-21ka file.
+
+    Args:
+        filename: The base filename (without path!) of the TraCE file. The file
+            name must not have been altered!
+
+    Returns:
+        A list with two integers defining beginning and end of time range in
+        years BP.
+
+    Raises:
+        ValueError: If `filename` does not match the original TraCE-21ka naming
+            pattern as expected.
+    """
+    try:
+        # For the youngest TraCE file, the time range goes to 1990 CE, which
+        # translates to -40 BP.
+        if 'CE' in filename:
+            return [400, -40]
+        match_obj = re.match(r'trace\.\d\d\.(\d+)-(\d+)BP.*', filename)
+        start = int(match_obj.group(1))
+        end = int(match_obj.group(2))
+        return [start, end]
+    except Exception:
+        raise ValueError("Given file name does not match TraCE-21ka naming "
+                         f"pattern: '{filename}'")
 
 
 def get_trace_filenames(variables: list):
