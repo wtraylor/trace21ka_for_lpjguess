@@ -51,8 +51,8 @@ def get_time_range_of_trace_file(filename):
                          f"pattern: '{filename}'")
 
 
-def get_trace_filenames(variables: list):
-    """Create a list of all original TraCE-21ka NetCDF filenames.
+def get_all_trace_filenames(variables: list):
+    """Create a list of ALL original TraCE-21ka NetCDF filenames.
 
     Args:
         variables: List with the CAM variable names.
@@ -98,4 +98,57 @@ def get_trace_filenames(variables: list):
                    'trace.34.02400-01401BP.cam2.h0.%s.1960101-2060012.nc' % v,
                    'trace.35.01400-00401BP.cam2.h0.%s.2060101-2160012.nc' % v,
                    'trace.36.400BP-1990CE.cam2.h0.%s.2160101-2204012.nc' % v]
+    return result
+
+
+def ranges_overlap(range1, range2):
+    """Whether two 2-element lists have an overlap.
+
+    Args:
+        range1, range2: Each a 2-element list with numbers.
+
+    Returns:
+        True if there is overlap, False otherwise.
+
+    Raises:
+        TypeError: An argument is not a list.
+        ValueError: One of the list doesn’t have exactly 2 elements.
+    """
+    if not isinstance(range1, list) or not isinstance(range2, list):
+        raise TypeError('Both arguments must be a list.')
+    if len(range1) != 2 or len(range2) != 2:
+        raise ValueError('Both lists must have two elements each.')
+    if max(range1) < min(range2):
+        return False
+    if max(range2) < min(range1):
+        return False
+    return True
+
+
+def get_trace_filenames(variables, time_range):
+    """Get the list of original TraCE-21ka filenames that cover the time range.
+
+    Args:
+        variables: A list of TraCE variables (can also be a single string).
+        time_range: A list with two integers, the start and end of the time
+            frame in years BP. Values must lie between 22000 BP and -40 BP
+            (i.e. 1990 CE).
+
+    Returns:
+        List of file names.
+
+    Raises:
+        ValueError: If `time_range` is not valid.
+    """
+    if not isinstance(variables, list):
+        variables = [variables]
+    if min(time_range) < -40 or max(time_range) > 22000:
+        raise ValueError('The given time range is invalid. The numbers must '
+                         'lie between 22000 BP and -40 BP (=1990 CE). I got '
+                         f'this: {time_range}')
+    all_files = get_all_trace_filenames(variables)
+    result = list()
+    for f in all_files:
+        if ranges_overlap(time_range, get_time_range_of_trace_file(f)):
+            result += [f]
     return result
