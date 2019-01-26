@@ -22,6 +22,7 @@ from trace_for_guess.add_precc_precl import add_precc_and_precl_to_prect
 from trace_for_guess.aggregate_modern_trace import aggregate_modern_trace
 from trace_for_guess.aggregate_monthly_means import aggregate_monthly_means
 from trace_for_guess.calculate_bias import calculate_bias
+from trace_for_guess.gridlist import create_gridlist
 from trace_for_guess.concatenate import cat_files
 from trace_for_guess.convert_time_unit import convert_time_unit
 from trace_for_guess.crop import crop_file_list, crop_file
@@ -214,3 +215,6 @@ for var in trace_files:
                 f, prec_std_file, os.path.join(heap, 'wet_days', wet_days_file)
             )
         # Compress
+
+cprint(f'Creating LPJ-GUESS gridlist file.', 'magenta')
+create_gridlist(regrid_template_file, os.path.join(out_dir, 'gridlist.txt'))
