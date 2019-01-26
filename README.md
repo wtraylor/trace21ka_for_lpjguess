@@ -84,6 +84,7 @@ Project Outline
 - [ ] Provide example LPJ-GUESS instruction file.
 - [ ] Switch to more recent CRU 4.02
 - [ ] Create CO₂ file.
+- [ ] Create grid list file.
 
 Design Questions
 ----------------
