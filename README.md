@@ -1,8 +1,13 @@
 Prepare TraCE-21ka monthly data as LPJ-GUESS drivers
 ====================================================
 
-Introduction
-------------
+Motivation
+----------
+
+TODO
+
+Description
+-----------
 
 This script bundle downscales and bias-corrects the monthly TraCE-21ka paleoclimate dataset (He 2011) and prepares NetCDF files that are readable as driving data by LPJ-GUESS.
 Bias-correction is based on the CRUNCEP 5 dataset of modern monthly climate between 1900 and 2013 in 0.5°x0.5° grid cell resolution.<!--TODO: Citation-->
@@ -14,15 +19,15 @@ Bias-correction is based on the CRUNCEP 5 dataset of modern monthly climate betw
 - How are changing coast lines handled?
 -->
 
-Requirements
-------------
+Prerequisites
+-------------
 
 - A Linux terminal on a 64bit machine.
 
 - Optional: A Miniconda installation <https://www.anaconda.com/download/>
 
-How to Use
-----------
+Usage
+-----
 
 1) Download the data sets. Do not change the original file names.
 
@@ -81,14 +86,23 @@ Design Questions
 
 - Is it good to bias-correct precipitation with a simple quotient? ⇒ Compare Lorenz et al. (2016)
 
-- Shall we install dependencies (nco, cdo, xarray, ...) locally or assume a system-wide installation?
+Related Projects
+----------------
+
+TODO
 
 Authors
 -------
 
-Main author: [Wolfgang Traylor](mailto:wolfgang.pappa@senckenberg.de)
+Main author: [Wolfgang Traylor](mailto:wolfgang.pappa@senckenberg.de), Senckenberg Biodiversity and Climate Research Institute, Frankfurt, Germany
 
-Thanks to: Christian Werner, Matthew Forrest
+Thanks to Christian Werner and Johan Liakka for their example script.
+Thanks to Matthew Forrest for a few tips.
+
+License
+-------
+
+[MIT](LICENSE)
 
 References
 ----------
