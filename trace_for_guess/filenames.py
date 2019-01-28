@@ -1,4 +1,7 @@
+import os
 import re
+
+import xarray as xr
 
 
 def get_cru_filenames():
@@ -152,3 +155,26 @@ def get_trace_filenames(variables, time_range):
         if ranges_overlap(time_range, get_time_range_of_trace_file(f)):
             result += [f]
     return result
+
+
+def derive_new_trace_name(trace_file):
+    """Compose a new basename for a TraCE file with already absolute calendar.
+
+    Args:
+        trace_file: An existing TraCE NetCDF file.
+
+    Returns:
+        String with the new base filename.
+
+    Raises:
+        FileNotFoundError: If `trace_file` does not exist.
+    """
+    if not os.path.isfile(trace_file):
+        raise FileNotFoundError(f"Could not find TraCE file '{trace_file}'.")
+    with xr.open_dataset(trace_file) as ds:
+        var = list(ds.var())[0]
+        time = ds['time']
+        first_year = int(time[0].dt.year)
+        last_year = int(time[-1].dt.year)
+    name = f'trace_{var}_{first_year}-{last_year}.nc'
+    return name

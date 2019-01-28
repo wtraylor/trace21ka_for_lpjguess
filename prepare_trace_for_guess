@@ -28,7 +28,8 @@ from trace_for_guess.concatenate import cat_files
 from trace_for_guess.convert_time_unit import convert_time_unit
 from trace_for_guess.crop import crop_file, crop_file_list
 from trace_for_guess.debias import debias_trace_file
-from trace_for_guess.filenames import (get_cru_filenames, get_crujra_filenames,
+from trace_for_guess.filenames import (derive_new_trace_name,
+                                       get_cru_filenames, get_crujra_filenames,
                                        get_modern_trace_filename,
                                        get_trace_filenames)
 from trace_for_guess.find_input import find_files
@@ -211,7 +212,7 @@ for var in trace_files:
     for f in split_trace_files[var]:
         f = rescale_file(in_file=f,
                          out_file=os.path.join(rescaled_dir,
-                                               os.path.basename(f)),
+                                               derive_new_trace_name(f)),
                          template_file=regrid_template_file,
                          alg=opts['regrid_algorithm'])
         if var in bias_files:
