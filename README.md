@@ -80,9 +80,8 @@ param "file_co2"     (str "/data/co2.txt")
 param "file_temp"     (str "")
 param "variable_temp" (str "TREFHT")
 
-! TODO:
 param "file_insol"      (str "")
-param "variable_insol" (str "")
+param "variable_insol" (str "FSDS")
 
 param "file_prec"     (str "")
 param "variable_prec" (str "PRECT")
