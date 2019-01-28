@@ -46,4 +46,4 @@ def set_metadata(trace_file, trace_var):
             ncatted_args += ['--attribute', f'{key},{var},o,c,{val}']
     if ncatted_args:
         subprocess.run(['ncatted', '--overwrite'] + ncatted_args
-                        + [trace_file], check=True)
+                       + [trace_file], check=True)
