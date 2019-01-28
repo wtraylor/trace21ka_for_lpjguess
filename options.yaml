@@ -61,6 +61,8 @@ regrid_template_file: 'cru_ts4.01.1921.1930.pre.dat.nc'
 # NetCDF attributes as they shall appear in the output files.
 nc_attributes:
   # TODO: cloud cover
+  # Note that the "time" dimension attributes are set in
+  # `trace_for_guess/convert_time_unit.py`.
   lat:
     long_name: 'latitude'
     standard_name: 'latitude'
@@ -81,10 +83,6 @@ nc_attributes:
     long_name: 'Near surface air temperature at 2m'
     standard_name: 'air_temperature'
     units: 'K'
-  time:
-    long_name: 'time'
-    units: 'day as %Y%m%d.%f'
-    calendar: '365_day'  # All years are 365 days long; equivalent to "noleap"
   wet_days:
     long_name: 'wet_days'
     standard_name: 'number_of_days_with_lwe_thickness_of_precipitation_amount_above_threshold'

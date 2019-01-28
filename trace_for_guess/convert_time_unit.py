@@ -2,7 +2,6 @@ import os
 import shutil
 import subprocess
 
-import yaml
 from termcolor import cprint
 
 from trace_for_guess.skip import skip
@@ -24,7 +23,6 @@ def convert_time_unit(trace_file, out_file):
     """
     if not os.path.isfile(trace_file):
         raise FileNotFoundError(f"Could not find TraCE file '{trace_file}'.")
-    attrs = yaml.load(open('options.yaml'))['nc_attributes']['time']
     if skip(trace_file, out_file):
         return out_file
     cprint(f"Converting kaBP time unit in TraCE file '{trace_file}'.",
@@ -52,11 +50,9 @@ def convert_time_unit(trace_file, out_file):
         # --append flag overwrites existing time dimension.
         subprocess.run(['ncap2', '--append', '--script', time_script,
                         tmp_file], check=True)
-        units = attrs['units']
-        calendar = attrs['calendar']
+        units = 'day as %Y%m%d.%f'
         subprocess.run(['ncatted', '--overwrite',
                         '--attribute', f'units,time,o,c,{units}',
-                        '--attribute', f'calendar,time,o,c,{calendar}',
                         tmp_file], check=True)
         # Now the calendar is set correctly to an absolute format. However,
         # LPJ-GUESS needs it relative. That’s why we copy the file with the CDO
