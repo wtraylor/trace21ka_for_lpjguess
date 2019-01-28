@@ -56,11 +56,13 @@ assert isinstance(time_range[0], int) and isinstance(time_range[1], int)
 # Directories:
 heap = opts['directories']['heap']  # Any intermediary files
 out_dir = opts['directories']['output']  # All output files
-cropped_dir = os.path.join(heap, 'cropped')  # Cropped files
-debiased_dir = os.path.join(heap, 'debiased')
-rescaled_dir = os.path.join(heap, 'rescaled')  # Rescaled files
-split_dir = os.path.join(heap, 'split')  # Split, but not yet regridded files
-heap_input = os.path.join(heap, 'input')  # Will be searched by find_files()
+heap_input = os.path.join(heap, '0_input')  # Will be searched by find_files()
+cropped_dir = os.path.join(heap, '1_cropped')
+time_unit_dir = os.path.join(heap, '2_time')
+split_dir = os.path.join(heap, '3_split')
+rescaled_dir = os.path.join(heap, '4_rescaled')
+debiased_dir = os.path.join(heap, '5_debiased')
+wet_days_dir = os.path.join(heap, '6_wet_days')
 
 if not os.path.isdir(heap):
     cprint(f"Heap directory '{heap}' does not exist yet. I will create it.",
@@ -200,7 +202,7 @@ for var in trace_files:
     for f in trace_files[var]:
         # In order for `cdo splitsel` to work, the time unit of the TraCE files
         # must be converted from kaBP to a standard calendar.
-        f = convert_time_unit(f, os.path.join(heap, 'time_unit',
+        f = convert_time_unit(f, os.path.join(time_unit_dir,
                                               os.path.basename(f)))
         split_trace_files[var] += split_file(filename=f, out_dir=split_dir)
     cprint(f"Going to rescale and debias TraCE files of variable '{var}'.",
@@ -220,7 +222,7 @@ for var in trace_files:
         if var == 'PRECT':
             wet_days_file = re.sub('PRECT', 'WET', os.path.basename(f))
             split_trace_files['WET'] += create_wet_days_file(
-                f, prec_std_file, os.path.join(heap, 'wet_days', wet_days_file)
+                f, prec_std_file, os.path.join(wet_days_dir, wet_days_file)
             )
         f = compress_netcdf(f, os.path.join(out_dir, os.path.basename(f)))
         set_metadata(f)

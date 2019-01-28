@@ -24,7 +24,7 @@ def find_files(filenames):
             empty string.
     """
     opts = yaml.load(open('options.yaml'))
-    heap_input = os.path.join(opts['directories']['heap'], 'input')
+    heap_input = os.path.join(opts['directories']['heap'], '0_input')
     dirs = opts['directories']['input'] + [heap_input]
     if not dirs:
         raise RuntimeError("No input directories defined in 'options.yaml'.")
