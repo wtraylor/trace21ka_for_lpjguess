@@ -19,12 +19,11 @@ def set_attributes(da, var):
         da.attrs[key] = attributes[key]
 
 
-def set_metadata(trace_file, trace_var):
+def set_metadata(trace_file):
     """Set NetCDF metadata of given file to CF standards for LPJ-GUESS.
 
     Args:
         trace_file: Full path to TraCE-21ka NetCDF file.
-        trace_var: The TraCE variable in the file.
 
     Raises:
         FileNotFoundError: If `trace_file` does not exist.
@@ -35,7 +34,7 @@ def set_metadata(trace_file, trace_var):
     if shutil.which('ncatted') is None:
         raise RuntimeError("Executable `ncatted` not found.")
     cprint(f"Standardizing metadata for file '{trace_file}'.", 'yellow')
-    attributes = yaml.load(open("options.yaml"))["nc_attributes"][trace_var]
+    attributes = yaml.load(open("options.yaml"))["nc_attributes"]
     ncatted_args = list()
     for var in attributes:
         with xr.open_dataset(trace_file, decode_times=False) as ds:
@@ -46,4 +45,4 @@ def set_metadata(trace_file, trace_var):
             ncatted_args += ['--attribute', f'{key},{var},o,c,{val}']
     if ncatted_args:
         subprocess.run(['ncatted', '--overwrite'] + ncatted_args
-                       + [trace_file], check=True)
+                        + [trace_file], check=True)

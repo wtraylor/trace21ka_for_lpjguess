@@ -215,7 +215,7 @@ for var in trace_files:
                                   bias_file=bias_files[var],
                                   out_file=os.path.join(debiased_dir,
                                                         os.path.basename(f)))
-        set_metadata(f, var)
+        set_metadata(f)
         if var == 'PRECT':
             wet_days_file = re.sub('PRECT', 'WET', os.path.basename(f))
             split_trace_files['WET'] += create_wet_days_file(
