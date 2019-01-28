@@ -83,7 +83,7 @@ nc_attributes:
     units: 'K'
   time:
     long_name: 'time'
-    units: 'days since -20050-1-1 0:0:0'
+    units: 'day as %Y%m%d.%f'
     calendar: '365_day'  # All years are 365 days long; equivalent to "noleap"
   wet_days:
     long_name: 'wet_days'

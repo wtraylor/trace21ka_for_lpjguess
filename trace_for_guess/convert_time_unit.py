@@ -2,44 +2,75 @@ import os
 import shutil
 import subprocess
 
-import xarray as xr
 import yaml
 from termcolor import cprint
 
+from trace_for_guess.skip import skip
 
-def convert_time_unit(trace_file):
-    """Convert kaBP time unit to calendar using NCO commands.
+
+def convert_time_unit(trace_file, out_file):
+    """Convert kaBP time unit to a format readable by LPJ-GUESS.
 
     Args:
         trace_file: File path to TraCE-21ka file with kaBP unit.
+        out_file: Path to output file.
+
+    Returns:
+        The output file (`out_file`).
 
     Raises:
         FileNotFoundError: If `trace_file` does not exist.
+        RuntimeError: If one of the commands cannot be found in the PATH.
     """
     if not os.path.isfile(trace_file):
         raise FileNotFoundError(f"Could not find TraCE file '{trace_file}'.")
     attrs = yaml.load(open('options.yaml'))['nc_attributes']['time']
-    with xr.open_dataset(trace_file, decode_times=False) as ds:
-        if ds.time.attrs['units'] == attrs['units']:
-            cprint(f"Time unit already converted: '{trace_file}'", 'cyan')
-            return
+    if skip(trace_file, out_file):
+        return out_file
     cprint(f"Converting kaBP time unit in TraCE file '{trace_file}'.",
            'yellow')
-    if shutil.which('ncatted') is None:
-        raise RuntimeError("Executable `ncatted` not found.")
+    if shutil.which('cdo') is None:
+        raise RuntimeError('Executable `cdo` not found.')
     if shutil.which('ncap2') is None:
-        raise RuntimeError("Executable `ncap2` not found.")
+        raise RuntimeError('Executable `ncap2` not found.')
+    if shutil.which('ncatted') is None:
+        raise RuntimeError('Executable `ncatted` not found.')
+    out_dir = os.path.dirname(out_file)
+    if not os.path.isdir(out_dir):
+        cprint(f"Heap directory '{out_dir}' does not exist yet. I will create "
+               "it.", 'yellow')
+        os.makedirs(out_dir)
     try:
-        time_script = 'time=trunc((time+22.0)*1000*365)'
+        # We leave `trace_file` untouched and change the calendar in a
+        # temporary file `tmp_file`.
+        tmp_file = out_file + '.tmp'
+        shutil.copy2(trace_file, tmp_file)
+        assert os.path.isfile(tmp_file)
+        # The in-built `date()` function in the TraCE files converts the time
+        # to the format 'YYYYMMDD' since 22,000 years BP.
+        time_script = 'time=date'
         # --append flag overwrites existing time dimension.
         subprocess.run(['ncap2', '--append', '--script', time_script,
-                        trace_file], check=True)
+                        tmp_file], check=True)
         units = attrs['units']
         calendar = attrs['calendar']
         subprocess.run(['ncatted', '--overwrite',
                         '--attribute', f'units,time,o,c,{units}',
                         '--attribute', f'calendar,time,o,c,{calendar}',
-                        trace_file], check=True)
+                        tmp_file], check=True)
+        # Now the calendar is set correctly to an absolute format. However,
+        # LPJ-GUESS needs it relative. That’s why we copy the file with the CDO
+        # flag '-r', which converts an absolute time axis to a relative one.
+        subprocess.run(['cdo', '-r', 'copy', tmp_file, out_file], check=True)
+        assert(os.path.isfile(out_file))
     except Exception:
-        cprint(f"Removing file '{trace_file}'.", 'red')
-        os.remove(trace_file)
+        if os.path.isfile(out_file):
+            cprint(f"Removing file '{out_file}'.", 'red')
+            os.remove(trace_file)
+        if os.path.isfile(tmp_file):
+            cprint(f"Removing file '{tmp_file}'.", 'red')
+            os.remove(tmp_file)
+        raise
+    assert os.path.isfile(out_file)
+    cprint(f"Successfully created file: '{out_file}'", 'green')
+    return out_file

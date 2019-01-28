@@ -197,7 +197,8 @@ for var in trace_files:
     for f in trace_files[var]:
         # In order for `cdo splitsel` to work, the time unit of the TraCE files
         # must be converted from kaBP to a standard calendar.
-        convert_time_unit(f)
+        f = convert_time_unit(f, os.path.join(heap, 'time_unit',
+                                              os.path.basename(f)))
         split_trace_files[var] += split_file(filename=f, out_dir=split_dir)
     cprint(f"Going to rescale and debias TraCE files of variable '{var}'.",
            'magenta')
