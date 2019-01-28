@@ -195,6 +195,8 @@ for var in trace_files:
     trace_files[var] = crop_file_list(trace_files[var], cropped_dir, extent)
     cprint(f"Going to split TraCE files of variable '{var}'.", 'magenta')
     split_trace_files[var] = list()
+    # In the following, `f` is always the file being processed. The path
+    # changes for every processing stage.
     for f in trace_files[var]:
         # In order for `cdo splitsel` to work, the time unit of the TraCE files
         # must be converted from kaBP to a standard calendar.
