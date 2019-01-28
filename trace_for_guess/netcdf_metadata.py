@@ -43,6 +43,11 @@ def set_metadata(trace_file):
         for key in attributes[var]:
             val = attributes[var][key]
             ncatted_args += ['--attribute', f'{key},{var},o,c,{val}']
-    if ncatted_args:
-        subprocess.run(['ncatted', '--overwrite'] + ncatted_args
-                        + [trace_file], check=True)
+    try:
+        subprocess.run(['ncatted', '--overwrite'] + ncatted_args +
+                       [trace_file], check=True)
+    except Exception:
+        if os.path.isfile(trace_file):
+            cprint(f"Removing file '{trace_file}'.", 'red')
+            os.remove(trace_file)
+        raise
