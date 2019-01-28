@@ -89,3 +89,11 @@ nc_attributes:
     long_name: 'wet_days'
     standard_name: 'number_of_days_with_lwe_thickness_of_precipitation_amount_above_threshold'
     units: 'count'
+
+# The deflation level (0 bis 9) for the `ncks` command.
+# From the NCO manual 4.7.8-alpha02:
+# > Minimal deflation (dfl_lvl = 1) achieves considerable storage compression
+# > with little time penalty. Higher deflation levels require more time for
+# > compression. File sizes resulting from minimal (dfl_lvl = 1) and maximal
+# > (dfl_lvl = 9) deflation levels typically differ by less than 10% in size.
+compression_level: 1

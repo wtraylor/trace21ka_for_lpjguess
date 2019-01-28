@@ -19,19 +19,20 @@ import yaml
 from termcolor import cprint
 
 from trace_for_guess.add_precc_precl import add_precc_and_precl_to_prect
-from trace_for_guess.co2 import create_co2_file
 from trace_for_guess.aggregate_modern_trace import aggregate_modern_trace
 from trace_for_guess.aggregate_monthly_means import aggregate_monthly_means
 from trace_for_guess.calculate_bias import calculate_bias
-from trace_for_guess.gridlist import create_gridlist
+from trace_for_guess.co2 import create_co2_file
+from trace_for_guess.compress import compress_netcdf
 from trace_for_guess.concatenate import cat_files
 from trace_for_guess.convert_time_unit import convert_time_unit
-from trace_for_guess.crop import crop_file_list, crop_file
+from trace_for_guess.crop import crop_file, crop_file_list
 from trace_for_guess.debias import debias_trace_file
 from trace_for_guess.filenames import (get_cru_filenames, get_crujra_filenames,
                                        get_modern_trace_filename,
                                        get_trace_filenames)
 from trace_for_guess.find_input import find_files
+from trace_for_guess.gridlist import create_gridlist
 from trace_for_guess.netcdf_metadata import set_metadata
 from trace_for_guess.prec_standard_deviation import get_prec_standard_deviation
 from trace_for_guess.rescale import rescale_file
@@ -220,7 +221,7 @@ for var in trace_files:
             split_trace_files['WET'] += create_wet_days_file(
                 f, prec_std_file, os.path.join(heap, 'wet_days', wet_days_file)
             )
-        # Compress
+        compress_netcdf(f, os.path.join(out_dir, os.path.basename(f)))
 
 cprint(f'Creating LPJ-GUESS gridlist file.', 'magenta')
 create_gridlist(regrid_template_file, os.path.join(out_dir, 'gridlist.txt'))
