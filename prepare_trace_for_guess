@@ -208,7 +208,6 @@ for var in trace_files:
         split_trace_files[var] += split_file(filename=f, out_dir=split_dir)
     cprint(f"Going to rescale and debias TraCE files of variable '{var}'.",
            'magenta')
-    split_trace_files['WET'] = list()
     for f in split_trace_files[var]:
         f = rescale_file(in_file=f,
                          out_file=os.path.join(rescaled_dir,
@@ -221,12 +220,17 @@ for var in trace_files:
                                   out_file=os.path.join(debiased_dir,
                                                         os.path.basename(f)))
         if var == 'PRECT':
-            wet_days_file = re.sub('PRECT', 'WET', os.path.basename(f))
-            split_trace_files['WET'] += create_wet_days_file(
-                f, prec_std_file, os.path.join(wet_days_dir, wet_days_file)
+            wet_basename = re.sub('PRECT', 'WET', os.path.basename(f))
+            wet_file = create_wet_days_file(
+                f, prec_std_file, os.path.join(wet_days_dir, wet_basename)
             )
+            wet_file = compress_netcdf(
+                wet_file, os.path.join(out_dir, os.path.basename(wet_file))
+            )
+            set_metadata(wet_file)
         f = compress_netcdf(f, os.path.join(out_dir, os.path.basename(f)))
         set_metadata(f)
+
 
 cprint(f'Creating LPJ-GUESS gridlist file.', 'magenta')
 create_gridlist(regrid_template_file, os.path.join(out_dir, 'gridlist.txt'))
