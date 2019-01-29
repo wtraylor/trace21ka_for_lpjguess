@@ -33,7 +33,7 @@ def set_metadata(trace_file):
         raise FileNotFoundError(f"TraCE file doesn’t exist: '{trace_file}'")
     if shutil.which('ncatted') is None:
         raise RuntimeError("Executable `ncatted` not found.")
-    cprint(f"Standardizing metadata for file '{trace_file}'.", 'yellow')
+    cprint(f"Setting metadata for file '{trace_file}'.", 'yellow')
     attributes = yaml.load(open("options.yaml"))["nc_attributes"]
     ncatted_args = list()
     for var in attributes:
