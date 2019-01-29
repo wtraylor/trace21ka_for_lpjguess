@@ -38,6 +38,12 @@ directories:
   # Directory for final output files.
   output: "/mnt/zathras/trace_for_guess/output"
 
+# Whether to concatenate results into one big, monolithic file per variable.
+# If set to 'yes', there will be smaller output files with 100 years each, but
+# LPJ-GUESS cannot natively read multiple files.
+# Valid options: 'yes' or 'no'
+concatenate: 'yes'
+
 ###############################################################################
 ###############################################################################
 # HARD-CODED SETTINGS.

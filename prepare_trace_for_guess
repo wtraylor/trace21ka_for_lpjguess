@@ -192,6 +192,12 @@ trace_files = dict()  # Key is the variable, value is a list of file paths.
 for var in ['FSDS', 'PRECT', 'TREFHT']:
     trace_files[var] = find_files(get_trace_filenames(var, time_range))
 
+# Prepare data structure to hold the final output files.
+output_files = dict()  # Key is the variable, value is a list of file paths.
+for var in trace_files:
+    output_files[var] = list()  # A list of file paths for this variable.
+output_files['WET'] = list()
+
 split_trace_files = dict()
 for var in trace_files:
     cprint(f"Going to crop TraCE files of variable '{var}'.", 'magenta')
@@ -228,9 +234,19 @@ for var in trace_files:
                 wet_file, os.path.join(out_dir, os.path.basename(wet_file))
             )
             set_metadata(wet_file)
+            output_files['WET'] += [wet_file]
         f = compress_and_chunk(f, os.path.join(out_dir, os.path.basename(f)))
+        output_files[var] += [f]
         set_metadata(f)
 
+if opts['concatenate'] == 'yes':
+    cprint(f'Joining output into monolithic files.', 'magenta')
+    for var in output_files:
+        cat_files(output_files[var],
+                  os.path.join(out_dir, f'monolithic_{var}.nc'))
+elif opts['concatenate'] != 'no':
+    cprint('Warning: Bad value in options.yaml for "concatenate". '
+           'Use "yes" or "no".', 'red')
 
 cprint(f'Creating LPJ-GUESS gridlist file.', 'magenta')
 # TODO: Use an output file for the gridlist since it must be the reference for
