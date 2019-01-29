@@ -1,3 +1,4 @@
+import math
 import os
 
 import xarray as xr
@@ -46,9 +47,18 @@ def create_gridlist(netcdf_file, gridlist_file):
     try:
         with xr.open_dataset(netcdf_file, decode_times=False) as ds, \
                 open(gridlist_file, 'w') as gridlist:
+            var = list(ds.var())[0]  # Assuming there’s only one variable.
+            assert var != ""
+            assert 'time' in ds[var].coords
+            lon_name = get_longitude(ds).name
+            lat_name = get_latitude(ds).name
             for x in range(len(get_longitude(ds).values)):
                 for y in range(len(get_latitude(ds).values)):
-                    gridlist.write(f"{x}\t{y}\n")
+                    # If the value is NAN in the first time step, the whole
+                    # grid cell will be dismissed.
+                    index_dict = {'time': 0, lon_name: x, lat_name: y}
+                    if not math.isnan(ds[var][index_dict]):
+                        gridlist.write(f"{x}\t{y}\n")
     except Exception:
         cprint(f"Removing file '{gridlist_file}'.", 'red')
         os.remove(gridlist_file)
