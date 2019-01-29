@@ -67,7 +67,7 @@ Run LPJ-GUESS with the CF input module: `guess -input cf "/path/to/my/instructio
 This is a template for an LPJ-GUESS instruction file: 
 
 ```
-param "file_gridlist" (str "/data/gridlist.txt")
+param "file_gridlist_cf" (str "/data/gridlist.txt")
 
 ! This file is used to obtain soil codes.
 param "file_cru"     (str "/lpj_guess/data/env/soils_lpj.dat")
