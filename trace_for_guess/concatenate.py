@@ -34,8 +34,8 @@ def cat_files(filelist, out_file):
     try:
         subprocess.run(['ncrcat'] + filelist + [out_file], check=True)
     except Exception:
-        if os.path.isfile(out_file):
-            cprint(f"Removing file '{out_file}'.", 'red')
+        for f in [out_file] + glob.glob(out_file + 'pid*.ncrcat.tmp'):
+            cprint(f"Removing file '{f}'.", 'red')
             os.remove(out_file)
         raise
     if not os.path.isfile(out_file):
