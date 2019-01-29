@@ -9,7 +9,7 @@ TODO
 Description
 -----------
 
-This script bundle downscales and bias-corrects the monthly TraCE-21ka paleoclimate dataset (He 2011) and prepares NetCDF files that are readable as driving data by LPJ-GUESS.
+This script bundle downscales and bias-corrects the monthly TraCE-21ka paleoclimate dataset [He 2011](http://www.aos.wisc.edu/uwaosjournal/Volume15/He_PhD_Thesis.pdf) and prepares NetCDF files that are readable as driving data by LPJ-GUESS.
 Bias-correction is based on the CRUNCEP 5 dataset of modern monthly climate between 1900 and 2013 in 0.5°x0.5° grid cell resolution.<!--TODO: Citation-->
 
 <!--TODO:
@@ -129,10 +129,13 @@ Design Questions
 
 - Is it good to bias-correct precipitation with a simple quotient? ⇒ Compare Lorenz et al. (2016)
 
-Related Projects
+Similar Projects
 ----------------
 
-TODO
+[Lorenz et al. 2016](https://www.nature.com/articles/sdata201648) for North America:
+<https://github.com/fitzLab-AL/climateSims21kto2100>
+
+[Werner et al. 2018](https://www.earth-surf-dynam.net/6/829/2018/) for Chile.
 
 Authors
 -------
@@ -146,8 +149,3 @@ License
 -------
 
 [MIT](LICENSE)
-
-References
-----------
-
-- He, Feng. 2011. “Simulating Transient Climate Evolution of the Last Deglaciation with Ccsm 3.” PhD thesis, University of Wisconsin-Madison.
