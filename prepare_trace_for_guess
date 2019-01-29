@@ -23,7 +23,7 @@ from trace_for_guess.aggregate_modern_trace import aggregate_modern_trace
 from trace_for_guess.aggregate_monthly_means import aggregate_monthly_means
 from trace_for_guess.calculate_bias import calculate_bias
 from trace_for_guess.co2 import create_co2_file
-from trace_for_guess.compress import compress_netcdf
+from trace_for_guess.compress import compress_and_chunk
 from trace_for_guess.concatenate import cat_files
 from trace_for_guess.convert_time_unit import convert_time_unit
 from trace_for_guess.crop import crop_file, crop_file_list
@@ -224,11 +224,11 @@ for var in trace_files:
             wet_file = create_wet_days_file(
                 f, prec_std_file, os.path.join(wet_days_dir, wet_basename)
             )
-            wet_file = compress_netcdf(
+            wet_file = compress_and_chunk(
                 wet_file, os.path.join(out_dir, os.path.basename(wet_file))
             )
             set_metadata(wet_file)
-        f = compress_netcdf(f, os.path.join(out_dir, os.path.basename(f)))
+        f = compress_and_chunk(f, os.path.join(out_dir, os.path.basename(f)))
         set_metadata(f)
 
 

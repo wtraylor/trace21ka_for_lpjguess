@@ -17,6 +17,7 @@ Bias-correction is based on the CRUNCEP 5 dataset of modern monthly climate betw
 - Why downscaling? ⇒ generate orthographical details
 - How to interpret the high resolution: Anything that’s not elevation is an artefact.
 - How are changing coast lines handled?
+- Why chunking?
 -->
 
 Prerequisites

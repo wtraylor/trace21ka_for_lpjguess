@@ -95,3 +95,13 @@ nc_attributes:
 # > compression. File sizes resulting from minimal (dfl_lvl = 1) and maximal
 # > (dfl_lvl = 9) deflation levels typically differ by less than 10% in size.
 compression_level: 1
+
+# Chunk sizes (number of elements) for each dimension.
+# See the NCO reference for more details:
+# http://nco.sourceforge.net/nco.html#Chunking
+chunks:
+  lon: 1
+  lat: 1
+  time: 1200  # = 100 years
+  # Cache for NCO chunking operation in Bytes.
+  cache: 1000000000  # = 1 GB
