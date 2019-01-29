@@ -233,4 +233,6 @@ for var in trace_files:
 
 
 cprint(f'Creating LPJ-GUESS gridlist file.', 'magenta')
+# TODO: Use an output file for the gridlist since it must be the reference for
+# NAN values.
 create_gridlist(regrid_template_file, os.path.join(out_dir, 'gridlist.txt'))
