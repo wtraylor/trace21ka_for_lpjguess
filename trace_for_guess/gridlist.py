@@ -23,7 +23,14 @@ def get_latitude(dataset):
 
 
 def create_gridlist(netcdf_file, gridlist_file):
-    """Create a gridlist file for LPJ-GUESS from a NetCDF file.
+    """Create a CF gridlist file for LPJ-GUESS from a NetCDF file.
+
+    Note that the "file_gridlist" parameter of LPJ-GUESS contains longitude and
+    latitude, but "file_gridlist_cf" contains the array indices of the grid
+    cells within the NetCDF file.
+
+    By creating one grid list based on only one NetCDF file, we assume that the
+    grid cells are the same in all other files.
 
     Args:
         netcdf_file: Path to NetCDF input file.
@@ -39,11 +46,9 @@ def create_gridlist(netcdf_file, gridlist_file):
     try:
         with xr.open_dataset(netcdf_file, decode_times=False) as ds, \
                 open(gridlist_file, 'w') as gridlist:
-            lon_arr = get_longitude(ds).values
-            lat_arr = get_latitude(ds).values
-            for lon in lon_arr:
-                for lat in lat_arr:
-                    gridlist.write(f"{lon}\t{lat}\n")
+            for x in range(len(get_longitude(ds).values)):
+                for y in range(len(get_latitude(ds).values)):
+                    gridlist.write(f"{x}\t{y}\n")
     except Exception:
         cprint(f"Removing file '{gridlist_file}'.", 'red')
         os.remove(gridlist_file)
