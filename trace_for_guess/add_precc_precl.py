@@ -50,8 +50,8 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
         # Finally we need to name the sum appropriately "PRECT".
         subprocess.run(['ncrename', '--variable', 'PRECL,PRECT', prect_file],
                        check=True)
-        long_name = yaml.load(
-            open('options.yaml'))['nc_attributes']['prec']['long_name']
+        opts = yaml.load(open('options.yaml'))
+        long_name = opts['nc_attributes']['PRECT']['long_name']
         subprocess.run(['ncatted', '--overwrite',
                         '--attribute', f'long_name,PRECT,m,c,"{long_name}"',
                         prect_file], check=True)
