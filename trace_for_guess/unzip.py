@@ -36,6 +36,9 @@ def gunzip(filename, targetdir):
             cprint(f"Removing file '{targetfile}'...", 'red')
             os.remove(targetfile)
         raise
+    assert targetfile
+    assert os.path.isfile(targetfile)
+    return targetfile
 
 
 def unzip_files_if_needed(filenames, unzip_dir):
