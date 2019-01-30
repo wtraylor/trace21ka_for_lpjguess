@@ -29,6 +29,11 @@ def crop_file(in_file, out_file, ext):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % in_file)
     if skip(in_file, out_file):
         return out_file
+    out_dir = os.path.dirname(out_file)
+    if not os.path.isdir(out_dir):
+        cprint(f"Directory '{out_dir}' does not exist yet. I will create it.",
+               'yellow')
+        os.makedirs(out_dir)
     cprint("Cropping file '%s'..." % in_file, 'yellow')
     if shutil.which("ncks") is None:
         raise RuntimeError("Executable `ncks` not found.")
