@@ -40,8 +40,9 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
     # variable to match the variable of the other operand. If the names of the
     # variables don’t match, NCO will not be able to add them.
     try:
-        shutil.copy2(precc_file, prect_file)
+        shutil.copy(precc_file, prect_file)
         assert(os.path.isfile(prect_file))
+        os.chmod(prect_file, 0o666)  # Read/write for everybody
         subprocess.run(['ncrename', '--overwrite', '--variable=PRECC,PRECL',
                         prect_file], check=True)
         # Now we can add the values of the variable "PRECL".
