@@ -94,6 +94,7 @@ regrid_template_file = unzip_files_if_needed(
     filenames=[opts['regrid_template_file']],
     unzip_dir=heap_input
 )[0]
+assert(os.path.isfile(regrid_template_file))
 regrid_template_file = crop_file(
     regrid_template_file,
     os.path.join(cropped_dir, os.path.basename(regrid_template_file)),
