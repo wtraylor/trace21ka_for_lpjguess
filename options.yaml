@@ -20,12 +20,6 @@ region:
 # to -40 BP (i.e. 1990 CE).
 time_range: [18500, 18000]
 
-# Interpolation algorithm for regridding
-# (downscaling) the NetCDF files.
-# See here for detailed descriptions:
-# http://www.earthsystemmodeling.org/esmf_releases/public/ESMF_6_3_0rp1/ESMF_refdoc/node3.html#SECTION03020000000000000000
-regrid_algorithm: 'bilinear'
-
 directories:
   # List of directories containing all original files: CRU, CRU-JRA-55
   # precipitation, TraCE-21ka.
@@ -50,6 +44,11 @@ concatenate: 'yes'
 #
 # Don’t change this unless you know what you are doing.
 #
+
+# Interpolation algorithm for regridding (downscaling) the NetCDF files.
+# See here for detailed descriptions:
+# http://www.earthsystemmodeling.org/esmf_releases/public/ESMF_6_3_0rp1/ESMF_refdoc/node3.html#SECTION03020000000000000000
+regrid_algorithm: 'bilinear'
 
 # Variables in the CRU NetCDF files as they correspond to the TraCE-21ka
 # variables. The CRU files are also named like their variables.

@@ -4,21 +4,75 @@ Prepare TraCE-21ka monthly data as LPJ-GUESS drivers
 Motivation
 ----------
 
-TODO
+We want to use the transient monthly paleoclimate dataset [TraCE-21ka](http://www.cgd.ucar.edu/ccr/TraCE/) as climatic driving data for the DGVM [LPJ-GUESS](http://iis4.nateko.lu.se/lpj-guess/).
+
+Bias-correction is necessary because present-day temperature and precipitation of the CCSM3 simulations diverge tremendously from measurements in some regions (e.g. NE-Siberia).
+We want to downscale the data together with bias-correcting it because this way orographic effects are represented (e.g. higher altitudes are colder).
 
 Description
 -----------
 
-This script bundle downscales and bias-corrects the monthly TraCE-21ka paleoclimate dataset [He 2011](http://www.aos.wisc.edu/uwaosjournal/Volume15/He_PhD_Thesis.pdf) and prepares NetCDF files that are readable as driving data by LPJ-GUESS.
-Bias-correction is based on the CRUNCEP 5 dataset of modern monthly climate between 1900 and 2013 in 0.5°x0.5° grid cell resolution.<!--TODO: Citation-->
+This script bundle **downscales** and **bias-corrects** the monthly TraCE-21ka paleoclimate dataset [He 2011](http://www.aos.wisc.edu/uwaosjournal/Volume15/He_PhD_Thesis.pdf) and prepares NetCDF files that are readable as driving data by LPJ-GUESS.
 
-<!--TODO:
-- Algorithm for downscaling
-- Why downscaling? ⇒ generate orthographical details
-- How to interpret the high resolution: Anything that’s not elevation is an artefact.
-- How are changing coast lines handled?
-- Why chunking?
--->
+Bias-correction of temperature and precipitation is based on the CRU dataset of modern monthly climate between 1900 and 1990 in 0.5° by 0.5° grid cell resolution.<!--TODO: Citation-->
+
+The TraCE files are regridded to match the CRU resolution using bilinear interpolation.
+Note that the higher resolution in of itself does not provide any gain in information.
+It only helps to create orographic/altitudinal effects.
+
+The **chunking** of the output NetCDF files is optimized for LPJ-GUESS input, i.e. for reading each grid cell separately for the whole time series.
+See [this](https://www.unidata.ucar.edu/blogs/developer/entry/chunking_data_why_it_matters) blog post to learn what chunks are and how they affect performance.
+
+For convenience and manageability the TraCE files are split into 100-years segments.
+However, LPJ-GUESS is currently (v.4.0) not capable of reading multiple contiguous NetCDF files in sequence.
+They can be concatenated to full length afterwards.
+
+Here is an overview of the procedure:
+
+```ditaa
+  +---------+    +----------------+  +-------------+
+  |CRU files|    |TraCE–21ka files|  |CRU–JRA files|
+  +---------+    +----------------+  +-------------+
+       |               |                    |
+       v               v                    v
+    /----\          /----\               /-----\
+    |Crop|          |Crop|               |Unzip|
+    \----/          \----/               \-----/
+       |               |                    |
+       |               v                    v
+       |            /-----\              /----\
+       |            |Split|              |Crop|
+       |            \-----/              \----/
+       |               |                    |
+       |               v                    v
+       |           /-------\           /---------\
+       |    +------|Rescale|           |Calculate|
+       |    |      \-------/           |Prec. SD |
+       v    v          |               \---------/
+/--------------\       |                    |
+|Calculate Bias|       |                    |
+\--------------/       v                    |
+       |           /------\                 |
+       \---------->|Debias|                 |
+                   \------/                 |
+                       |                    |
+                       v                    |
+                 /------------\             |
+                 |Add Wet Days|<------------+
+                 \------------/
+                       |
+                       v
+                 /------------\
+                 |Set Metadata|
+                 \------------/
+                       |
+                       v
+                  /--------\
+                  |Compress|
+                  | Chunk  |
+                  |(Concat)|
+                  \--------/
+```
 
 Prerequisites
 -------------
@@ -56,8 +110,6 @@ Be careful not to keep other files in your "heap" or "output" directory since th
   - When you are done, you can delete the environment with `make delete_environment` and clean up the files with `make clean`.
 
 ### Running LPJ-GUESS
-
-TODO: Generate instruction file or give an example.
 
 You will need the CRU soil code file for the CF input module of LPJ-GUESS. Adjust the path to it in the generated LPJ-GUESS instruction file.
 
@@ -106,6 +158,7 @@ Project Outline
 - [x] Split dataset into 100 years files.
 - [x] Downscale TraCE dataset to 0.5° grid resolution.
 - [ ] Mask oceans and glaciers, based on ICE-5G?
+- [ ] How to handle changing coast lines?
 - [x] Bias-correct all files.
 - [x] Calculate wet days, based on modern monthly wet days. Store them as `wet_days` variable in precipitation file.
 - [x] Set standard names for all NetCDF variables.
@@ -115,7 +168,7 @@ Project Outline
 - [ ] Switch to more recent CRU 4.02?
 - [x] Create CO₂ file.
 - [x] Create grid list file.
-- [ ] How to use the many small NetCDF files in LPJ-GUESS in a transient simulation?
+- [x] How to use the many small NetCDF files in LPJ-GUESS in a transient simulation?
 
 Design Questions
 ----------------
@@ -141,7 +194,7 @@ Similar Projects
 Authors
 -------
 
-Main author: [Wolfgang Traylor](mailto:wolfgang.pappa@senckenberg.de), Senckenberg Biodiversity and Climate Research Institute, Frankfurt, Germany
+Main author: [Wolfgang Traylor](mailto:wolfgang.pappa@senckenberg.de), Senckenberg Biodiversity and Climate Research Institute, Frankfurt (BiK-F), Germany
 
 Thanks to Christian Werner and Johan Liakka for their example script.
 Thanks to Matthew Forrest for a few tips.
