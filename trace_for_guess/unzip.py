@@ -78,4 +78,7 @@ def unzip_files_if_needed(filenames, unzip_dir):
                    f"file '{f}' in input directories.", 'red')
             raise ex
     assert(len(result) == len(filenames))
+    for f in result:
+        assert f, 'List element is None.'
+        assert os.path.isfile(f), f'List element is no file: {f}'
     return result
