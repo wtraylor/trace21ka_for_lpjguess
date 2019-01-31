@@ -68,7 +68,7 @@ if heap_files:
                 cprint(f"Deleting '{f}''", 'yellow')
                 os.remove(os.path.join(root, f))
             for d in dirs:
-                cprint(f"Deleting directory '{d}''", 'yellow')
+                cprint(f"Deleting directory '{d}'", 'yellow')
                 os.rmdir(os.path.join(root, d))
 else:
     cprint('No processed files to delete in the heap directory.', 'green')
