@@ -61,15 +61,15 @@ for root, dirs, files in os.walk(heap):
 if heap_files:
     if confirm('Do you want to delete all intermediary files in the heap?',
                heap_files):
+        for f in heap_files:
+            cprint(f"Deleting '{f}'", 'yellow')
+            os.remove(f)
         for root, dirs, files in os.walk(heap, topdown=False):
-            if os.path.join(root, f) in dont_delete:
-                continue
-            for f in files:
-                cprint(f"Deleting '{f}''", 'yellow')
-                os.remove(os.path.join(root, f))
             for d in dirs:
-                cprint(f"Deleting directory '{d}'", 'yellow')
-                os.rmdir(os.path.join(root, d))
+                d = os.path.join(root, d)
+                if not os.listdir(d):
+                    cprint(f"Deleting empty directory '{d}'", 'yellow')
+                    os.rmdir(os.path.join(root, d))
 else:
     cprint('No processed files to delete in the heap directory.', 'green')
 
