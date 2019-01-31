@@ -26,7 +26,7 @@ def gunzip(filename, targetdir):
     targetfile = os.path.join(
         targetdir, re.sub('\\.gz$', '', os.path.basename(filename))
     )
-    cprint(f"Decompressing '{filename}' to '{targetdir}'...", 'yellow')
+    cprint(f"Decompressing '{filename}'...", 'yellow')
     try:
         with open(targetfile, 'xb') as o, gzip.open(filename, 'rb') as i:
             shutil.copyfileobj(i, o)
@@ -38,6 +38,7 @@ def gunzip(filename, targetdir):
         raise
     assert targetfile
     assert os.path.isfile(targetfile)
+    cprint(f"Successfully created file '{targetfile}'.", 'green')
     return targetfile
 
 
