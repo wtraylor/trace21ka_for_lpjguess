@@ -200,7 +200,7 @@ for var in trace_files:
     output_files[var] = list()  # A list of file paths for this variable.
 output_files['WET'] = list()
 
-split_trace_files = dict()
+split_trace_files = dict()  # key=TraCE variable; value=list of files
 for var in trace_files:
     cprint(f"Going to crop TraCE files of variable '{var}'.", 'magenta')
     trace_files[var] = crop_file_list(trace_files[var], cropped_dir, extent)
@@ -241,12 +241,13 @@ for var in trace_files:
         output_files[var] += [f]
         set_metadata(f)
 
+concat_files = dict()  # key=TraCE variable; value=file path
 if opts['concatenate'] == 'yes':
     cprint(f'Joining output into monolithic files.', 'magenta')
     for var in output_files:
         concat_filename = derive_new_concat_trace_name(output_files[var])
-        cat_files(output_files[var],
-                  os.path.join(out_dir, concat_filename))
+        concat_files[var] = cat_files(output_files[var],
+                                      os.path.join(out_dir, concat_filename))
 elif opts['concatenate'] != 'no':
     cprint('Warning: Bad value in options.yaml for "concatenate". '
            'Use "yes" or "no".', 'red')
@@ -254,7 +255,11 @@ elif opts['concatenate'] != 'no':
 cprint(f'Going to create CO₂ files.', 'magenta')
 # We choose 'FSDS' as the variable because those files still have the original
 # TraCE "co2vmr" variable.
-create_co2_files(output_files['FSDS'], out_dir, opts['concatenate'] == 'yes')
+co2_input = output_files['FSDS']
+print(concat_files)
+if 'FSDS' in concat_files:
+    co2_input += [concat_files['FSDS']]
+create_co2_files(co2_input, out_dir)
 
 cprint(f'Creating LPJ-GUESS gridlist file.', 'magenta')
 # TODO: Use an output file for the gridlist since it must be the reference for
