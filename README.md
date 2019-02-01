@@ -170,6 +170,7 @@ Project Outline
 - [x] Create CO₂ file.
 - [x] Create grid list file.
 - [x] How to use the many small NetCDF files in LPJ-GUESS in a transient simulation?
+- [ ] Crop time
 
 Design Questions
 ----------------
