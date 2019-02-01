@@ -27,7 +27,7 @@ def get_modern_trace_filename(var: str):
 
 
 def get_time_range_of_trace_file(filename):
-    """Get the time range in years BP covered by given TraCE-21ka file.
+    """Get the time range (years BP) only from given TraCE-21ka filename.
 
     Args:
         filename: The base filename (without path!) of the TraCE file. The file
