@@ -1,7 +1,7 @@
 import os
 import re
-
-import xarray as xr
+import shutil
+import subprocess
 
 
 def get_cru_filenames():
@@ -168,13 +168,24 @@ def derive_new_trace_name(trace_file):
 
     Raises:
         FileNotFoundError: If `trace_file` does not exist.
+        RuntimeError: `cdo` command is not in the PATH.
     """
     if not os.path.isfile(trace_file):
         raise FileNotFoundError(f"Could not find TraCE file '{trace_file}'.")
-    with xr.open_dataset(trace_file) as ds:
-        var = list(ds.var())[0]
-        time = ds['time']
-        first_year = int(time[0].dt.year)
-        last_year = int(time[-1].dt.year)
+    if not shutil.which('cdo'):
+        raise RuntimeError('`cdo` command is not in the PATH.')
+    # Get beginning and end:
+    prc = subprocess.run(
+        ['cdo', 'showdate', '-select,timestep=1,-1', trace_file],
+        check=True, capture_output=True
+    )
+    stdout = str(prc.stdout)
+    first_year, last_year = re.findall(r' (\d+)-\d\d-\d\d', stdout)
+    first_year = int(first_year)
+    last_year = int(last_year)
+    # Get variable name:
+    stdout = subprocess.run(['cdo', 'showname', trace_file],
+                            capture_output=True).stdout
+    var = str(stdout).split()[0]  # Take the first variable.
     name = f'trace_{var}_{first_year}-{last_year}.nc'
     return name
