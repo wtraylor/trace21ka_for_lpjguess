@@ -142,7 +142,7 @@ def create_wet_days_file(prect_file, prec_std_file, out_file):
             set_attributes(da, "wet_days")
             da.attrs['_FillValue'] = NODATA
             da.attrs['missing_value'] = NODATA
-            trace['wet'] = da
+            trace['WET'] = da
             del trace['PRECT']
             trace.to_netcdf(out_file, mode='w', engine='netcdf4')
     except Exception:
