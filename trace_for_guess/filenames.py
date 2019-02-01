@@ -1,7 +1,7 @@
 import os
 import re
-import shutil
-import subprocess
+
+from trace_for_guess.netcdf_metadata import get_metadata_from_trace_file
 
 
 def get_cru_filenames():
@@ -168,24 +168,12 @@ def derive_new_trace_name(trace_file):
 
     Raises:
         FileNotFoundError: If `trace_file` does not exist.
-        RuntimeError: `cdo` command is not in the PATH.
     """
     if not os.path.isfile(trace_file):
         raise FileNotFoundError(f"Could not find TraCE file '{trace_file}'.")
-    if not shutil.which('cdo'):
-        raise RuntimeError('`cdo` command is not in the PATH.')
-    # Get beginning and end:
-    stdout = subprocess.run(
-        ['cdo', 'showdate', '-select,timestep=1,-1', trace_file],
-        check=True, capture_output=True, encoding='utf-8'
-    ).stdout
-    first_year, last_year = re.findall(r' (\d+)-\d\d-\d\d', stdout)
-    del stdout
-    first_year = int(first_year)
-    last_year = int(last_year)
-    # Get variable name:
-    stdout = subprocess.run(['cdo', 'showname', trace_file],
-                            capture_output=True, encoding='utf-8').stdout
-    var = stdout.split()[0]  # Take the first variable.
+    metadata = get_metadata_from_trace_file(trace_file)
+    first_year = metadata['first_year']
+    last_year = metadata['last_year']
+    var = metadata['variable']
     name = f'trace_{var}_{first_year}-{last_year}.nc'
     return name

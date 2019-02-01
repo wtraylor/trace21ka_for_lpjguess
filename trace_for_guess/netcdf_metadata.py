@@ -1,10 +1,45 @@
 import os
+import re
 import shutil
 import subprocess
 
 import xarray as xr
 import yaml
 from termcolor import cprint
+
+
+def get_metadata_from_trace_file(trace_file):
+    """Get time range and variable from given TraCE file.
+
+    Args:
+        trace_file: An existing TraCE NetCDF file.
+
+    Returns:
+        A dictionary with the header information of interest: first_year,
+        last_year, variable
+
+    Raises:
+        FileNotFoundError: If `trace_file` does not exist.
+        RuntimeError: `cdo` command is not in the PATH.
+    """
+    if not os.path.isfile(trace_file):
+        raise FileNotFoundError(f"Could not find TraCE file '{trace_file}'.")
+    if not shutil.which('cdo'):
+        raise RuntimeError('`cdo` command is not in the PATH.')
+    # Get time range:
+    stdout = subprocess.run(
+        ['cdo', 'showdate', '-select,timestep=1,-1', trace_file],
+        check=True, capture_output=True, encoding='utf-8'
+    ).stdout
+    time_range = re.findall(r' (\d+)-\d\d-\d\d', stdout)
+    del stdout
+    # Get variable name:
+    stdout = subprocess.run(['cdo', 'showname', trace_file],
+                            capture_output=True, encoding='utf-8').stdout
+    var = stdout.split()[0]  # Take the first variable.
+    return {'first_year': int(time_range[0]),
+            'last_year': int(time_range[1]),
+            'variable': var}
 
 
 def set_attributes(da, var):
