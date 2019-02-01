@@ -33,7 +33,8 @@ def cat_files(filelist, out_file):
     for f in filelist:
         cprint('\t' + f, 'yellow')
     try:
-        subprocess.run(['cdo', 'cat'] + filelist + [out_file], check=True)
+        subprocess.run(['cdo', 'mergetime'] + filelist + [out_file],
+                       check=True)
     except Exception:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
