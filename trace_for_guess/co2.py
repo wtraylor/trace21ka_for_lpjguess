@@ -1,6 +1,8 @@
+import re
 import os
 
-import xarray as xr
+import subprocess
+import shutil
 from termcolor import cprint
 
 from trace_for_guess.filenames import get_co2_filename
@@ -15,6 +17,30 @@ def year_from_date(date):
     # Drop the last 6 digits ('MMDD.0').
     s = s[:-6]
     return int(s)
+
+
+def get_co2_values(trace_file):
+    """Get average CO₂ values per year from TraCE-21ka file.
+
+    We use `cdo` to read the values because xarray cannot parse the dates
+    correctly for youngest TraCE data (year numbers are too high).
+
+    Returns:
+        A dictionary with year as key and CO₂ concentration as value.
+    """
+    if not os.path.isfile(trace_file):
+        raise FileNotFoundError(f"Input file not found: '{trace_file}'")
+    stdout = subprocess.run(['cdo', 'output', '-yearmean',
+                                '-selvar,co2vmr', trace_file], check=True,
+                            encoding='utf-8', capture_output=True).stdout
+    co2_vals = [float(v) for v in stdout.split()]
+    del stdout
+    stdout = subprocess.run(['cdo', 'showyear', trace_file], check=True,
+                            encoding='utf-8', capture_output=True).stdout
+    years = [int(s) for s in stdout.split()]
+    assert len(years) == len(co2_vals),\
+        f'len(years)=={len(years)}, len(co2_vals)=={len(co2_vals)}'
+    return dict(zip(years, co2_vals))
 
 
 def create_co2_files(trace_files, out_dir, concat):
@@ -52,31 +78,11 @@ def create_co2_files(trace_files, out_dir, concat):
     try:
         with open(co2_concat, 'w') as out_concat:
             for f in trace_files:
-                with xr.open_dataset(f, decode_times=False) as ds, \
-                        open(co2_files[f], 'w') as out_single:
-                    co2 = ds['co2vmr']
-                    prev_year = values_in_year = sum_values = 0
-                    for i in range(len(co2.values)):
-                        year = year_from_date(co2['time'].values[i])
-                        value = co2.values[i]
-                        if year == prev_year or values_in_year == 0:
-                            # Before the year is completed, only record data
-                            # for calculating the mean.
-                            values_in_year += 1
-                            sum_values += value
-                        else:
-                            # We have completed one year and write the
-                            # arithmetic mean to output.
-                            mean = sum_values / values_in_year
-                            line = f'{prev_year}\t{mean}\n'
-                            out_concat.write(f'{prev_year}\t{mean}\n')
-                            out_single.write(line)
-                            values_in_year = sum_values = 0
-                        prev_year = year
-                    # Write the last year.
-                    if values_in_year:
-                        mean = sum_values / values_in_year
-                        line = f'{prev_year}\t{mean}\n'
+                co2_vals = get_co2_values(f)
+                with open(co2_files[f], 'w') as out_single:
+                    for year in co2_vals:
+                        val = co2_vals[year]
+                        line = f'{year}\t{val}\n'
                         out_concat.write(line)
                         out_single.write(line)
     except Exception:
