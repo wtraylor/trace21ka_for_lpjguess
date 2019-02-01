@@ -14,6 +14,7 @@ Output colors with termcolor.cprint():
 import os
 import re
 import sys
+import warnings
 
 import yaml
 from termcolor import cprint
@@ -249,8 +250,8 @@ if opts['concatenate'] == 'yes':
         concat_files[var] = cat_files(output_files[var],
                                       os.path.join(out_dir, concat_filename))
 elif opts['concatenate'] != 'no':
-    cprint('Warning: Bad value in options.yaml for "concatenate". '
-           'Use "yes" or "no".', 'red')
+    warnings.warn('Bad value in options.yaml for "concatenate". '
+                  'Use "yes" or "no".')
 
 cprint(f'Going to create CO₂ files.', 'magenta')
 # We choose 'FSDS' as the variable because those files still have the original
