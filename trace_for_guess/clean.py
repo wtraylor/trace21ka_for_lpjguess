@@ -14,7 +14,7 @@ def confirm(prompt, filelist):
     """Prompt the user for confirmation."""
     while True:
         cprint(prompt, 'green')
-        cprint('(y)es, (n)o, (l)ist files, or (q)uit.', 'green')
+        print('(y)es, (n)o, (l)ist files, or (q)uit.', 'green')
         answer = input('')
         if answer in 'yY':
             return True
@@ -27,7 +27,7 @@ def confirm(prompt, filelist):
             cprint('User canceled cleaning.', 'red')
             sys.exit(0)
         else:
-            cprint('Please enter y, n, l, or q.', 'green')
+            cprint('Please enter y, n, l, or q.', 'red')
 
 
 dirs = yaml.load(open('options.yaml'))['directories']
