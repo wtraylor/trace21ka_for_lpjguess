@@ -21,8 +21,6 @@ def cat_files(filelist, out_file):
     Raises:
         FileNotFoundError: A file in `filenames` wasn’t found.
         RuntimeError: The command `ncrcat` is not in the PATH.
-        RuntimeError: The command `ncrcat` produced an error or the output
-            file wasn’t created.
     """
     for f in filelist:
         if not os.path.isfile(f):
@@ -40,8 +38,6 @@ def cat_files(filelist, out_file):
                 cprint(f"Removing file '{f}'.", 'red')
                 os.remove(out_file)
         raise
-    if not os.path.isfile(out_file):
-        raise RuntimeError('The command `ncrcat` didn’t produce an output '
-                           'file.')
+    assert os.path.isfile(out_file)
     cprint(f"Created file '{out_file}'.", 'green')
     return out_file
