@@ -70,6 +70,6 @@ def create_co2_files(trace_files, out_dir):
         raise
     for f in co2_files.values():
         assert os.path.isfile(f)
-    cprint('Successfully created CO₃ file:', 'green')
+    cprint('Successfully created CO₂ file:', 'green')
     for f in co2_files.values():
         cprint('\t' + f, 'green')
