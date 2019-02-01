@@ -57,7 +57,13 @@ def convert_time_unit(trace_file, out_file):
         # Now the calendar is set correctly to an absolute format. However,
         # LPJ-GUESS needs it relative. That’s why we copy the file with the CDO
         # flag '-r', which converts an absolute time axis to a relative one.
-        subprocess.run(['cdo', '-r', 'copy', tmp_file, out_file], check=True)
+        # We also change the reference time and calendar in the same pipe
+        # because e.g. NCO and XArray cannot read time units with very high
+        # reference times (e.g. “days since days since 21601-1-15 00:00:00”).
+        # However, “months since 1-1-15 00:00:00” seems to work fine.
+        subprocess.run(['cdo', '-r', 'copy',
+                        '-setreftime,1-1-15,00:00:00,months', tmp_file,
+                        out_file], check=True)
         assert(os.path.isfile(out_file))
         os.remove(tmp_file)
     except Exception:
