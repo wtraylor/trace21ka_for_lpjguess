@@ -59,6 +59,7 @@ def convert_time_unit(trace_file, out_file):
         # flag '-r', which converts an absolute time axis to a relative one.
         subprocess.run(['cdo', '-r', 'copy', tmp_file, out_file], check=True)
         assert(os.path.isfile(out_file))
+        os.remove(tmp_file)
     except Exception:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
