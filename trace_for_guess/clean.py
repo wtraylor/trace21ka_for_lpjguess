@@ -37,8 +37,8 @@ out_dir = dirs['output']
 
 extracted_files = glob.glob(os.path.join(heap_input, '**'))
 if extracted_files:
-    if confirm('Do you want to delete all extracted input files in the heap?',
-               extracted_files):
+    if confirm('Do you want to delete all extracted input files in the heap? '
+               '(Usually not necessary.)', extracted_files):
         for f in extracted_files:
             cprint(f"Deleting '{f}''", 'yellow')
             os.remove(f)

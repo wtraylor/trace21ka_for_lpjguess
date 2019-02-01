@@ -105,7 +105,8 @@ Be careful not to keep other files in your "heap" or "output" directory since th
 
   - Run `make create_environment`. This will create a local Conda environment for this little project in the subdirectory `conda_environment` and install all dependencies.
 
-  - Then you can run the actual script: `make run`. If you encounter problems or need to interrupt (`Ctrl+C`) the script, you can restart it again. But if you change something in `options.yaml`, you should probably run `make clean` to start from scratch again!
+  - Then you can run the actual script: `make run`. If you encounter problems or need to interrupt (`Ctrl+C`) the script, you can simply restart it again.
+  But if you change something in `options.yaml`, you probably have to run `make clean` to start from scratch again!
 
   - When you are done, you can delete the environment with `make delete_environment` and clean up the files with `make clean`.
 
