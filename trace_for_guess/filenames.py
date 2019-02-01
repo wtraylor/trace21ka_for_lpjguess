@@ -1,7 +1,8 @@
 import os
 import re
 
-from trace_for_guess.netcdf_metadata import get_metadata_from_trace_file
+from trace_for_guess.netcdf_metadata import (get_metadata_from_trace_file,
+                                             get_metadata_from_trace_files)
 
 
 def get_cru_filenames():
@@ -187,26 +188,14 @@ def derive_new_concat_trace_name(trace_filelist):
 
     Returns:
         String with new base filename.
-
-    Raises:
-        FileNotFoundError: If a file in `trace_filelist` doesn’t exist.
-        ValueError: If the variables of the files differ.
     """
-    var = str()
-    first_year = 9999999999999999999
-    last_year = 0
-    for f in trace_filelist:
-        if not os.path.isfile(f):
-            raise FileNotFoundError(f"Could not find TraCE file '{f}'.")
-        metadata = get_metadata_from_trace_file(f)
-        first_year = min(first_year, metadata['first_year'])
-        last_year = max(last_year, metadata['last_year'])
-        v = metadata['variable']
-        if not var:
-            var = v
-        elif var != v:
-            raise ValueError(
-                f"The variable in file '{f}' is '{v}'. This is different from "
-                f"the other files, which have variable '{var}'."
-            )
+    metadata = get_metadata_from_trace_files(trace_filelist)
+    var = metadata['variable']
+    first_year = metadata['first_year']
+    last_year = metadata['last_year']
     return f'trace_{var}_{first_year}-{last_year}.nc'
+
+
+def get_co2_filename(first_year, last_year):
+    """Compose a basename for a CO₂ file."""
+    return f'trace_CO2_{first_year}-{last_year}.txt'

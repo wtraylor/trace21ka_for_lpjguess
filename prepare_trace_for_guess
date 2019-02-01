@@ -22,7 +22,7 @@ from trace_for_guess.add_precc_precl import add_precc_and_precl_to_prect
 from trace_for_guess.aggregate_modern_trace import aggregate_modern_trace
 from trace_for_guess.aggregate_monthly_means import aggregate_monthly_means
 from trace_for_guess.calculate_bias import calculate_bias
-from trace_for_guess.co2 import create_co2_file
+from trace_for_guess.co2 import create_co2_files
 from trace_for_guess.compress import compress_and_chunk
 from trace_for_guess.concatenate import cat_files
 from trace_for_guess.convert_time_unit import convert_time_unit
@@ -250,6 +250,11 @@ if opts['concatenate'] == 'yes':
 elif opts['concatenate'] != 'no':
     cprint('Warning: Bad value in options.yaml for "concatenate". '
            'Use "yes" or "no".', 'red')
+
+cprint(f'Going to create CO₂ files.', 'magenta')
+# We choose 'FSDS' as the variable because those files still have the original
+# TraCE "co2vmr" variable.
+create_co2_files(output_files['FSDS'], out_dir, opts['concatenate'] == 'yes')
 
 cprint(f'Creating LPJ-GUESS gridlist file.', 'magenta')
 # TODO: Use an output file for the gridlist since it must be the reference for

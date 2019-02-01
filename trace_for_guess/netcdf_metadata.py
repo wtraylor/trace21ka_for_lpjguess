@@ -41,6 +41,41 @@ def get_metadata_from_trace_file(trace_file):
             'last_year': int(time_range[1]),
             'variable': var}
 
+def get_metadata_from_trace_files(trace_filelist):
+    """Get time range and variable from a list of TraCE files.
+
+    Args:
+        trace_file: An existing TraCE NetCDF file.
+
+    Returns:
+        A dictionary with the header information of interest: first_year,
+        last_year, variable
+
+    Raises:
+        FileNotFoundError: If a file in `trace_filelist` doesn’t exist.
+        ValueError: If the variables of the files differ.
+    """
+    var = str()
+    first_year = 9999999999999999999
+    last_year = -9999999999999999999
+    for f in trace_filelist:
+        if not os.path.isfile(f):
+            raise FileNotFoundError(f"Could not find TraCE file '{f}'.")
+        metadata = get_metadata_from_trace_file(f)
+        first_year = min(first_year, metadata['first_year'])
+        last_year = max(last_year, metadata['last_year'])
+        v = metadata['variable']
+        if not var:
+            var = v
+        elif var != v:
+            raise ValueError(
+                f"The variable in file '{f}' is '{v}'. This is different from "
+                f"the other files, which have variable '{var}'."
+            )
+    return {'first_year': first_year,
+            'last_year': last_year,
+            'variable': var}
+
 
 def set_attributes(da, var):
     """Set NetCDF attributes for XArray object to values that LPJ-GUESS expects.
