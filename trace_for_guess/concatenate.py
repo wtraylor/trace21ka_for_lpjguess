@@ -29,7 +29,9 @@ def cat_files(filelist, out_file):
         return out_file
     if shutil.which("ncrcat") is None:
         raise RuntimeError('The command `ncrcat` could not be found.')
-    cprint(f"Concatenating files {filelist} to '{out_file}'...", 'yellow')
+    cprint('Concatenating files:', 'yellow')
+    for f in filelist:
+        cprint('\t' + f, 'yellow')
     try:
         subprocess.run(['ncrcat'] + filelist + [out_file], check=True)
     except Exception:
