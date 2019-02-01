@@ -11,14 +11,6 @@ from trace_for_guess.netcdf_metadata import (get_metadata_from_trace_file,
 from trace_for_guess.skip import skip
 
 
-def year_from_date(date):
-    """Extract the year from the "%Y%m%d.%f"-formatted floating point date."""
-    s = str(date)
-    # Drop the last 6 digits ('MMDD.0').
-    s = s[:-6]
-    return int(s)
-
-
 def get_co2_values(trace_file):
     """Get average CO₂ values per year from TraCE-21ka file.
 
