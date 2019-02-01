@@ -28,7 +28,8 @@ from trace_for_guess.concatenate import cat_files
 from trace_for_guess.convert_time_unit import convert_time_unit
 from trace_for_guess.crop import crop_file, crop_file_list
 from trace_for_guess.debias import debias_trace_file
-from trace_for_guess.filenames import (derive_new_trace_name,
+from trace_for_guess.filenames import (derive_new_concat_trace_name,
+                                       derive_new_trace_name,
                                        get_cru_filenames, get_crujra_filenames,
                                        get_modern_trace_filename,
                                        get_trace_filenames)
@@ -243,8 +244,9 @@ for var in trace_files:
 if opts['concatenate'] == 'yes':
     cprint(f'Joining output into monolithic files.', 'magenta')
     for var in output_files:
+        concat_filename = derive_new_concat_trace_name(output_files[var])
         cat_files(output_files[var],
-                  os.path.join(out_dir, f'monolithic_{var}.nc'))
+                  os.path.join(out_dir, concat_filename))
 elif opts['concatenate'] != 'no':
     cprint('Warning: Bad value in options.yaml for "concatenate". '
            'Use "yes" or "no".', 'red')

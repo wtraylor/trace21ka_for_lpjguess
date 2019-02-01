@@ -177,3 +177,36 @@ def derive_new_trace_name(trace_file):
     var = metadata['variable']
     name = f'trace_{var}_{first_year}-{last_year}.nc'
     return name
+
+
+def derive_new_concat_trace_name(trace_filelist):
+    """Compose a new basename for the concatenation of many TraCE files.
+
+    Args:
+        trace_filelist: List of TraCE file paths.
+
+    Returns:
+        String with new base filename.
+
+    Raises:
+        FileNotFoundError: If a file in `trace_filelist` doesn’t exist.
+        ValueError: If the variables of the files differ.
+    """
+    var = str()
+    first_year = 9999999999999999999
+    last_year = 0
+    for f in trace_filelist:
+        if not os.path.isfile(f):
+            raise FileNotFoundError(f"Could not find TraCE file '{f}'.")
+        metadata = get_metadata_from_trace_file(f)
+        first_year = min(first_year, metadata['first_year'])
+        last_year = max(last_year, metadata['last_year'])
+        v = metadata['variable']
+        if not var:
+            var = v
+        elif var != v:
+            raise ValueError(
+                f"The variable in file '{f}' is '{v}'. This is different from "
+                f"the other files, which have variable '{var}'."
+            )
+    return f'trace_{var}_{first_year}-{last_year}.nc'
