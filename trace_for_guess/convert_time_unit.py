@@ -60,9 +60,10 @@ def convert_time_unit(trace_file, out_file):
         # We also change the reference time and calendar in the same pipe
         # because e.g. NCO and XArray cannot read time units with very high
         # reference times (e.g. “days since days since 21601-1-15 00:00:00”).
-        # However, “months since 1-1-15 00:00:00” seems to work fine.
+        # However, “days since 1-1-15 00:00:00” seems to work fine.
+        # Note that LPJ-GUESS cannot handle "months since ...".
         subprocess.run(['cdo', '-r', 'copy',
-                        '-setreftime,1-1-15,00:00:00,months', tmp_file,
+                        '-setreftime,1-1-15,00:00:00,days', tmp_file,
                         out_file], check=True)
         assert(os.path.isfile(out_file))
         os.remove(tmp_file)
