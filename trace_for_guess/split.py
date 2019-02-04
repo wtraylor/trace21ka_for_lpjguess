@@ -50,7 +50,9 @@ def split_file(filename, out_dir):
     if shutil.which("cdo") is None:
         raise RuntimeError("Executable `cdo` not found.")
     try:
-        subprocess.run(["cdo", "splitsel,1200", filename, stub_path],
+        years = 100
+        timesteps = 12 * years
+        subprocess.run(['cdo', f'splitsel,{timesteps}', filename, stub_path],
                        check=True)
     except Exception:
         for f in glob(stub_path + '*'):
