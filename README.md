@@ -142,16 +142,16 @@ param "file_ndep"     (str "")
 
 param "file_co2"     (str "/data/co2.txt")
 
-param "file_temp"     (str "")
+param "file_temp"     (str "/data/trace_TREFHT.nc")
 param "variable_temp" (str "TREFHT")
 
-param "file_insol"      (str "")
+param "file_insol"      (str "/data/trace_FSDS.nc")
 param "variable_insol" (str "FSDS")
 
-param "file_prec"     (str "")
+param "file_prec"     (str "/data/trace_PRECT.nc")
 param "variable_prec" (str "PRECT")
 
-param "file_wetdays"     (str "")
+param "file_wetdays"     (str "/data/trace_WET.nc")
 param "variable_wetdays" (str "wet_days")
 
 ! The following parameters need to be declared, but left empty.
