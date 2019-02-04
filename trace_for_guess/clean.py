@@ -14,7 +14,7 @@ def confirm(prompt, filelist):
     """Prompt the user for confirmation."""
     while True:
         cprint(prompt, 'green')
-        print('(y)es, (n)o, (l)ist files, or (q)uit.', 'green')
+        print('(y)es, (n)o, (l)ist files, or (q)uit.')
         answer = input('')
         if answer in 'yY':
             return True
