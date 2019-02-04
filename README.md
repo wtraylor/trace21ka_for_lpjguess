@@ -74,6 +74,17 @@ Here is an overview of the procedure:
                   \--------/
 ```
 
+### Wet Days
+
+### Time Unit
+
+### Limitations
+
+- Paleo-coastlines are currently not taken into account. The resulting valid grid cells cover only the land area from the CRU dataset.
+
+- The time range of the output does not match exactly the years specified in `options.yaml`, but is aligned with the time ranges of the original TraCE files (usually 400-years steps).
+If you need finer control, you can run the output file through CDO or NCO. To select for instance the years 56 to 100 (i.e. 21944 to 21900 years BP) run `cdo selyear,56/100 in.nc out.nc`.
+
 Prerequisites
 -------------
 
