@@ -1,5 +1,4 @@
 import os
-import re
 import shutil
 import subprocess
 
@@ -41,6 +40,7 @@ def get_metadata_from_trace_file(trace_file):
     return {'first_year': int(time_range[0]),
             'last_year': int(time_range[1]),
             'variable': var}
+
 
 def get_metadata_from_trace_files(trace_filelist):
     """Get time range and variable from a list of TraCE files.
