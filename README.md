@@ -143,6 +143,7 @@ param "variable_prec" (str "PRECT")
 param "file_wetdays"     (str "")
 param "variable_wetdays" (str "wet_days")
 
+! The following parameters need to be declared, but left empty.
 param "file_min_temp"      (str "")
 param "variable_min_temp"  (str "min_temp")
 param "file_max_temp"      (str "")
