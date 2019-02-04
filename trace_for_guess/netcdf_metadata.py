@@ -32,6 +32,7 @@ def get_metadata_from_trace_file(trace_file):
         check=True, capture_output=True, encoding='utf-8'
     ).stdout
     time_range = re.findall(r' (\d+)-\d\d-\d\d', stdout)
+    assert len(time_range) == 2, f'file={trace_file}, stdout={stdout}'
     del stdout
     # Get variable name:
     stdout = subprocess.run(['cdo', 'showname', trace_file],
