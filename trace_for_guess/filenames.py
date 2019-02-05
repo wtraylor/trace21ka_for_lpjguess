@@ -176,7 +176,7 @@ def derive_new_trace_name(trace_file):
     first_year = metadata['first_year']
     last_year = metadata['last_year']
     var = metadata['variable']
-    name = f'trace_{var}_{first_year}-{last_year}.nc'
+    name = f'trace_{var:05}_{first_year:05}-{last_year:05}.nc'
     return name
 
 
@@ -193,9 +193,9 @@ def derive_new_concat_trace_name(trace_filelist):
     var = metadata['variable']
     first_year = metadata['first_year']
     last_year = metadata['last_year']
-    return f'trace_{var}_{first_year}-{last_year}.nc'
+    return f'trace_{var:05}_{first_year:05}-{last_year:05}.nc'
 
 
 def get_co2_filename(first_year, last_year):
     """Compose a basename for a CO₂ file."""
-    return f'trace_CO2_{first_year}-{last_year}.txt'
+    return f'trace_CO2_{first_year:05}-{last_year:05}.txt'
