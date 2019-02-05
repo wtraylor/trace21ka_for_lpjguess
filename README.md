@@ -74,6 +74,39 @@ Here is an overview of the procedure:
                   \--------/
 ```
 
+### Precipitation
+
+The TraCE-21ka dataset provides two precipitation variables from the atmosphere submodel `CAM` from the CCSM3 model:
+
+- `PRECC`: Convective precipitation rate (liquid + ice)
+- `PRECL`: Large-scale (stable) precipitation rate (liquid + ice)
+
+We are interested in the _total_ precipitation `PRECT`, which is the sum of `PRECC` and `PRECL`.
+`PRECT` is automatically calculated in this script.
+
+The TraCE-21ka precipitation files come with the precipitation unit m/s.
+This is the water flux of the CAM model.
+
+LPJ-GUESS expects the precipitation unit kg/m²/s (standard name `precipitation_flux`).
+We convert from m/s to kg/m²/s dividing by 1000, since water has a density of $`\rho = 1 kg/l = 1000 kg/m^3`$:
+
+```math
+1 \frac{kg}{s*m^2}
+= \frac{1000}{1000} \frac{m*kg}{s*m^3}
+= 10^{-3} \frac{m}{s} * \rho
+```
+
+Compare also this forum thread: <https://bb.cgd.ucar.edu/precipitation-units>
+
+The CRU-TS dataset comes with precipiation in mm/month. It converts as follows ($`d`$ is the number of days in the month):
+
+```math
+1 \frac{kg}{s*m^2}
+= \rho^{-1} \frac{m}{s}
+= \frac{1}{\rho * d*24*60*60} \frac{mm}{month}
+= \frac{1}{1000 * d*24*60*60} \frac{mm}{month}
+```
+
 ### Wet Days
 
 ### Time Unit

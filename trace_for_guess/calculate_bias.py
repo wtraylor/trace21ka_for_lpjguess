@@ -6,6 +6,14 @@ from termcolor import cprint
 from trace_for_guess.skip import skip
 
 
+def monthly_precip_to_flux(data_array):
+    """Convert precipitation from mm/month to kg/m²/s."""
+    # TODO Take month lengths into account!
+    days_per_month = 30
+    seconds_per_month = days_per_month * 24 * 60 * 60
+    return data_array / (1000 * seconds_per_month)
+
+
 def celsius_to_kelvin(x):
     """Convert from degrees Celsius to Kelvin."""
     return x + 273.15
@@ -56,8 +64,9 @@ def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
         if trace_var == "TREFHT":
             bias = trace[trace_var] - celsius_to_kelvin(cru[trace_var])
         elif trace_var == "PRECT":
-            # TODO Rename precipitation variable
-            bias = trace[trace_var] / cru[trace_var]
+            # The CRU precipitation is in mm/month.
+            # The TraCE precipitation is in kg/m²/s
+            bias = trace[trace_var] / monthly_precip_to_flux(cru[trace_var])
         else:
             raise NotImplementedError("Arithmetic operation not defined for"
                                       "variable '%s'." % trace_var)

@@ -56,6 +56,13 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
         subprocess.run(['ncatted', '--overwrite',
                         '--attribute', f'long_name,PRECT,m,c,"{long_name}"',
                         prect_file], check=True)
+        # Convert precipitation flux from m/s to kg/m²/s (compare README).
+        subprocess.run(['ncap2', '--overwrite', '--script=PRECT/=1000.0',
+                        prect_file, prect_file], check=True)
+        units = opts['nc_attributes']['PRECT']['units']
+        subprocess.run(['ncatted', '--overwrite',
+                        '--attribute', f'units,PRECT,m,c,"{units}"',
+                        prect_file], check=True)
     except Exception:
         if os.path.isfile(prect_file):
             cprint(f"Removing file '{prect_file}'.", 'red')

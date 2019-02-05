@@ -78,8 +78,8 @@ nc_attributes:
     units: 'degrees_east'
   PRECT:
     long_name: 'Total (convective and large-scale) precipitation rate (liq + ice)'
-    standard_name: 'precipitation_amount'
-    units: 'kg m-2'
+    standard_name: 'precipitation_flux'
+    units: 'kg m-2 s-1'
   FSDS:
     long_name: 'Mean daily surface incident shortwave radiation'
     standard_name: 'surface_downwelling_shortwave_flux'
