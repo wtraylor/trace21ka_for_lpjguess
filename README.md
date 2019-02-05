@@ -78,6 +78,17 @@ Here is an overview of the procedure:
 
 ### Time Unit
 
+The default unit of the `time` axis in the TraCE-21ka files is “kaBP” (cal. years before present, i.e. before 1950).
+That is not standard and cannot be parsed by NCO, CDO, and XArray.
+
+Luckily, TraCE files contain a function `date()`, which converts kaBP to an absolute date with 22 kaBP (the beginning of the TraCE simulation) as the reference time.
+A year of, say, 100 thus corresponds to 21,900 years BP.
+The `date()` function is used to overwrite the original `time` dimension.
+
+Subsequently, the `time` dimension is converted to a relative format ("months since 1-1-15") so that a CDO commands work properly.
+
+Finally, the unit is converted to "days since 1-1-15" because LPJ-GUESS cannot parse "months" as time steps.
+
 ### Limitations
 
 - Paleo-coastlines are currently not taken into account. The resulting valid grid cells cover only the land area from the CRU dataset.
