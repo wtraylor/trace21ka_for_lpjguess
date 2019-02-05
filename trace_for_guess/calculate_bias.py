@@ -6,6 +6,11 @@ from termcolor import cprint
 from trace_for_guess.skip import skip
 
 
+def celsius_to_kelvin(x):
+    """Convert from degrees Celsius to Kelvin."""
+    return x + 273.15
+
+
 def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
     """Create a file with the monthly bias of TraCE compared to the CRUNCEP data.
 
@@ -49,7 +54,7 @@ def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
         # Rename the variable in the CRU file to the TraCE variable name.
         cru = cru.rename({cru_var: trace_var})
         if trace_var == "TREFHT":
-            bias = trace[trace_var] - cru[trace_var]
+            bias = trace[trace_var] - celsius_to_kelvin(cru[trace_var])
         elif trace_var == "PRECT":
             # TODO Rename precipitation variable
             bias = trace[trace_var] / cru[trace_var]
