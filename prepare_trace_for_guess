@@ -26,7 +26,8 @@ from trace_for_guess.calculate_bias import calculate_bias
 from trace_for_guess.co2 import create_co2_files
 from trace_for_guess.compress import compress_and_chunk
 from trace_for_guess.concatenate import cat_files
-from trace_for_guess.convert_time_unit import convert_time_unit
+from trace_for_guess.convert_time_unit import (convert_kabp_to_months,
+                                               convert_months_to_days)
 from trace_for_guess.crop import crop_file, crop_file_list
 from trace_for_guess.debias import debias_trace_file
 from trace_for_guess.filenames import (derive_new_concat_trace_name,
@@ -61,11 +62,12 @@ heap = opts['directories']['heap']  # Any intermediary files
 out_dir = opts['directories']['output']  # All output files
 heap_input = os.path.join(heap, '0_input')  # Will be searched by find_files()
 cropped_dir = os.path.join(heap, '1_cropped')
-time_unit_dir = os.path.join(heap, '2_time')
+time_unit_dir = os.path.join(heap, '2_time')  # unit 'months since'
 split_dir = os.path.join(heap, '3_split')
 rescaled_dir = os.path.join(heap, '4_rescaled')
 debiased_dir = os.path.join(heap, '5_debiased')
 wet_days_dir = os.path.join(heap, '6_wet_days')
+final_time_dir = os.path.join(heap, '7_final_time')  # unit 'days since'
 
 if not os.path.isdir(heap):
     cprint(f"Heap directory '{heap}' does not exist yet. I will create it.",
@@ -212,33 +214,39 @@ for var in trace_files:
     for f in trace_files[var]:
         # In order for `cdo splitsel` to work, the time unit of the TraCE files
         # must be converted from kaBP to a standard calendar.
-        f = convert_time_unit(f, os.path.join(time_unit_dir,
-                                              os.path.basename(f)))
+        f = convert_kabp_to_months(f, os.path.join(time_unit_dir,
+                                                   os.path.basename(f)))
         split_trace_files[var] += split_file(filename=f, out_dir=split_dir)
     cprint(f"Going to rescale and debias TraCE files of variable '{var}'.",
            'magenta')
     for f in split_trace_files[var]:
+        basename = os.path.basename(f)
         f = rescale_file(in_file=f,
                          out_file=os.path.join(rescaled_dir,
                                                derive_new_trace_name(f)),
                          template_file=regrid_template_file,
                          alg=opts['regrid_algorithm'])
         if var in bias_files:
-            f = debias_trace_file(trace_file=f,
-                                  bias_file=bias_files[var],
-                                  out_file=os.path.join(debiased_dir,
-                                                        os.path.basename(f)))
+            f = debias_trace_file(
+                trace_file=f,
+                bias_file=bias_files[var],
+                out_file=os.path.join(debiased_dir, basename)
+            )
         if var == 'PRECT':
-            wet_basename = re.sub('PRECT', 'WET', os.path.basename(f))
+            wet_basename = re.sub('PRECT', 'WET', basename)
             wet_file = create_wet_days_file(
                 f, prec_std_file, os.path.join(wet_days_dir, wet_basename)
             )
+            wet_file = convert_months_to_days(
+                wet_file, os.path.join(final_time_dir, wet_basename)
+            )
             wet_file = compress_and_chunk(
-                wet_file, os.path.join(out_dir, os.path.basename(wet_file))
+                wet_file, os.path.join(out_dir, wet_basename)
             )
             set_metadata(wet_file)
             output_files['WET'] += [wet_file]
-        f = compress_and_chunk(f, os.path.join(out_dir, os.path.basename(f)))
+        f = convert_months_to_days(f, os.path.join(final_time_dir, basename))
+        f = compress_and_chunk(f, os.path.join(out_dir, basename))
         output_files[var] += [f]
         set_metadata(f)
 

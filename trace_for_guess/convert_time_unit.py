@@ -7,8 +7,48 @@ from termcolor import cprint
 from trace_for_guess.skip import skip
 
 
-def convert_time_unit(trace_file, out_file):
-    """Convert kaBP time unit to a format readable by LPJ-GUESS.
+def convert_months_to_days(trace_file, out_file):
+    """Convert time unit from 'months since' to 'days since'.
+
+    Args:
+        trace_file: File path to TraCE-21ka file with a relative time unit.
+        out_file: Path to output file.
+
+    Returns:
+        The output file (`out_file`).
+
+    Raises:
+        FileNotFoundError: If `trace_file` does not exist.
+        RuntimeError: If one of the commands cannot be found in the PATH.
+    """
+    if not os.path.isfile(trace_file):
+        raise FileNotFoundError(f"Could not find TraCE file '{trace_file}'.")
+    if skip(trace_file, out_file):
+        return out_file
+    cprint(f"Converting time unit for LPJ-GUESS in TraCE file '{trace_file}'.",
+           'yellow')
+    if shutil.which('cdo') is None:
+        raise RuntimeError('Executable `cdo` not found.')
+    out_dir = os.path.dirname(out_file)
+    if not os.path.isdir(out_dir):
+        cprint(f"Heap directory '{out_dir}' does not exist yet. I will create "
+               "it.", 'yellow')
+        os.makedirs(out_dir)
+    try:
+        subprocess.run(['cdo', 'settunits,days', trace_file, out_file],
+                       check=True)
+    except Exception:
+        if os.path.isfile(out_file):
+            cprint(f"Removing file '{out_file}'.", 'red')
+            os.remove(trace_file)
+        raise
+    assert os.path.isfile(out_file)
+    cprint(f"Successfully created file: '{out_file}'", 'green')
+    return out_file
+
+
+def convert_kabp_to_months(trace_file, out_file):
+    """Convert the default kaBP time unit to 'months since 1-1-15'.
 
     Args:
         trace_file: File path to TraCE-21ka file with kaBP unit.
