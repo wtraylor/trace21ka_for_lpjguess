@@ -14,6 +14,14 @@ from trace_for_guess.skip import skip
 NODATA = 999999999
 
 
+def flux_to_monthly_precip(data_array):
+    """Convert precipitation from kg/m²/s to mm/month."""
+    # TODO Take month lengths into account!
+    days_per_month = 30
+    seconds_per_month = days_per_month * 24 * 60 * 60
+    return data_array * (1000 * seconds_per_month)
+
+
 def get_gamma_cdf(x, xmean, xstd):
     """Calculate cumulative density function of gamma distribution.
 
@@ -73,7 +81,7 @@ def get_wet_days_array(prect, prec_std):
 
     Args:
         prect: xarray dataarray of a PRECT TraCE file with monthly
-            precipitation.
+            precipitation (mm/month).
         prec_std: xarray dataarray with monthly standard deviation of daily
             modern precipitation. The dataset has 12 values (one for each
             month) per grid cell.
@@ -138,6 +146,7 @@ def create_wet_days_file(prect_file, prec_std_file, out_file):
                 raise ValueError("File does not contain total precipitation"
                                  f"variable 'PRECT': '{prect_file}'.")
             da = xr.full_like(trace['PRECT'], NODATA, dtype='int32')
+            trace['PRECT'] = flux_to_monthly_precip(trace['PRECT'])
             da.values = get_wet_days_array(trace['PRECT'], std)
             set_attributes(da, "wet_days")
             da.attrs['_FillValue'] = NODATA
