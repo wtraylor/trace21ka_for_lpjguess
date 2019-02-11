@@ -122,6 +122,33 @@ Subsequently, the `time` dimension is converted to a relative format ("months si
 
 Finally, the unit is converted to "days since 1-1-15" because LPJ-GUESS cannot parse "months" as time steps.
 
+### Bias Calculations
+
+Bias is calculated for each individual grid cell in the final resolution and for each month of the year.
+The modern TraCE values in 1900–1990 CE are aggregated to 12 values with the monthly means over the time period in the study area.
+The same is done with the CRU data.
+
+Be $`t`$ the value for one month and one grid cell in the aggregated modern TraCE data.
+Be $`c`$ the corresponding value from the CRU dataset.
+The goal is to derive the debiased value $`x'`$ for each (biased) value $`x`$ in the regridded TraCE dataset.
+As an intermediary step, a bias map is created with values $`b`$ for all grid cells and all (12) months.
+
+#### Temperature
+For temperature, the CRU value $`c`$ is first converted from degrees Celsius to Kelvin.
+
+```math
+b = t - c
+x' = x + b
+```
+
+#### Precipitation
+For precipitation, the CRU value is first converted from mm/month to a flux in kg/m²/s.
+
+```math
+b = t / c
+x' = x * b
+```
+
 ### Limitations
 
 - Paleo-coastlines are currently not taken into account. The resulting valid grid cells cover only the land area from the CRU dataset.
