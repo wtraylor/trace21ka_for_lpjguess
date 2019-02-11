@@ -125,8 +125,9 @@ for var in ['pre', 'tmp', 'wet']:
     files_with_var = [f for f in cru_files if var in f]
     cat = cat_files(filelist=files_with_var,
                     out_file=os.path.join(heap, '%s_cat.nc' % var))
+    cropped = crop_file(cat, os.path.join(heap, f'{var}_crop.nc'), extent)
     aggregated = os.path.join(heap, '%s_mean.nc' % var)
-    cru_mean_files[var] = aggregate_monthly_means(in_file=cat,
+    cru_mean_files[var] = aggregate_monthly_means(in_file=cropped,
                                                   out_file=aggregated)
     # NOTE: We assume that the CRU files are in the desired resolution.
 
