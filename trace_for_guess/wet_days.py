@@ -27,8 +27,8 @@ def get_gamma_cdf(x, xmean, xstd):
 
     Args:
         x: TODO
-        xmean: Monthly mean precipitation.
-        xstd: Standard deviation of precipitation.
+        xmean: Monthly mean precipitation [mm/day].
+        xstd: Standard deviation of daily precipitation [mm].
 
     Returns:
         Cumulative density of gamma distribution.

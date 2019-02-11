@@ -109,6 +109,43 @@ The CRU-TS dataset comes with precipiation in mm/month. It converts as follows (
 
 ### Wet Days
 
+Wet days are calculated following [Werner et al. 2018](https://www.earth-surf-dynam.net/6/829/2018/) (Appendix A).
+
+The daily precipitation in a month is described with a [gamma distribution](https://en.wikipedia.org/wiki/Gamma_distribution) (Γ) with the parameters *shape* (α) and *rate* (β).
+See [Geng et al. 1986](http://www.sciencedirect.com/science/article/pii/0168192386900146) for how gamma distributions are used to describe precipitation amounts.
+
+Be $`x_{mean}`$ the mean precipitation (mm/day) of the month in question.
+Be $`x_{std}`$ the standard deviation of daily precipitation amount in the month.
+
+```math
+\alpha = (x_{mean} / x_{std})^2
+\beta = x_{std}^2 / x_{mean}
+```
+
+$`x_{mean}`$ is given for each month and grid cell by the bias-corrected precipitation of the TraCE-21ka dataset.
+Precipitation flux (kg/m²/s) was converted to amount (mm/month) as described in Section “Precipitation” above.
+
+$`x_{std}`$ is not given by the TraCE-21ka data.
+Therefore it is assumed to be constant over time and derived from the modern daily precipitation in the CRU-JRA dataset.
+From the CRU-JRA dataset only the years from 1958 to 1990 are used because TraCE-21ka only covers the time until 1990 CE.
+
+```math
+F(x \alpha \beta) = \frac{1}{\beta^\alpha \Gamma(\alpha)} \int_0^x t^{\alpha-1} \exp(-t/b) dt
+```
+
+F is the probability that an observation will fall in the interval [0,x].
+In our case, the observation is the amount of rain in a day in mm.
+
+In order to derive the number of wet days ($`n_{wet}`$), a threshold value $`x_t`$ in mm/day needs to be defined: a day with at least this amount of precipitation is called a “wet day”.
+The threshold value can be defined in `options.yaml` under `precip_threshold`.
+
+The probability $`F(x_t \alpha \beta)`$ tells us how likely it is that any given day in the month is “dry”.
+The following term gives us the the _wet_ days in a month of $`n_{day}`$ days:
+
+```math
+n_{wet} = n_{day} (1 - F(x_t \alpha \beta))
+```
+
 ### Time Unit
 
 The default unit of the `time` axis in the TraCE-21ka files is “kaBP” (cal. years before present, i.e. before 1950).
