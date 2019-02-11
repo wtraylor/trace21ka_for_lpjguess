@@ -264,7 +264,6 @@ cprint(f'Going to create CO₂ files.', 'magenta')
 # We choose 'FSDS' as the variable because those files still have the original
 # TraCE "co2vmr" variable.
 co2_input = output_files['FSDS']
-print(concat_files)
 if 'FSDS' in concat_files:
     co2_input += [concat_files['FSDS']]
 create_co2_files(co2_input, out_dir)
