@@ -133,12 +133,14 @@ Be $`c`$ the corresponding value from the CRU dataset.
 The goal is to derive the debiased value $`x'`$ for each (biased) value $`x`$ in the regridded TraCE dataset.
 As an intermediary step, a bias map is created with values $`b`$ for all grid cells and all (12) months.
 
+For modern times, $`x'`$ will be very close to the corresponding $`c`$ value.
+
 #### Temperature
 For temperature, the CRU value $`c`$ is first converted from degrees Celsius to Kelvin.
 
 ```math
 b = t - c
-x' = x + b
+x' = x - b
 ```
 
 #### Precipitation
@@ -146,7 +148,7 @@ For precipitation, the CRU value is first converted from mm/month to a flux in k
 
 ```math
 b = t / c
-x' = x * b
+x' = x / b
 ```
 
 ### Limitations

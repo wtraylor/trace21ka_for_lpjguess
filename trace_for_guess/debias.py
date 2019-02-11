@@ -57,9 +57,9 @@ def debias_trace_file(trace_file, bias_file, out_file):
             bias.time.values = trace.time.values
             # Apply the bias to the TraCE data.
             if var == "TREFHT":
-                output = trace[var] + bias
+                output = trace[var] - bias
             elif var == "PRECT":
-                output = trace[var] * bias
+                output = trace[var] / bias
             else:
                 raise NotImplementedError("No bias correction defined for "
                                           "variable '%s'." % var)
