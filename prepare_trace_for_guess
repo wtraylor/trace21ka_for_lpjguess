@@ -220,10 +220,9 @@ for var in trace_files:
     cprint(f"Going to rescale and debias TraCE files of variable '{var}'.",
            'magenta')
     for f in split_trace_files[var]:
-        basename = os.path.basename(f)
+        basename = os.path.basename(derive_new_trace_name(f))
         f = rescale_file(in_file=f,
-                         out_file=os.path.join(rescaled_dir,
-                                               derive_new_trace_name(f)),
+                         out_file=os.path.join(rescaled_dir, basename),
                          template_file=regrid_template_file,
                          alg=opts['regrid_algorithm'])
         if var in bias_files:
