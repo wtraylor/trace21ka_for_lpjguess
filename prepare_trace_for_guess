@@ -107,7 +107,7 @@ regrid_template_file = unzip_files_if_needed(
 assert(os.path.isfile(regrid_template_file))
 regrid_template_file = crop_file(
     regrid_template_file,
-    os.path.join(cropped_dir, os.path.basename(regrid_template_file)),
+    os.path.join(cropped_dir, 'regrid_template_file.nc'),
     extent
 )
 
@@ -150,13 +150,13 @@ for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
     out_file = f'modern_trace_{var}.nc'
     modern_trace_files[var] = aggregate_modern_trace(
         trace_file=find_files(get_modern_trace_filename(var)),
-        out_file=os.path.join(heap, out_file)
+        out_file=os.path.join(heap_input, out_file)
     )
 # Merge PRECC and PRECL into PRECT.
 modern_trace_files['PRECT'] = add_precc_and_precl_to_prect(
     precc_file=modern_trace_files['PRECC'],
     precl_file=modern_trace_files['PRECL'],
-    prect_file=os.path.join(heap, 'modern_trace_PRECT.nc')
+    prect_file=os.path.join(heap_input, 'modern_trace_PRECT.nc')
 )
 del modern_trace_files['PRECC']
 del modern_trace_files['PRECL']
