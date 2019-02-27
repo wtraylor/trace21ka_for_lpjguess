@@ -8,3 +8,6 @@ PET0.RegridWeightGen.Log
 # Python cache
 __pycache__/
 *.pyc
+
+# Log file
+prepare_trace_for_guess.log

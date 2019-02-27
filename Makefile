@@ -66,7 +66,11 @@ create_environment:
 run:
 	@test "$$(which activate)"
 	@test "$$(which python)"
-	@source activate  $(ENV) && python 'prepare_trace_for_guess'
+	@source activate  $(ENV) && python 'prepare_trace_for_guess' | tee 'prepare_trace_for_guess.log'
+
+.PHONY: log
+log:
+	@cat 'prepare_trace_for_guess.log' | less --RAW-CONTROL-CHARS
 
 .PHONY: delete_environment
 delete_environment:

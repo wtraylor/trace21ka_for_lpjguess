@@ -229,6 +229,9 @@ Be careful not to keep other files in your "heap" or "output" directory since th
   - Then you can run the actual script: `make run`. If you encounter problems or need to interrupt (`Ctrl+C`) the script, you can simply restart it again.
   But if you change something in `options.yaml`, you probably have to run `make clean` to start from scratch again!
 
+  - Any command output is also written to a file `prepare_trace_for_guess.log`.
+  You can look at it with `make log`.
+
   - When you are done, you can delete the environment with `make delete_environment` and clean up the files with `make clean`.
 
 ### Running LPJ-GUESS

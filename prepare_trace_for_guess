@@ -15,6 +15,7 @@ import os
 import re
 import sys
 import warnings
+import socket
 
 import yaml
 from termcolor import cprint
@@ -43,6 +44,11 @@ from trace_for_guess.rescale import rescale_file
 from trace_for_guess.split import split_file
 from trace_for_guess.unzip import unzip_files_if_needed
 from trace_for_guess.wet_days import create_wet_days_file
+import datetime
+
+cprint('This is `prepare_trace_for_guess` on %s.' % socket.gethostname(),
+       'green')
+cprint(datetime.datetime.now(), 'green')
 
 if not os.path.isfile('options.yaml'):
     cprint("Couldn’t find options file in './options.yaml'.", 'red')
