@@ -63,10 +63,14 @@ create_environment:
 	@conda env list
 
 .PHONY: run
+# Note that we need to call python with the -u flag so that the output is
+# not buffered even if it’s fed into a pipe (tee). This prints the
+# (unbuffered) output to the screen *and* writes it to the log file in real
+# time.
 run:
 	@test "$$(which activate)"
 	@test "$$(which python)"
-	@source activate  $(ENV) && python 'prepare_trace_for_guess' | tee 'prepare_trace_for_guess.log'
+	@source activate  $(ENV) && python -u 'prepare_trace_for_guess' | tee 'prepare_trace_for_guess.log'
 
 .PHONY: log
 log:
