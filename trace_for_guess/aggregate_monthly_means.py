@@ -33,7 +33,7 @@ def aggregate_monthly_means(in_file, out_file):
     if skip(in_file, out_file):
         return out_file
     cprint(f"Aggregating monthly means from '{in_file}', writing to "
-           "'{out_file}'...", 'yellow')
+           f"'{out_file}'...", 'yellow')
     try:
         subprocess.run(['cdo', 'ymonmean', in_file, out_file], check=True)
     except Exception:
