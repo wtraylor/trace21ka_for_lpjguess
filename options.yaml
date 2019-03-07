@@ -12,9 +12,9 @@
 # Geographic extent of study area.
 region:
   # Longitude: 0° to 360° E
-  lon: [8, 16]
+  lon: [300, 307]
   # Latitude: -90° to +90° N
-  lat: [50, 55]
+  lat: [-12.0, -5.0]
 
 # The time range of interest in years BP. Possible values range from 22000 BP
 # to -40 BP (i.e. 1990 CE).
@@ -36,7 +36,7 @@ directories:
 # If set to 'yes', there will be smaller output files with 100 years each, but
 # LPJ-GUESS cannot natively read multiple files.
 # Valid options: 'yes' or 'no'
-concatenate: 'yes'
+concatenate: 'no'
 
 ###############################################################################
 ###############################################################################
