@@ -70,7 +70,7 @@ run:
 
 .PHONY: log
 log:
-	@cat 'prepare_trace_for_guess.log' | less --RAW-CONTROL-CHARS
+	@cat 'prepare_trace_for_guess.log' | less --RAW-CONTROL-CHARS +G
 
 .PHONY: delete_environment
 delete_environment:
