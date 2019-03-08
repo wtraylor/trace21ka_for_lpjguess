@@ -274,35 +274,16 @@ param "file_max_temp"      (str "")
 param "variable_max_temp"  (str "max_temp")
 ```
 
-Project Outline
----------------
+To Do
+-----
 
-- [x] Fix the broken time dimension! It’s all set to zero.
-- [x] Calculate monthly bias for all grid cells against modern CRUNCEP.
-- [x] Calculate `PRECT` as `PRECC + PRECL`.
-- [x] Crop TraCE data to specified region.
-- [x] Split dataset into 100 years files.
-- [x] Downscale TraCE dataset to 0.5° grid resolution.
-- [ ] Mask oceans and glaciers, based on ICE-5G?
+- [ ] Mask oceans and glaciers? Perhaps based on ICE-5G?
 - [ ] How to handle changing coast lines?
-- [x] Bias-correct all files.
-- [x] Calculate wet days, based on modern monthly wet days. Store them as `wet_days` variable in precipitation file.
-- [x] Set standard names for all NetCDF variables.
-- [ ] Use land IDs instead of lon/lat for LPJ-GUESS (for performance).
-- [x] Compress output files.
-- [x] Provide example LPJ-GUESS instruction file.
 - [ ] Switch to more recent CRU 4.02?
-- [x] Create CO₂ file.
-- [x] Create grid list file.
-- [x] How to use the many small NetCDF files in LPJ-GUESS in a transient simulation?
-- [ ] Crop time
 
-Design Questions
-----------------
+### Open Design Questions
 
 - Use land IDs or not? How much faster will LPJ-GUESS run? Land IDs have the disadvantage that you cannot easily plot the data file with standard NetCDF tools.
-
-- How are wet days calculated exactly? ⇒ Lookup in publication.
 
 - How to bias-correct radiation?
     + The radiation of TraCE-21ka shouldn’t be biased in any way because it is astronomically calculated.
