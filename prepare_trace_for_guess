@@ -1,0 +1,289 @@
+#!/usr/bin/env python
+"""Downscale and debias TraCE-21ka NetCDF files for use in LPJ-GUESS.
+
+See README.md for more details.
+
+Output colors with termcolor.cprint():
+    - magenta: section announcements
+    - yellow: status updates
+    - green: success notifications
+    - cyan: skipping something
+    - red: errors
+"""
+
+import datetime
+import os
+import re
+import socket
+import sys
+import warnings
+
+import yaml
+from termcolor import cprint
+
+from trace_for_guess.add_precc_precl import add_precc_and_precl_to_prect
+from trace_for_guess.aggregate_modern_trace import aggregate_modern_trace
+from trace_for_guess.aggregate_monthly_means import aggregate_monthly_means
+from trace_for_guess.calculate_bias import calculate_bias
+from trace_for_guess.co2 import create_co2_files
+from trace_for_guess.compress import compress_and_chunk
+from trace_for_guess.concatenate import cat_files
+from trace_for_guess.convert_time_unit import (convert_kabp_to_months,
+                                               convert_months_to_days)
+from trace_for_guess.crop import (check_region, crop_file, crop_file_list,
+                                  expand_extent)
+from trace_for_guess.debias import debias_trace_file
+from trace_for_guess.filenames import (derive_new_concat_trace_name,
+                                       derive_new_trace_name,
+                                       get_cru_filenames, get_crujra_filenames,
+                                       get_modern_trace_filename,
+                                       get_trace_filenames)
+from trace_for_guess.find_input import find_files
+from trace_for_guess.gridlist import create_gridlist
+from trace_for_guess.netcdf_metadata import set_metadata
+from trace_for_guess.prec_standard_deviation import get_prec_standard_deviation
+from trace_for_guess.rescale import rescale_file
+from trace_for_guess.split import split_file
+from trace_for_guess.unzip import unzip_files_if_needed
+from trace_for_guess.wet_days import create_wet_days_file
+
+cprint('This is `prepare_trace_for_guess` on %s.' % socket.gethostname(),
+       'green')
+cprint(datetime.datetime.now(), 'green')
+
+if not os.path.isfile('options.yaml'):
+    cprint("Couldn’t find options file in './options.yaml'.", 'red')
+    sys.exit(1)
+
+cprint("Loading options from 'options.yaml'.", 'yellow')
+opts = yaml.load(open('options.yaml'))
+extent = opts['region']['lon'] + opts['region']['lat']
+time_range = opts['time_range']
+assert isinstance(time_range, list)
+assert len(time_range) == 2
+assert isinstance(time_range[0], int) and isinstance(time_range[1], int)
+
+check_region(extent)
+
+# Directories:
+heap = opts['directories']['heap']  # Any intermediary files
+out_dir = opts['directories']['output']  # All output files
+heap_input = os.path.join(heap, '0_input')  # Will be searched by find_files()
+cropped_dir = os.path.join(heap, '1_cropped')
+time_unit_dir = os.path.join(heap, '2_time')  # unit 'months since'
+split_dir = os.path.join(heap, '3_split')
+rescaled_dir = os.path.join(heap, '4_rescaled')
+debiased_dir = os.path.join(heap, '5_debiased')
+wet_days_dir = os.path.join(heap, '6_wet_days')
+final_time_dir = os.path.join(heap, '7_final_time')  # unit 'days since'
+
+if not os.path.isdir(heap):
+    cprint(f"Heap directory '{heap}' does not exist yet. I will create it.",
+           'yellow')
+    os.makedirs(heap)
+    assert(os.path.isdir(heap))
+
+if not os.path.isdir(heap_input):
+    cprint(f"Directory '{heap_input}' does not exist yet. I will create it.",
+           'yellow')
+    os.makedirs(heap_input)
+    assert(os.path.isdir(heap_input))
+
+if not os.path.isdir(out_dir):
+    cprint(f"Output directory '{out_dir}' does not exist yet. I will create "
+           "it.", 'yellow')
+    os.makedirs(out_dir)
+    assert(os.path.isdir(out_dir))
+
+
+# Prepare CRU and CRU-JRA files ########################################
+
+
+cprint(f'Going to gather input CRU-JRA files.', 'magenta')
+# We unzip into `heap_input` so that any unzipped files are available like
+# original input files.
+regrid_template_file = unzip_files_if_needed(
+    filenames=[opts['regrid_template_file']],
+    unzip_dir=heap_input
+)[0]
+assert(os.path.isfile(regrid_template_file))
+regrid_template_file = crop_file(
+    regrid_template_file,
+    os.path.join(cropped_dir, 'regrid_template_file.nc'),
+    extent
+)
+
+crujra_files = unzip_files_if_needed(
+    filenames=get_crujra_filenames(),
+    unzip_dir=heap_input)
+cprint('Going to crop CRU-JRA files and calculate precipitation standard '
+       'deviation.', 'magenta')
+crujra_files = crop_file_list(crujra_files, cropped_dir, extent)
+prec_std_file = get_prec_standard_deviation(crujra_files,
+                                            os.path.join(heap, 'prec_std.nc'))
+
+cprint(f'Going to gather input CRU files.', 'magenta')
+cru_files = unzip_files_if_needed(
+    filenames=get_cru_filenames(),
+    unzip_dir=heap_input)
+cru_mean_files = dict()  # Aggregated CRU files with variable as key.
+cprint(f'Going to aggregate CRU files.', 'magenta')
+for var in ['pre', 'tmp', 'wet']:
+    # Filter list of all CRU files to file names containing `var`.
+    files_with_var = [f for f in cru_files if var in f]
+    cat = cat_files(filelist=files_with_var,
+                    out_file=os.path.join(heap, '%s_cat.nc' % var))
+    cropped = crop_file(cat, os.path.join(heap, f'{var}_crop.nc'), extent)
+    aggregated = os.path.join(heap, '%s_mean.nc' % var)
+    cru_mean_files[var] = aggregate_monthly_means(in_file=cropped,
+                                                  out_file=aggregated)
+    # NOTE: We assume that the CRU files are in the desired resolution.
+
+
+# Calculate Bias Files #################################################
+
+
+# Create means for modern TraCE files. We need them to calculate the bias.
+# NOTE: We calculate the means first and then add PRECC and PRECL in the
+# assumption that the order doesn’t make a difference.
+cprint(f'Going to calculate means of TraCE data from modern time.', 'magenta')
+modern_trace_files = dict()
+for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
+    out_file = f'modern_trace_{var}.nc'
+    modern_trace_files[var] = aggregate_modern_trace(
+        trace_file=find_files(get_modern_trace_filename(var)),
+        out_file=os.path.join(heap_input, out_file)
+    )
+# Merge PRECC and PRECL into PRECT.
+modern_trace_files['PRECT'] = add_precc_and_precl_to_prect(
+    precc_file=modern_trace_files['PRECC'],
+    precl_file=modern_trace_files['PRECL'],
+    prect_file=os.path.join(heap_input, 'modern_trace_PRECT.nc')
+)
+del modern_trace_files['PRECC']
+del modern_trace_files['PRECL']
+# Rescale modern TraCE files in heap/rescaled.
+for var in modern_trace_files:
+    modern_trace_files[var] = rescale_file(
+        in_file=modern_trace_files[var],
+        out_file=os.path.join(rescaled_dir,
+                              os.path.basename(modern_trace_files[var])),
+        template_file=regrid_template_file,
+        alg=opts['regrid_algorithm']
+    )
+
+# Calculate bias for all variables specified in "options.yaml".
+bias_files = dict()  # TraCE vs. CRU bias files with TraCE variable as key.
+cprint(f'Going to calculate bias TraCE vs. CRU.', 'magenta')
+for trace_var in opts['cru_vars']:
+    cru_var = opts['cru_vars'][trace_var]
+    trace_file = modern_trace_files[trace_var]
+    bias_files[trace_var] = calculate_bias(
+        trace_file=trace_file,
+        trace_var=trace_var,
+        cru_file=cru_mean_files[cru_var],
+        cru_var=cru_var,
+        bias_file=os.path.join(heap, f'bias_{trace_var}.nc')
+    )
+
+
+# Prepare TraCE-21ka Files #############################################
+
+
+# Create all PRECT files in a special directory in the "heap", which will
+# automatically be searched like an input directory.
+cprint(f'Going to calculate PRECT as PRECC + PRECL.', 'magenta')
+for prect in get_trace_filenames('PRECT', time_range):
+    precc = find_files(re.sub('PRECT', 'PRECC', prect))
+    precl = find_files(re.sub('PRECT', 'PRECL', prect))
+    add_precc_and_precl_to_prect(precc_file=precc,
+                                 precl_file=precl,
+                                 prect_file=os.path.join(heap_input, prect))
+
+# All the original TraCE-21ka files. We assume they are not zipped because they
+# come as plain NetCDF files from earthsystemgrid.org.
+trace_files = dict()  # Key is the variable, value is a list of file paths.
+for var in ['FSDS', 'PRECT', 'TREFHT']:
+    trace_files[var] = find_files(get_trace_filenames(var, time_range))
+
+# Prepare data structure to hold the final output files.
+output_files = dict()  # Key is the variable, value is a list of file paths.
+for var in trace_files:
+    output_files[var] = list()  # A list of file paths for this variable.
+output_files['WET'] = list()
+
+split_trace_files = dict()  # key=TraCE variable; value=list of files
+for var in trace_files:
+    cprint(f"Going to crop TraCE files of variable '{var}'.", 'magenta')
+    # We need to crop the TraCE files with an additional margin of at least the
+    # TraCE grid cell size because otherwise the cropped TraCE files can cover
+    # a smaller area than the cropped CRU files (which has a higher
+    # resolution).
+    trace_extent = expand_extent(extent, 4.0)
+    trace_files[var] = crop_file_list(trace_files[var], cropped_dir,
+                                      trace_extent)
+    cprint(f"Going to split TraCE files of variable '{var}'.", 'magenta')
+    split_trace_files[var] = list()
+    # In the following, `f` is always the file being processed. The path
+    # changes for every processing stage.
+    for f in trace_files[var]:
+        # In order for `cdo splitsel` to work, the time unit of the TraCE files
+        # must be converted from kaBP to a standard calendar.
+        f = convert_kabp_to_months(f, os.path.join(time_unit_dir,
+                                                   os.path.basename(f)))
+        split_trace_files[var] += split_file(filename=f, out_dir=split_dir)
+    cprint(f"Going to rescale and debias TraCE files of variable '{var}'.",
+           'magenta')
+    for f in split_trace_files[var]:
+        basename = os.path.basename(derive_new_trace_name(f))
+        f = rescale_file(in_file=f,
+                         out_file=os.path.join(rescaled_dir, basename),
+                         template_file=regrid_template_file,
+                         alg=opts['regrid_algorithm'])
+        if var in bias_files:
+            f = debias_trace_file(
+                trace_file=f,
+                bias_file=bias_files[var],
+                out_file=os.path.join(debiased_dir, basename)
+            )
+        if var == 'PRECT':
+            wet_basename = re.sub('PRECT', 'WET', basename)
+            wet_file = create_wet_days_file(
+                f, prec_std_file, os.path.join(wet_days_dir, wet_basename)
+            )
+            wet_file = convert_months_to_days(
+                wet_file, os.path.join(final_time_dir, wet_basename)
+            )
+            wet_file = compress_and_chunk(
+                wet_file, os.path.join(out_dir, wet_basename)
+            )
+            set_metadata(wet_file)
+            output_files['WET'] += [wet_file]
+        f = convert_months_to_days(f, os.path.join(final_time_dir, basename))
+        f = compress_and_chunk(f, os.path.join(out_dir, basename))
+        output_files[var] += [f]
+        set_metadata(f)
+
+concat_files = dict()  # key=TraCE variable; value=file path
+if opts['concatenate'] == 'yes':
+    cprint(f'Joining output into monolithic files.', 'magenta')
+    for var in output_files:
+        concat_filename = derive_new_concat_trace_name(output_files[var])
+        concat_files[var] = cat_files(output_files[var],
+                                      os.path.join(out_dir, concat_filename))
+elif opts['concatenate'] != 'no':
+    warnings.warn('Bad value in options.yaml for "concatenate". '
+                  'Use "yes" or "no".')
+
+cprint(f'Going to create CO₂ files.', 'magenta')
+# We choose 'FSDS' as the variable because those files still have the original
+# TraCE "co2vmr" variable.
+co2_input = output_files['FSDS']
+if 'FSDS' in concat_files:
+    co2_input += [concat_files['FSDS']]
+create_co2_files(co2_input, out_dir)
+
+cprint(f'Creating LPJ-GUESS gridlist file.', 'magenta')
+# TODO: Use an output file for the gridlist since it must be the reference for
+# NAN values.
+create_gridlist(regrid_template_file, os.path.join(out_dir, 'gridlist.txt'))

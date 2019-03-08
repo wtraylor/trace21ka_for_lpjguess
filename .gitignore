@@ -1,1 +1,13 @@
-packrat/lib*/
+/Miniconda3-latest-Linux-x86_64.sh
+/miniconda3/
+/conda_environment/
+
+# Temporary file created by `ncremap`
+PET0.RegridWeightGen.Log
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Log file
+prepare_trace_for_guess.log

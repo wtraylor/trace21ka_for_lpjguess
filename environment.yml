@@ -1,0 +1,13 @@
+name: trace_for_guess
+channels:
+  - conda-forge
+dependencies:
+  - cdo
+  - cftime
+  - nco
+  - netCDF4
+  - python=3.7
+  - pyyaml
+  - scipy
+  - termcolor
+  - xarray

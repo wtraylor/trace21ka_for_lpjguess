@@ -1,0 +1,10 @@
+# Required Python Packages
+glob
+numpy
+scipy
+shutil
+subprocess
+termcolor
+xarray
+yaml
+zipfile

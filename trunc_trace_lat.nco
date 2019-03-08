@@ -1,5 +1,0 @@
-// NCO script for TraCE-21ka NetCDF files to correct latitude values by 
-// truncating the tail of odd decimal values
-
-for(*i=0.0d; i<$lat.size; i++)
-	lat(i)=lat@first+ i * lat@resolution;

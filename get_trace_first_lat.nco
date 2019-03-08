@@ -1,5 +1,0 @@
-// NCO script to get first "clean" latitude value for TraCE-21ka file
-
-*precision=4; // precision is hardcoded here, would need to be changed in other script files too
-lat@first=trunc(lat(0) * 10^precision)/10^precision;
-print(lat@first, "%f");

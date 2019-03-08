@@ -1,0 +1,112 @@
+###############################################################################
+###############################################################################
+# USER SETTINGS
+#
+# User-defined settings for preparing TraCE-21ka paleoclimate data for
+# LPJ-GUESS
+#
+
+# Paths, either absolute or relative to the root of the Git repository.
+# ("~" for home directory and environment variables are allowed.)
+
+# Geographic extent of study area.
+region:
+  # Longitude: 0° to 360° E
+  lon: [300, 307]
+  # Latitude: -90° to +90° N
+  lat: [-12.0, -5.0]
+
+# The time range of interest in years BP. Possible values range from 22000 BP
+# to -40 BP (i.e. 1990 CE).
+time_range: [22000, 20000]
+
+directories:
+  # List of directories containing all original files: CRU, CRU-JRA-55
+  # precipitation, TraCE-21ka.
+  # For any given file, all directories will be searched recursively.
+  input:
+    - '/mnt/zathras/data/'
+    - '/mnt/zathras/research_data/'
+  # Directory for temporary files.
+  heap: "/mnt/zathras/trace_for_guess/heap"
+  # Directory for final output files.
+  output: "/mnt/zathras/trace_for_guess/output"
+
+# Whether to concatenate results into one big, monolithic file per variable.
+# If set to 'yes', there will be smaller output files with 100 years each, but
+# LPJ-GUESS cannot natively read multiple files.
+# Valid options: 'yes' or 'no'
+concatenate: 'no'
+
+###############################################################################
+###############################################################################
+# HARD-CODED SETTINGS.
+#
+# Don’t change this unless you know what you are doing.
+#
+
+# Interpolation algorithm for regridding (downscaling) the NetCDF files.
+# See here for detailed descriptions:
+# http://www.earthsystemmodeling.org/esmf_releases/public/ESMF_6_3_0rp1/ESMF_refdoc/node3.html#SECTION03020000000000000000
+regrid_algorithm: 'bilinear'
+
+# Variables in the CRU NetCDF files as they correspond to the TraCE-21ka
+# variables. The CRU files are also named like their variables.
+cru_vars:
+  PRECT: 'pre'
+  TREFHT: 'tmp'
+
+# For calculating wet days: The minimum amount of rain to count a day as “wet”.
+precip_threshold: 0.1  # [mm/day]
+
+# This file provides the reference grid resolution for downscaling TraCE files.
+# It is an arbitrarily chosen original CRU file.
+regrid_template_file: 'cru_ts4.01.1921.1930.pre.dat.nc'
+
+# NetCDF attributes as they shall appear in the output files.
+nc_attributes:
+  # TODO: cloud cover
+  # Note that the "time" dimension attributes are set in
+  # `trace_for_guess/convert_time_unit.py`.
+  lat:
+    long_name: 'latitude'
+    standard_name: 'latitude'
+    units: 'degrees_north'
+  lon:
+    long_name: 'longitude'
+    standard_name: 'longitude'
+    units: 'degrees_east'
+  PRECT:
+    long_name: 'Total (convective and large-scale) precipitation rate (liq + ice)'
+    standard_name: 'precipitation_flux'
+    units: 'kg m-2 s-1'
+  FSDS:
+    long_name: 'Mean daily surface incident shortwave radiation'
+    standard_name: 'surface_downwelling_shortwave_flux'
+    units: 'W m-2'
+  TREFHT:
+    long_name: 'Near surface air temperature at 2m'
+    standard_name: 'air_temperature'
+    units: 'K'
+  wet_days:
+    long_name: 'wet_days'
+    standard_name: 'number_of_days_with_lwe_thickness_of_precipitation_amount_above_threshold'
+    units: 'count'
+
+# The deflation level (0 bis 9) for the `ncks` command.
+# From the NCO manual 4.7.8-alpha02:
+# > Minimal deflation (dfl_lvl = 1) achieves considerable storage compression
+# > with little time penalty. Higher deflation levels require more time for
+# > compression. File sizes resulting from minimal (dfl_lvl = 1) and maximal
+# > (dfl_lvl = 9) deflation levels typically differ by less than 10% in size.
+compression_level: 1
+
+# Chunk sizes (number of elements) for each dimension.
+# See the NCO reference for more details:
+# http://nco.sourceforge.net/nco.html#Chunking
+chunks:
+  lon: 1
+  lat: 1
+  time: 1200  # = 100 years
+  # Cache for NCO chunking operation in Bytes.
+  cache: 1000000000  # = 1 GB
