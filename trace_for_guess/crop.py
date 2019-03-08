@@ -171,3 +171,80 @@ def crop_file_list(filelist, out_dir, ext):
         f'len(filelist)={len(filelist)} does not equal '\
         f'len(result_list)={len(result_list)}'
     return result_list
+
+def expand_extent(extent, margin):
+    """Make the rectangular region bigger by a given amount to all directions.
+
+    Args:
+        extent: The rectangular given as a list of [lon1, lon2, lat1, lat2].
+            Longitude in [0,360) °E and latitude in [-90,+90] °N.
+        margin: The amount to extend into all four directions. (one number)
+
+    Returns:
+        Expanded extent as a list of [lon1, lon2, lat1, lat2].
+
+    Most simple case:
+    >>> expand_extent([20, 200, -10, 10], 10)
+    [10, 210, -20, 20]
+
+    Don’t go beyond 90° North or South:
+    >>> expand_extent([20, 200, -85, 85], 10)
+    [10, 210, -90, 90]
+
+    Cover the whole globe:
+    >>> expand_extent([0, 360, -90, 90], 10)
+    [0, 360, -90, 90]
+
+    Circle around 0° longitude:
+    >>> expand_extent([0, 30, -10, 10], 10)
+    [350, 40, -20, 20]
+    >>> expand_extent([20, 355, -10, 10], 10)
+    [10, 5, -20, 20]
+
+    Special Case 1: lon1 and lon2 are so close that by expanding them, they
+    close around the whole globe.
+    >>> expand_extent([20, 15, -10, 10], 10)
+    [0, 360, -20, 20]
+
+    Special Case 2.1: lon1 and lon2 both expand around the 0°/360° boundary so
+    that they close around the whole globe.
+    >>> expand_extent([5, 359, -10, 10], 10)
+    [0, 360, -20, 20]
+
+    Special Case 2.2: Only lon2 expands beyond 360°, but then it overlaps with
+    the expanded lon1, and they close around the whole globe.
+    >>> expand_extent([11, 359, -10, 10], 10)
+    [0, 360, -20, 20]
+
+    Special Case 3: Only lon1 expands beyond 0°, but then it overlaps with the
+    expanded lon2, and they close again around the whole globe.
+    >>> expand_extent([1, 349, -10, 10], 10)
+    [0, 360, -20, 20]
+    """
+    result = list()
+    result[:] = extent
+    lon1, lon2 = extent[0:2]
+    lat1, lat2 = extent[2:4]
+    # LONGITUDE
+    if lon1 > lon2 and (lon1 - margin) < (lon2 + margin):
+        # Special Case 1
+        result[0] = 0
+        result[1] = 360
+    elif (lon1 < lon2 and lon2 + margin >= 360 and
+          lon1 - margin < (lon2 + margin) % 360):
+        # Special Case 2
+        result[0] = 0
+        result[1] = 360
+    elif (lon1 < lon2 and lon1 - margin <= 0 and
+          lon2 + margin > (lon1 - margin) % 360):
+        # Special Case 3
+        result[0] = 0
+        result[1] = 360
+    else:
+        # The normal case.
+        result[0] = (lon1 - margin) % 360
+        result[1] = (lon2 + margin) % 360
+    # LATITUDE
+    result[2] = max(-90, lat1 - margin)
+    result[3] = min(+90, lat2 + margin)
+    return result

@@ -29,7 +29,7 @@ from trace_for_guess.compress import compress_and_chunk
 from trace_for_guess.concatenate import cat_files
 from trace_for_guess.convert_time_unit import (convert_kabp_to_months,
                                                convert_months_to_days)
-from trace_for_guess.crop import crop_file, crop_file_list
+from trace_for_guess.crop import crop_file, crop_file_list, expand_extent
 from trace_for_guess.debias import debias_trace_file
 from trace_for_guess.filenames import (derive_new_concat_trace_name,
                                        derive_new_trace_name,
@@ -213,7 +213,13 @@ output_files['WET'] = list()
 split_trace_files = dict()  # key=TraCE variable; value=list of files
 for var in trace_files:
     cprint(f"Going to crop TraCE files of variable '{var}'.", 'magenta')
-    trace_files[var] = crop_file_list(trace_files[var], cropped_dir, extent)
+    # We need to crop the TraCE files with an additional margin of at least the
+    # TraCE grid cell size because otherwise the cropped TraCE files can cover
+    # a smaller area than the cropped CRU files (which has a higher
+    # resolution).
+    trace_extent = expand_extent(extent, 4.0)
+    trace_files[var] = crop_file_list(trace_files[var], cropped_dir,
+                                      trace_extent)
     cprint(f"Going to split TraCE files of variable '{var}'.", 'magenta')
     split_trace_files[var] = list()
     # In the following, `f` is always the file being processed. The path
