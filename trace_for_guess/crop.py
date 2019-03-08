@@ -34,7 +34,7 @@ def adjust_longitude(netcdf_file, lon):
         raise FileNotFoundError("Input file doesn’t exist: '%s'" % netcdf_file)
     if lon < -180 or lon >= 360:
         raise ValueError("Longitude value is out of any supported range: %.2f"
-                         %lon)
+                         % lon)
     # Get longitude range of the file.
     stdout = subprocess.run(['ncks',
                              '--json',
@@ -98,8 +98,10 @@ def crop_file(in_file, out_file, ext):
         # CROP
         subprocess.run(["ncks",
                         "--overwrite",
-                        "--dimension", "lon,%.2f,%.2f" % (ext_adj[0], ext_adj[1]),
-                        "--dimension", "lat,%.2f,%.2f" % (ext_adj[2], ext_adj[3]),
+                        "--dimension", "lon,%.2f,%.2f" % (ext_adj[0],
+                                                          ext_adj[1]),
+                        "--dimension", "lat,%.2f,%.2f" % (ext_adj[2],
+                                                          ext_adj[3]),
                         in_file,
                         out_file], check=True)
         # ROTATE LONGITUDE
@@ -171,6 +173,7 @@ def crop_file_list(filelist, out_dir, ext):
         f'len(filelist)={len(filelist)} does not equal '\
         f'len(result_list)={len(result_list)}'
     return result_list
+
 
 def expand_extent(extent, margin):
     """Make the rectangular region bigger by a given amount to all directions.
