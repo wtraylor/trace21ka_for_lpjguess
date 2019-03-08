@@ -11,11 +11,12 @@ Output colors with termcolor.cprint():
     - red: errors
 """
 
+import datetime
 import os
 import re
+import socket
 import sys
 import warnings
-import socket
 
 import yaml
 from termcolor import cprint
@@ -29,7 +30,8 @@ from trace_for_guess.compress import compress_and_chunk
 from trace_for_guess.concatenate import cat_files
 from trace_for_guess.convert_time_unit import (convert_kabp_to_months,
                                                convert_months_to_days)
-from trace_for_guess.crop import crop_file, crop_file_list, expand_extent
+from trace_for_guess.crop import (check_region, crop_file, crop_file_list,
+                                  expand_extent)
 from trace_for_guess.debias import debias_trace_file
 from trace_for_guess.filenames import (derive_new_concat_trace_name,
                                        derive_new_trace_name,
@@ -44,7 +46,6 @@ from trace_for_guess.rescale import rescale_file
 from trace_for_guess.split import split_file
 from trace_for_guess.unzip import unzip_files_if_needed
 from trace_for_guess.wet_days import create_wet_days_file
-import datetime
 
 cprint('This is `prepare_trace_for_guess` on %s.' % socket.gethostname(),
        'green')
@@ -52,7 +53,7 @@ cprint(datetime.datetime.now(), 'green')
 
 if not os.path.isfile('options.yaml'):
     cprint("Couldn’t find options file in './options.yaml'.", 'red')
-    sys.exit()
+    sys.exit(1)
 
 cprint("Loading options from 'options.yaml'.", 'yellow')
 opts = yaml.load(open('options.yaml'))
@@ -61,7 +62,8 @@ time_range = opts['time_range']
 assert isinstance(time_range, list)
 assert len(time_range) == 2
 assert isinstance(time_range[0], int) and isinstance(time_range[1], int)
-# TODO: Check if region is valid.
+
+check_region(extent)
 
 # Directories:
 heap = opts['directories']['heap']  # Any intermediary files

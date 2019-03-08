@@ -251,3 +251,37 @@ def expand_extent(extent, margin):
     result[2] = max(-90, lat1 - margin)
     result[3] = min(+90, lat2 + margin)
     return result
+
+
+def check_region(extent):
+    """Check if region [lon1, lon2, lat1, lat2] is good.
+
+    Args:
+        extent: The rectangular given as a list of [lon1, lon2, lat1, lat2].
+            Longitude in [0,360) °E and latitude in [-90,+90] °N.
+
+    Raises:
+        ValueError: If `extent` is not a list with 4 numbers.
+        RuntimeError: If the numbers `extent` are not valid.
+    """
+    if not isinstance(extent, list):
+        raise ValueError('Argument "extent" is not a list.')
+    if not len(extent) == 4:
+        raise ValueError(f'The list "extent" has not 4 elements: {extent}')
+    if not all([isinstance(i, (int, float)) for i in extent]):
+        raise ValueError('The list "extent" contains non-numerical elements: '
+                         f'{extent}')
+    lon1, lon2, lat1, lat2 = extent
+    if lon1 < 0 or lon1 > 360:
+        raise RuntimeError(f'Longitude 1 is out of range: {lon1}')
+    if lon2 < 0 or lon2 > 360:
+        raise RuntimeError(f'Longitude 2 is out of range: {lon2}')
+    if lon1 == lon2:
+        raise RuntimeError(f'Longitude values are equal: {lon1} == {lon2}')
+    if lat1 > 90 or lat1 < -90:
+        raise RuntimeError(f'Latitude 1 is out of range: {lat1}')
+    if lat2 > 90 or lat2 < -90:
+        raise RuntimeError(f'Latitude 2 is out of range: {lat2}')
+    if lat1 >= lat2:
+        raise RuntimeError(f'Latitude 1 is greater or equal than latitude 2: '
+                           f'{lat1} >= {lat2}')
