@@ -35,18 +35,7 @@ def adjust_longitude(netcdf_file, lon):
     if lon < -180 or lon >= 360:
         raise ValueError("Longitude value is out of any supported range: %.2f"
                          % lon)
-    # Get longitude range of the file.
-    stdout = subprocess.run(['ncks',
-                             '--json',
-                             '--variable', 'lon',
-                             '--dimension', 'lon,0',  # first entry
-                             '--dimension', 'lon,-1',  # last entry
-                             netcdf_file],
-                            check=True,
-                            encoding='utf-8',
-                            capture_output=True).stdout
-    j = json.loads(stdout)
-    file_range = j['variables']['lon']['data']  # a 2-elements list
+    file_range = get_longitude_range(netcdf_file)
     # Convert longitude to [-180,+180) °E format.
     if min(file_range) < 0 and lon > 180:
         return lon - 360
@@ -107,20 +96,19 @@ def crop_file(in_file, out_file, ext):
         # ROTATE LONGITUDE
         # See here for the documentation about rotating longitude:
         # http://nco.sourceforge.net/nco.html#msa_usr_rdr
-        # Note that we rotate after cropping for performance reasons. This way,
+        # Unlike in the instructions in the documentation, we don’t need to
+        # re-order the longitude dimension with --msa_usr_rdr because through
+        # the `ncks` cropping/hyperslabbing command the longitude is already
+        # ordered correctly from East to West.
+        # Note that we rotate after cropping for performance reasons. This way
         # only the cropped grid cells need to be rotated.
-        if min(ext_adj[0:2]) < 0 and max(ext_adj[2:4]) > 0:
-            subprocess.run(['ncks',
-                            '--dimension', 'lon,0.,180.',
-                            '--dimension', 'lon,-180.,-0.1',
-                            '--msa_user_order',
-                            out_file,
-                            out_file], check=True)
         subprocess.run(['ncap2',
                         '--overwrite',
                         '--script', 'where(lon < 0) lon=lon+360',
                         out_file, out_file], check=True)
     except Exception:
+        print(f'DEBUG: ext = {ext}')
+        print(f'DEBUG: ext_adj = {ext_adj}')
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
             os.remove(out_file)
@@ -285,3 +273,32 @@ def check_region(extent):
     if lat1 >= lat2:
         raise RuntimeError(f'Latitude 1 is greater or equal than latitude 2: '
                            f'{lat1} >= {lat2}')
+
+
+def get_longitude_range(netcdf_file):
+    """Get min and max longitude from NetCDF file.
+
+    It is assumed that the longitude variable in the NetCDF file is named
+    'lon'.
+
+    Args:
+        netcdf_file: Path to NetCDF file.
+
+    Raises:
+        FileNotFoundError: `netcdf_file` doesn’t exist.
+    """
+    if not os.path.isfile(netcdf_file):
+        raise FileNotFoundError("Input file doesn’t exist: '%s'" % netcdf_file)
+    # Get longitude range of the file.
+    stdout = subprocess.run(['ncks',
+                             '--json',
+                             '--variable', 'lon',
+                             '--dimension', 'lon,0',  # first entry
+                             '--dimension', 'lon,-1',  # last entry
+                             netcdf_file],
+                            check=True,
+                            encoding='utf-8',
+                            capture_output=True).stdout
+    j = json.loads(stdout)
+    file_range = j['variables']['lon']['data']  # a 2-elements list
+    return file_range
