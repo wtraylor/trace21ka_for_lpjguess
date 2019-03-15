@@ -16,7 +16,7 @@ MINICONDA = miniconda3
 # The directory of binaries in the Miniconda installation.
 # If `conda` is found in the PATH, use the existing installation, otherwise
 # use local installation in project directory.
-CHECK_CONDA=$(shell which conda 2>/dev/null)
+CHECK_CONDA=$(shell command -v conda 2>/dev/null)
 ifeq "$(CHECK_CONDA)" ""
 	export PATH := ${MINICONDA}/bin:$(PATH)
 endif
@@ -29,10 +29,10 @@ ENV := trace_for_guess
 ## INSTALLATION
 ###############################################################################
 
-# - We use `test "$$(which conda)"` to check if the conda binary is in the
-#   PATH (i.e. either in the system installation or locally in $MINICONDA).
-#   If `conda` cannot be found, `which` will create an error message and
-#   the rule will be aborted.
+# - We use `test $$(command -v conda)` to check if the conda binary is in
+#   the PATH (i.e. either in the system installation or locally in
+#   $MINICONDA). If `conda` cannot be found, `command` will create an error
+#   message and the rule will be aborted.
 
 # We `touch` the installed files (the Make targets) so that they are marked as
 # up-to-date even if the installation command doesn’t change them (because
@@ -56,7 +56,7 @@ install_conda: $(CONDA_INSTALLER)
 
 .PHONY: create_environment
 create_environment:
-	@test "$$(which conda)"
+	@test $$(command -v conda) || (echo 'conda not installed.';exit 1)
 	@echo 'Creating local conda environment...'
 	@conda env create --file 'environment.yml' --force
 	@echo 'Conda environment succesfully created:'
@@ -68,8 +68,8 @@ create_environment:
 # (unbuffered) output to the screen *and* writes it to the log file in real
 # time.
 run:
-	@test "$$(which activate)"
-	@test "$$(which python)"
+	@test $$(command -v activate) || (echo 'activate not found.';exit 1)
+	@test $$(command -v python) || (echo 'python not found.';exit 1)
 	@source activate  $(ENV) && python -u 'prepare_trace_for_guess' | tee 'prepare_trace_for_guess.log'
 
 .PHONY: log
@@ -79,16 +79,16 @@ log:
 .PHONY: delete_environment
 delete_environment:
 	@echo 'Deleting conda environment.'
-	@test "$$(which conda)"
+	@test $$(command -v conda) || (echo 'conda not found.';exit 1)
 	@conda remove $(ENV)
 
 .PHONY: download_crujra
 download_crujra:
-	@test "$$(which activate)"
-	@test "$$(which python)"
+	@test $$(command -v activate) || (echo 'activate not found.';exit 1)
+	@test $$(command -v python) || (echo 'python not found.';exit 1)
 	@source activate  $(ENV) && python 'trace_for_guess/download_crujra.py'
 
 .PHONY: clean
 clean:
-	@test "$$(which python)"
+	@test $$(command -v python) || (echo 'python not found.';exit 1)
 	@source activate  $(ENV) && python 'trace_for_guess/clean.py'
