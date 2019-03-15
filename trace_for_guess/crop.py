@@ -109,7 +109,7 @@ def crop_file(in_file, out_file, ext):
         # http://nco.sourceforge.net/nco.html#msa_usr_rdr
         # Note that we rotate after cropping for performance reasons. This way,
         # only the cropped grid cells need to be rotated.
-        if min(ext_adj[0:2]) < 0 and max(ext_adj[2:4]) > 0:
+        if min(ext_adj[0:2]) < 0 and max(ext_adj[0:2]) > 0:
             subprocess.run(['ncks',
                             '--dimension', 'lon,0.,180.',
                             '--dimension', 'lon,-180.,-0.1',
