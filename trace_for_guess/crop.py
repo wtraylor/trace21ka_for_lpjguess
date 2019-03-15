@@ -35,18 +35,7 @@ def adjust_longitude(netcdf_file, lon):
     if lon < -180 or lon >= 360:
         raise ValueError("Longitude value is out of any supported range: %.2f"
                          % lon)
-    # Get longitude range of the file.
-    stdout = subprocess.run(['ncks',
-                             '--json',
-                             '--variable', 'lon',
-                             '--dimension', 'lon,0',  # first entry
-                             '--dimension', 'lon,-1',  # last entry
-                             netcdf_file],
-                            check=True,
-                            encoding='utf-8',
-                            capture_output=True).stdout
-    j = json.loads(stdout)
-    file_range = j['variables']['lon']['data']  # a 2-elements list
+    file_range = get_longitude_range(netcdf_file)
     # Convert longitude to [-180,+180) °E format.
     if min(file_range) < 0 and lon > 180:
         return lon - 360
@@ -291,3 +280,31 @@ def check_region(extent):
     if lat1 >= lat2:
         raise RuntimeError(f'Latitude 1 is greater or equal than latitude 2: '
                            f'{lat1} >= {lat2}')
+
+def get_longitude_range(netcdf_file):
+    """Get min and max longitude from NetCDF file.
+
+    It is assumed that the longitude variable in the NetCDF file is named
+    'lon'.
+
+    Args:
+        netcdf_file: Path to NetCDF file.
+
+    Raises:
+        FileNotFoundError: `netcdf_file` doesn’t exist.
+    """
+    if not os.path.isfile(netcdf_file):
+        raise FileNotFoundError("Input file doesn’t exist: '%s'" % netcdf_file)
+    # Get longitude range of the file.
+    stdout = subprocess.run(['ncks',
+                             '--json',
+                             '--variable', 'lon',
+                             '--dimension', 'lon,0',  # first entry
+                             '--dimension', 'lon,-1',  # last entry
+                             netcdf_file],
+                            check=True,
+                            encoding='utf-8',
+                            capture_output=True).stdout
+    j = json.loads(stdout)
+    file_range = j['variables']['lon']['data']  # a 2-elements list
+    return file_range
