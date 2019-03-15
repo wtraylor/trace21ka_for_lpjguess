@@ -110,6 +110,10 @@ def crop_file(in_file, out_file, ext):
         # Note that we rotate after cropping for performance reasons. This way,
         # only the cropped grid cells need to be rotated.
         if min(ext_adj[0:2]) < 0 and max(ext_adj[0:2]) > 0:
+            # If the longitude range goes around the 180° line, the Eastern and
+            # the Western half of the longitude ranges are re-ordered: The
+            # Eastern half comes first, then the Western half. This is then the
+            # correct order for the 0–360 ° format.
             subprocess.run(['ncks',
                             '--dimension', 'lon,0.,180.',
                             '--dimension', 'lon,-180.,-0.1',
