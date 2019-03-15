@@ -121,6 +121,8 @@ def crop_file(in_file, out_file, ext):
                         '--script', 'where(lon < 0) lon=lon+360',
                         out_file, out_file], check=True)
     except Exception:
+        print(f'DEBUG: ext = {ext}')
+        print(f'DEBUG: ext_adj = {ext_adj}')
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
             os.remove(out_file)
