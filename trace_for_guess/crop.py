@@ -96,19 +96,12 @@ def crop_file(in_file, out_file, ext):
         # ROTATE LONGITUDE
         # See here for the documentation about rotating longitude:
         # http://nco.sourceforge.net/nco.html#msa_usr_rdr
-        # Note that we rotate after cropping for performance reasons. This way,
+        # Unlike in the instructions in the documentation, we don’t need to
+        # re-order the longitude dimension with --msa_usr_rdr because through
+        # the `ncks` cropping/hyperslabbing command the longitude is already
+        # ordered correctly from East to West.
+        # Note that we rotate after cropping for performance reasons. This way
         # only the cropped grid cells need to be rotated.
-        if min(ext_adj[0:2]) < 0 and max(ext_adj[0:2]) > 0:
-            # If the longitude range goes around the 180° line, the Eastern and
-            # the Western half of the longitude ranges are re-ordered: The
-            # Eastern half comes first, then the Western half. This is then the
-            # correct order for the 0–360 ° format.
-            subprocess.run(['ncks',
-                            '--dimension', 'lon,0.,180.',
-                            '--dimension', 'lon,-180.,-0.1',
-                            '--msa_user_order',
-                            out_file,
-                            out_file], check=True)
         subprocess.run(['ncap2',
                         '--overwrite',
                         '--script', 'where(lon < 0) lon=lon+360',
@@ -280,6 +273,7 @@ def check_region(extent):
     if lat1 >= lat2:
         raise RuntimeError(f'Latitude 1 is greater or equal than latitude 2: '
                            f'{lat1} >= {lat2}')
+
 
 def get_longitude_range(netcdf_file):
     """Get min and max longitude from NetCDF file.
