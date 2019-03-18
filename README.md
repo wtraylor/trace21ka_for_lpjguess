@@ -247,8 +247,9 @@ This is a template for an LPJ-GUESS instruction file:
 ```
 param "file_gridlist_cf" (str "/data/gridlist.txt")
 
-! This file is used to obtain soil codes.
-param "file_cru"     (str "/lpj_guess/data/env/soils_lpj.dat")
+! This file is used to obtain soil codes. It’s not shipped with LPJ-GUESS, so
+! you need to request it from the LPJ-GUESS developers or somewhere else.
+param "file_cru"     (str "/path/to/cruncep_1901_2015.bin")
 
 ! Leave empty to use pre-industrial N deposition rate.
 param "file_ndep"     (str "")
