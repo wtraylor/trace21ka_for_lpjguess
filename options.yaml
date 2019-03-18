@@ -14,7 +14,7 @@ region:
   # Longitude: 0° to 360° E
   lon: [130, 230]
   # Latitude: -90° to +90° N
-  lat: [40, 80]
+  lat: [50, 80]
 
 # The time range of interest in years BP. Possible values range from 22000 BP
 # to -40 BP (i.e. 1990 CE).
