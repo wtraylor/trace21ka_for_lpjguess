@@ -36,7 +36,7 @@ directories:
 # If set to 'yes', there will be smaller output files with 100 years each, but
 # LPJ-GUESS cannot natively read multiple files.
 # Valid options: 'yes' or 'no'
-concatenate: 'no'
+concatenate: 'yes'
 
 ###############################################################################
 ###############################################################################
