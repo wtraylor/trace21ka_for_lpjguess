@@ -266,7 +266,7 @@ param "file_prec"     (str "/data/trace_PRECT.nc")
 param "variable_prec" (str "PRECT")
 
 param "file_wetdays"     (str "/data/trace_WET.nc")
-param "variable_wetdays" (str "wet")
+param "variable_wetdays" (str "WET")
 
 ! The following parameters need to be declared, but left empty.
 param "file_min_temp"      (str "")
