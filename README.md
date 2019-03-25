@@ -245,7 +245,10 @@ Run LPJ-GUESS with the CF input module: `guess -input cf "/path/to/my/instructio
 This is a template for an LPJ-GUESS instruction file: 
 
 ```
-param "file_gridlist_cf" (str "/data/gridlist.txt")
+! Don’t use an absolute path in parallel runs here because this refers to the
+! gridlist fragment that one single job takes. The total gridlist is split up
+! by the `submit.sh` script.
+param "file_gridlist_cf" (str "./gridlist.txt")
 
 ! This file is used to obtain soil codes. It’s not shipped with LPJ-GUESS, so
 ! you need to request it from the LPJ-GUESS developers or somewhere else.
