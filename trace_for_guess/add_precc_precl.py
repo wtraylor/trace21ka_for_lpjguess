@@ -57,7 +57,7 @@ def add_precc_and_precl_to_prect(precc_file, precl_file, prect_file):
                         '--attribute', f'long_name,PRECT,m,c,"{long_name}"',
                         prect_file], check=True)
         # Convert precipitation flux from m/s to kg/m²/s (compare README).
-        subprocess.run(['ncap2', '--overwrite', '--script=PRECT/=1000.0',
+        subprocess.run(['ncap2', '--overwrite', '--script=PRECT*=1000.0',
                         prect_file, prect_file], check=True)
         units = opts['nc_attributes']['PRECT']['units']
         subprocess.run(['ncatted', '--overwrite',

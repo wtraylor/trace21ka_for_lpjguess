@@ -154,7 +154,7 @@ for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
         trace_file=find_files(get_modern_trace_filename(var)),
         out_file=os.path.join(heap_input, out_file)
     )
-# Merge PRECC and PRECL into PRECT.
+# Merge PRECC and PRECL into PRECT and convert from m/s to kg/m²/s.
 modern_trace_files['PRECT'] = add_precc_and_precl_to_prect(
     precc_file=modern_trace_files['PRECC'],
     precl_file=modern_trace_files['PRECL'],

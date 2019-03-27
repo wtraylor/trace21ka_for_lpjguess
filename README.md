@@ -88,24 +88,28 @@ The TraCE-21ka precipitation files come with the precipitation unit m/s.
 This is the water flux of the CAM model.
 
 LPJ-GUESS expects the precipitation unit kg/m²/s (standard name `precipitation_flux`).
-We convert from m/s to kg/m²/s dividing by 1000, since water has a density of $`\rho = 1 kg/l = 1000 kg/m^3`$:
+1 kg/m² precipitation _amount_ is equivalent to 1 mm water _column._
+We can simply convert from m/s to mm/s, which is then equivalent to kg/m²/s.
+<!-- I don’t know the mathematical symbol for this kind of equivalency (amount = column height). So I just use an equal sign. -->
 
 ```math
 1 \frac{kg}{s*m^2}
-= \frac{1000}{1000} \frac{m*kg}{s*m^3}
-= 10^{-3} \frac{m}{s} * \rho
+= 1 \frac{l}{s*m^2}
+= 1 \frac{mm}{s}
+= 10^{-3} \frac{m}{s}
 ```
 
 Compare also this forum thread: <https://bb.cgd.ucar.edu/precipitation-units>
 
-The CRU-TS dataset comes with precipiation in mm/month. It converts as follows ($`d`$ is the number of days in the month):
+The CRU-TS dataset comes with precipiation in mm/month.
+So in order to convert mm/month to kg/m²/s (equivalent to mm/s, see above), we need to divide by the number of seconds in a month:
 
 ```math
 1 \frac{kg}{s*m^2}
-= \rho^{-1} \frac{m}{s}
-= \frac{1}{\rho * d*24*60*60} \frac{mm}{month}
-= \frac{1}{1000 * d*24*60*60} \frac{mm}{month}
+= \frac{1}{d*24*60*60} \frac{mm}{month}
 ```
+
+$`d`$ is the number of days in the month.
 
 ### Wet Days
 
