@@ -7,11 +7,14 @@ from trace_for_guess.skip import skip
 
 
 def monthly_precip_to_flux(data_array):
-    """Convert precipitation from mm/month to kg/m²/s."""
+    """Convert precipitation from mm/month to kg/m²/s.
+
+    See the README.md for a detailed explanation of the formula.
+    """
     # TODO Take month lengths into account!
     days_per_month = 30
     seconds_per_month = days_per_month * 24 * 60 * 60
-    return data_array / (1000 * seconds_per_month)
+    return data_array / seconds_per_month
 
 
 def celsius_to_kelvin(x):
