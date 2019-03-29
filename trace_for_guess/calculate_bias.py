@@ -1,5 +1,6 @@
 import os
 
+import numpy as np
 import xarray as xr
 from termcolor import cprint
 
@@ -72,7 +73,11 @@ def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
             # We convert to high numbers to do the division in order to prevent
             # any floating point precision errors.
             trace[trace_var] = precip_flux_to_mm_per_month(trace[trace_var])
-            bias = trace[trace_var] / cru[trace_var]
+            # Catch potential division by zero.
+            almost_zero = 1  # [mm/month]
+            c = cru[trace_var]
+            c = np.where(c == 0, almost_zero, c)
+            bias = trace[trace_var] / c
         else:
             raise NotImplementedError("Arithmetic operation not defined for"
                                       "variable '%s'." % trace_var)
