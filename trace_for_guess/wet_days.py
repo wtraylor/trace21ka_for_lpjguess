@@ -19,7 +19,7 @@ def flux_to_monthly_precip(data_array):
     # TODO Take month lengths into account!
     days_per_month = 30
     seconds_per_month = days_per_month * 24 * 60 * 60
-    return data_array * (1000 * seconds_per_month)
+    return data_array * seconds_per_month
 
 
 def get_gamma_cdf(x, xmean, xstd):
@@ -34,12 +34,12 @@ def get_gamma_cdf(x, xmean, xstd):
         Cumulative density of gamma distribution.
     """
     shape = np.power(xmean, 2) / np.power(xstd, 2)
-    rate = np.power(xstd, 2) / xmean
+    scale = np.power(xstd, 2) / xmean
     # scipy raises this “RuntimeWarning: invalid value encountered in greater”
     # I don’t know why so I just suppress it.
     with warnings.catch_warnings():
         warnings.simplefilter('ignore')
-        rv = scipy.stats.gamma(shape, scale=rate)
+        rv = scipy.stats.gamma(a=shape, scale=scale)
         return rv.cdf(x)
 
 
@@ -102,7 +102,7 @@ def get_wet_days_array(prect, prec_std):
     assert(len(days_per_month_array) == len(prect))
     # Iterate over every month `t` (“time step”) in the transient time series.
     for t, (month, days) in enumerate(zip(months_array, days_per_month_array)):
-        mean_daily_prec = prect[t] / float(days)
+        mean_daily_prec = prect[t] / float(days)  # [mm/day]
         wet_values[t] = calc_wet_days(mean_daily_prec, prec_std[month], days,
                                       precip_threshold)
     return wet_values
