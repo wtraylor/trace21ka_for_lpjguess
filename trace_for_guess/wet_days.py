@@ -71,6 +71,7 @@ def calc_wet_days(trace_prec, cru_std, days, threshold):
     wet_days = (1.0 - cdf) * days
     # Number of wet days is an integer value, so we round up the float number.
     wet_days = np.ceil(wet_days)
+    # Convert NaN values in the array to zeros.
     wet_days = np.nan_to_num(wet_days)
     # Make sure that number of wet days does not exceed total number of days.
     return np.where(wet_days > days, days, wet_days)
