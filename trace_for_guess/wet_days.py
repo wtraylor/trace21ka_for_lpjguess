@@ -87,7 +87,8 @@ def get_wet_days_array(prect, prec_std):
             month) per grid cell.
 
     Returns:
-
+        Array with number of wet days for each month from the `prect` input
+        array.
     """
     precip_threshold = yaml.load(open('options.yaml'))['precip_threshold']
     # Create a numpy array of the same shape, but with missing values.
