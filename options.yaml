@@ -6,8 +6,13 @@
 # LPJ-GUESS
 #
 
-# Paths, either absolute or relative to the root of the Git repository.
-# ("~" for home directory and environment variables are allowed.)
+directories:
+  # Paths, either absolute or relative to the root of the Git repository.
+  # ("~" for home directory and environment variables are allowed.)
+  # Directory for temporary files.
+  heap: "./heap"
+  # Directory for final output files.
+  output: "./output"
 
 # Geographic extent of study area.
 region:
@@ -19,18 +24,6 @@ region:
 # The time range of interest in years BP. Possible values range from 22000 BP
 # to -40 BP (i.e. 1990 CE).
 time_range: [22000, 20000]
-
-directories:
-  # List of directories containing all original files: CRU, CRU-JRA-55
-  # precipitation, TraCE-21ka.
-  # For any given file, all directories will be searched recursively.
-  input:
-    - '/mnt/zathras/data/'
-    - '/mnt/zathras/research_data/'
-  # Directory for temporary files.
-  heap: "/mnt/zathras/trace_for_guess/heap"
-  # Directory for final output files.
-  output: "/mnt/zathras/trace_for_guess/output"
 
 # Whether to concatenate results into one big, monolithic file per variable.
 # If set to 'yes', there will be smaller output files with 100 years each, but

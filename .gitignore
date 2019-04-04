@@ -1,3 +1,13 @@
+# External files
+/external_files
+/external_files/
+
+# The default output paths
+/heap
+/heap/
+/output
+/output/
+
 /Miniconda3-latest-Linux-x86_64.sh
 /miniconda3/
 /conda_environment/
