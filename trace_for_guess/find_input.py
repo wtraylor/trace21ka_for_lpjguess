@@ -25,7 +25,7 @@ def find_files(filenames):
     """
     opts = yaml.load(open('options.yaml'))
     heap_input = os.path.join(opts['directories']['heap'], '0_input')
-    dirs = opts['directories']['input'] + [heap_input]
+    dirs = ['external_files', heap_input]
     if not dirs:
         raise RuntimeError("No input directories defined in 'options.yaml'.")
     # Expand '~' for home directory and environment variables like '$HOME'.

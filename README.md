@@ -209,6 +209,22 @@ Prerequisites
 Usage
 -----
 
+### External Files
+The files in the `external_files` directory are too big to be included in the Git repository.
+They reside in the directory `172.30.45.24:/akira_data/wtraylor/trace21ka_for_lpjguess/` on the BiK-F server.<!--TODO: update that path-->
+You can download them from the internal network or request access from the authors.
+To verify that you have all files and that they are correct, check the MD5 checksums:
+
+1. Open a terminal in the root of the repository, where the `MD5.txt` file lies.
+	- You can open the `MD5.txt` file with a text editor to see which files you need and what directory structure is expected.
+1. Copy or mount or symlink the big files in the `external_files` subdirectory directly.
+	- `external_files` should not exist yet.
+	- Mount via SSH: `mkdir external_files ; sshfs -o compression=yes user@ip_address:/path/to/directory external_files`
+	- Symlink from local storage: `ln --symbolic /path/to/local/storage external_files`
+	- Copy from local or remote (see `man rsync` for more options): `mkdir external_files ; rsync --progress --copy-links --recursive /path/to/storage/* external_files/`
+1. Run `md5sum --check MD5.txt` and check the output in the terminal. Are all files there and checked correctly?
+1. If some files failed the test, download them again. If that fails, contact the authors.
+
 ### Download Data
 
 Important: Do not change the original file names!
