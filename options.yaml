@@ -23,13 +23,13 @@ region:
 
 # The time range of interest in years BP. Possible values range from 22000 BP
 # to -40 BP (i.e. 1990 CE).
-time_range: [22000, 20000]
+time_range: [100, -40]
 
 # Whether to concatenate results into one big, monolithic file per variable.
 # If set to 'yes', there will be smaller output files with 100 years each, but
 # LPJ-GUESS cannot natively read multiple files.
 # Valid options: 'yes' or 'no'
-concatenate: 'yes'
+concatenate: 'no'
 
 ###############################################################################
 ###############################################################################
