@@ -2,12 +2,12 @@ name: trace_for_guess
 channels:
   - conda-forge
 dependencies:
-  - cdo
-  - cftime
-  - nco
-  - netCDF4
+  - cdo=1.9.6
+  - cftime=1.0.3.4
+  - nco=4.7.9
+  - netCDF4=1.5.0.1
   - python=3.7
-  - pyyaml
-  - scipy
-  - termcolor
-  - xarray
+  - pyyaml=5.1
+  - scipy=1.2.1
+  - termcolor=1.1.0
+  - xarray=0.12.0
