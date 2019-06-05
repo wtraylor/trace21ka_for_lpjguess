@@ -59,7 +59,11 @@ def create_co2_files(trace_files, out_dir):
             co2_vals = get_co2_values(f)
             with open(co2_files[f], 'w') as out:
                 for year in co2_vals:
-                    val = co2_vals[year]
+                    # The CO₂ values in the TraCE file are by a factor of 10^6
+                    # smalller # than what LPJ-GUESS expects, that’s why we
+                    # need to multiply here. The result is good to be taken
+                    # with integer precision.
+                    val = int(co2_vals[year] * 1e6)
                     line = f'{year}\t{val}\n'
                     out.write(line)
     except Exception:
