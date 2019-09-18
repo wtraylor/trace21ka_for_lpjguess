@@ -122,7 +122,7 @@ Be $`x_{mean}`$ the mean precipitation (mm/day) of the month in question.
 Be $`x_{std}`$ the standard deviation of daily precipitation amount in the month.
 
 ```math
-\alpha = (x_{mean} / x_{std})^2
+\alpha = (x_{mean} / x_{std})^2 \\
 \beta = x_{std}^2 / x_{mean}
 ```
 
@@ -180,7 +180,7 @@ For modern times, $`x'`$ will be very close to the corresponding $`c`$ value.
 For temperature, the CRU value $`c`$ is first converted from degrees Celsius to Kelvin.
 
 ```math
-b = t - c
+b = t - c \\
 x' = x - b
 ```
 
@@ -188,7 +188,7 @@ x' = x - b
 For precipitation, the CRU value is first converted from mm/month to a flux in kg/m²/s.
 
 ```math
-b = t / c
+b = t / c \\
 x' = x / b
 ```
 
