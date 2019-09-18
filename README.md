@@ -12,7 +12,7 @@ We want to downscale the data together with bias-correcting it because this way 
 Description
 -----------
 
-This script bundle **downscales** and **bias-corrects** the monthly TraCE-21ka paleoclimate dataset [He 2011](http://www.aos.wisc.edu/uwaosjournal/Volume15/He_PhD_Thesis.pdf) and prepares NetCDF files that are readable as driving data by LPJ-GUESS.
+This script bundle **downscales** and **bias-corrects** the monthly TraCE-21ka paleoclimate dataset ([He 2011](http://www.aos.wisc.edu/uwaosjournal/Volume15/He_PhD_Thesis.pdf)) and prepares NetCDF files that are readable as driving data by LPJ-GUESS.
 
 Bias-correction of temperature and precipitation is based on the CRU dataset of modern monthly climate between 1900 and 1990 in 0.5° by 0.5° grid cell resolution.<!--TODO: Citation-->
 
