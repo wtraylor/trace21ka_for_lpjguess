@@ -1,5 +1,14 @@
 # Chronological Lab Notebook
 
+## 2019-11-06
+Download CRU `cld` files:
+```bash
+cd external_files/cru/
+for f in $(find -iname '*pre*');
+    do echo $f | sed 's/pre/cld/' | sed 's;^./;https://crudata.uea.ac.uk/cru/data/hrg/cru_ts_4.01/cruts.1709081022.v4.01/cld/;'
+done 
+```
+
 ## 2019-09-19 Chat with Antoine Champreux
 Antoine:
 > Hi Wolfgang, I will double check the equivalence between cld and CLDTOT asap, but I was pretty sure of it few months ago. 
