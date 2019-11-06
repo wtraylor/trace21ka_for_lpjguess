@@ -48,9 +48,9 @@ def calculate_fsdscl(cldtot_file, fsds_file, fsdsc_file, out_file):
         subprocess.run(['ncks', '--append', fsds_file, out_file], check=True)
         subprocess.run(['ncks', '--append', fsdsc_file, out_file], check=True)
         subprocess.run(['ncks', '--append', cldtot_file, out_file], check=True)
-        subprocess.run(['ncap2', '--append', '--script',
-                        'FSDSCL = FSDS - FSDSC * (1 - CLDTOT) / CLDTOT',
-                        out_file], check=True)
+        script = 'FSDSCL = FSDS - FSDSC * (1 - CLDTOT) / CLDTOT'
+        subprocess.run(['ncap2', '--append', '--script', script, out_file],
+                       check=True)
     except Exception:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
@@ -60,6 +60,6 @@ def calculate_fsdscl(cldtot_file, fsds_file, fsdsc_file, out_file):
             cprint(f"Removing file '{g}'.", 'red')
             os.remove(g)
         raise
-    assert(os.path.isfile(out_file))
+    assert (os.path.isfile(out_file))
     cprint(f"Successfully created '{out_file}'.", 'green')
     return out_file
