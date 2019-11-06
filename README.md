@@ -178,9 +178,9 @@ The fraction `FSDSCL` is biased and needs to be corrected in order to get a good
 
 Reconstruct the original (i.e. biased) `FSDSCL` variable from the original `FSDS` and `CLDTOT`:
 ```math
-FSDS = FSDSC * (CLDTOT-1) + FSDSCL * CLDTOT
+FSDS = FSDSC * (1 - CLDTOT) + FSDSCL * CLDTOT
 \\
-\implies FSDSCL = (FSDS - FSDSC * (CLDTOT-1)) / CLDTOT
+\implies FSDSCL = (FSDS - FSDSC * (1 - CLDTOT)) / CLDTOT
 ```
 
 Calculate debiased `FSDS`:
