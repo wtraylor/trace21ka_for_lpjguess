@@ -27,52 +27,11 @@ For convenience and manageability the TraCE files are split into 100-years segme
 However, LPJ-GUESS is currently (v.4.0) not capable of reading multiple contiguous NetCDF files in sequence.
 They can be concatenated to full length afterwards.
 
-Here is an overview of the procedure:
-
-```ditaa
-  +---------+    +----------------+  +-------------+
-  |CRU files|    |TraCE–21ka files|  |CRU–JRA files|
-  +---------+    +----------------+  +-------------+
-       |               |                    |
-       v               v                    v
-    /----\          /----\               /-----\
-    |Crop|          |Crop|               |Unzip|
-    \----/          \----/               \-----/
-       |               |                    |
-       |               v                    v
-       |            /-----\              /----\
-       |            |Split|              |Crop|
-       |            \-----/              \----/
-       |               |                    |
-       |               v                    v
-       |           /-------\           /---------\
-       |    +------|Rescale|           |Calculate|
-       |    |      \-------/           |Prec. SD |
-       v    v          |               \---------/
-/--------------\       |                    |
-|Calculate Bias|       |                    |
-\--------------/       v                    |
-       |           /------\                 |
-       \---------->|Debias|                 |
-                   \------/                 |
-                       |                    |
-                       v                    |
-                 /------------\             |
-                 |Add Wet Days|<------------+
-                 \------------/
-                       |
-                       v
-                 /------------\
-                 |Set Metadata|
-                 \------------/
-                       |
-                       v
-                  /--------\
-                  |Compress|
-                  | Chunk  |
-                  |(Concat)|
-                  \--------/
-```
+![Overview of file processing to create downscaled and debiased TraCE-21ka files for LPJ-GUESS.](figures/process_overview.png)
+<!--
+The image "figures/process_overview.png" was created with ditaa from "figures/process_overview.ditaa".
+http://ditaa.sourceforge.net/
+-->
 
 ### Precipitation
 
