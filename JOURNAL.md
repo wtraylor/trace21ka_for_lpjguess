@@ -9,6 +9,9 @@ for f in $(find -iname '*pre*');
 done 
 ```
 
+I am now just using the debiasing log-algorithm from Lorenz et al. (2016) for cloud fraction.
+But I don’t know if that makes sense...
+
 ## 2019-09-19 Chat with Antoine Champreux
 Antoine:
 > Hi Wolfgang, I will double check the equivalence between cld and CLDTOT asap, but I was pretty sure of it few months ago. 
