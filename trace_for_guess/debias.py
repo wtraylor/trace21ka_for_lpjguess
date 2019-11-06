@@ -113,7 +113,7 @@ def debias_fsds_file(fsdsc_file, fsdscl_file, cldtot_file, out_file):
         cprint(f"Directory '{out_dir}' does not exist yet. I will create it.",
                'yellow')
         os.makedirs(out_dir)
-    cprint(f"Creating debiased FSDS file to '{out_file}'...", 'yellow')
+    cprint(f"Creating debiased FSDS file in '{out_file}'...", 'yellow')
     try:
         with xr.open_dataset(fsdsc_file, decode_times=False) as fsdsc,\
                 xr.open_dataset(fsdscl_file, decode_times=False) as fsdscl,\
