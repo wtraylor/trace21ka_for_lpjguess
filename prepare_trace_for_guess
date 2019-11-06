@@ -273,9 +273,9 @@ for var in trace_files:
                 cldtot_file=os.path.join(debiased_dir, cldtot_basename),
                 out_file=os.path.join(debiased_dir, basename)
             )
-        else:
-            # We don’t do anything more with CLDTOT, FSDSC, and FSDSCL here.
-            # They will not go into the output.
+        # We don’t do anything more with CLDTOT, FSDSC, and FSDSCL here.
+        # They will not go into the output.
+        if var in ['CLDTOT', 'FSDSC', 'FSDSCL']:
             continue
         # In addition to debiasing PRECT we generate the WET files.
         if var == 'PRECT':
