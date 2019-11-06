@@ -76,3 +76,59 @@ def debias_trace_file(trace_file, bias_file, out_file):
     assert os.path.isfile(out_file), f"No output file created: '{out_file}'"
     cprint(f"Successfully created '{out_file}'.", 'green')
     return out_file
+
+
+def debias_fsds_file(fsds_file, fsdsc_file, fsdscl_file,
+                      cldtot_debiased_file):
+    """Apply bias-correction to an FSDS TraCE-21ka file.
+
+    Args:
+        fsds_file: Name of the original (biased) TraCE FSDS file.
+        cldtot_debiased_file: The bias-corrected TraCE CLDTOT file (total cloud
+            cover).
+        fsdsc_file: Name of the original (biased) TraCE FSDSC file (solar
+            radiation in clear sky)
+        fsdscl_file: Name of the original (biased) TraCE FSDSCL file (solar
+            radiation under fully clouded sky).
+        out_file: Bias-corrected output file name (will not be overwritten).
+
+    Returns:
+        The name of the new file (equal to `out_file`).
+
+    Raises:
+        FileNotFoundError: One of the input files doesn’t exist.
+        RuntimeError: If no output file was produced.
+    """
+    if not os.path.isfile(fsds_file):
+        raise FileNotFoundError("FSDS file does not exist: '%s'" % fsds_file)
+    if not os.path.isfile(fsdsc_file):
+        raise FileNotFoundError("FSDSC file does not exist: '%s'" % fsdsc_file)
+    if not os.path.isfile(fsdscl_file):
+        raise FileNotFoundError("FSDSCL file does not exist: '%s'" %
+                                fsdscl_file)
+    if not os.path.isfile(cldtot_debiased_file):
+        raise FileNotFoundError("CLDTOT file does not exist: '%s'" %
+                                cldtot_debiased_file)
+    if skip([fsds_file, fsdsc_file, fsdscl_file, cldtot_debiased_file],
+            out_file):
+        return out_file
+    out_dir = os.path.dirname(out_file)
+    if not os.path.isdir(out_dir):
+        cprint(f"Directory '{out_dir}' does not exist yet. I will create it.",
+               'yellow')
+        os.makedirs(out_dir)
+    cprint(f"Debiasing FSDS file '{fsds_file}'...", 'yellow')
+    try:
+        with xr.open_dataset(fsds_file, decode_times=False) as fsds,
+        xr.open_dataset(fsdsc_file, decode_times=False) as fsdsc,
+        xr.open_dataset(fsdscl_file, decode_times=False) as fsdscl,
+        xr.open_dataset(cldtot_debiased_file, decode_times=False) as cldtot:
+            output = (1 - cldtot) * fsdsc + cldtot * fsdscl
+    except Exception:
+        if os.path.isfile(out_file):
+            cprint(f"Removing file '{out_file}'.", 'red')
+            os.remove(out_file)
+        raise
+    assert os.path.isfile(out_file), f"No output file created: '{out_file}'"
+    cprint(f"Successfully created '{out_file}'.", 'green')
+    return out_file
