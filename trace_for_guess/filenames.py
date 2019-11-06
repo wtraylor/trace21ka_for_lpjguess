@@ -158,11 +158,12 @@ def get_trace_filenames(variables, time_range):
     return result
 
 
-def derive_new_trace_name(trace_file):
+def derive_new_trace_name(trace_file, var):
     """Compose a new basename for a TraCE file with already absolute calendar.
 
     Args:
         trace_file: An existing TraCE NetCDF file.
+        var: The CCSM3 variable in the NetCDF file.
 
     Returns:
         String with the new base filename.
@@ -175,7 +176,6 @@ def derive_new_trace_name(trace_file):
     metadata = get_metadata_from_trace_file(trace_file)
     first_year = metadata['first_year']
     last_year = metadata['last_year']
-    var = metadata['variable']
     name = f'trace_{first_year:05}-{last_year:05}_{var}.nc'
     return name
 
