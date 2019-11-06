@@ -263,6 +263,7 @@ To Do
 - [ ] Mask oceans and glaciers? Perhaps based on ICE-5G?
 - [ ] How to handle changing coast lines?
 - [ ] Switch to more recent CRU 4.02?
+- [ ] Add the script `check_external_files` for more convenience.
 
 ### Open Design Questions
 
