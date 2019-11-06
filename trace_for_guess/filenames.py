@@ -8,7 +8,7 @@ from trace_for_guess.netcdf_metadata import (get_metadata_from_trace_file,
 def get_cru_filenames():
     """Create list of original CRU files between 1900 and 1990."""
     years = [(y+1, y+10) for y in range(1920, 1971, 10)]
-    vars = ['pre', 'wet', 'tmp']
+    vars = ['cld', 'pre', 'wet', 'tmp']
     # Combine every time segment (decade) with every variable.
     years_vars = tuple((y1, y2, v) for (y1, y2) in years for v in vars)
     return ["cru_ts4.01.%d.%d.%s.dat.nc" % (y1, y2, v) for (y1, y2, v) in

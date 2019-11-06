@@ -43,6 +43,8 @@ def debias_trace_file(trace_file, bias_file, out_file):
                 var = 'TREFHT'
             elif 'PRECT' in trace.data_vars:
                 var = 'PRECT'
+            elif 'CLDTOT' in trace.data_vars:
+                var = 'CLDTOT'
             else:
                 raise NotImplementedError("Could not find known variable in "
                                           "TraCE file: '%s'." % trace_file)
@@ -60,6 +62,8 @@ def debias_trace_file(trace_file, bias_file, out_file):
                 output = trace[var] - bias
             elif var == "PRECT":
                 output = trace[var] / bias
+            elif var == 'CLDTOT':
+                output = trace[var] ** bias
             else:
                 raise NotImplementedError("No bias correction defined for "
                                           "variable '%s'." % var)

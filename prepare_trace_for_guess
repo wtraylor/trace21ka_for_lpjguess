@@ -128,7 +128,7 @@ cru_files = unzip_files_if_needed(
     unzip_dir=heap_input)
 cru_mean_files = dict()  # Aggregated CRU files with variable as key.
 cprint(f'Going to aggregate CRU files.', 'magenta')
-for var in ['pre', 'tmp', 'wet']:
+for var in ['cld', 'pre', 'tmp', 'wet']:
     # Filter list of all CRU files to file names containing `var`.
     files_with_var = [f for f in cru_files if var in f]
     cat = cat_files(filelist=files_with_var,
@@ -148,7 +148,7 @@ for var in ['pre', 'tmp', 'wet']:
 # assumption that the order doesn’t make a difference.
 cprint(f'Going to calculate means of TraCE data from modern time.', 'magenta')
 modern_trace_files = dict()
-for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
+for var in ['CLDTOT', 'PRECC', 'PRECL', 'TREFHT']:
     out_file = f'modern_trace_{var}.nc'
     modern_trace_files[var] = aggregate_modern_trace(
         trace_file=find_files(get_modern_trace_filename(var)),
@@ -203,7 +203,7 @@ for prect in get_trace_filenames('PRECT', time_range):
 # All the original TraCE-21ka files. We assume they are not zipped because they
 # come as plain NetCDF files from earthsystemgrid.org.
 trace_files = dict()  # Key is the variable, value is a list of file paths.
-for var in ['FSDS', 'PRECT', 'TREFHT']:
+for var in ['CLDTOT', 'FSDS', 'PRECT', 'TREFHT']:
     trace_files[var] = find_files(get_trace_filenames(var, time_range))
 
 # Prepare data structure to hold the final output files.
@@ -240,12 +240,14 @@ for var in trace_files:
                          out_file=os.path.join(rescaled_dir, basename),
                          template_file=regrid_template_file,
                          alg=opts['regrid_algorithm'])
+        # All variables except FSDS can be debiased with one common function.
         if var in bias_files:
             f = debias_trace_file(
                 trace_file=f,
                 bias_file=bias_files[var],
                 out_file=os.path.join(debiased_dir, basename)
             )
+        # In addition to debiasing PRECT we generate the WET files.
         if var == 'PRECT':
             wet_basename = re.sub('PRECT', 'WET', basename)
             wet_file = create_wet_days_file(
@@ -262,7 +264,10 @@ for var in trace_files:
         f = convert_months_to_days(f, os.path.join(final_time_dir, basename))
         f = compress_and_chunk(f, os.path.join(out_dir, basename))
         output_files[var] += [f]
-        set_metadata(f)
+        # All CCSM3 variables except CDTOT and FSDSC shall get LPJ-GUESS
+        # metadata.
+        if var != 'CLDTOT':
+            set_metadata(f)
 
 concat_files = dict()  # key=TraCE variable; value=file path
 if opts['concatenate'] == 'yes':
