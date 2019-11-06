@@ -113,7 +113,7 @@ def convert_kabp_to_months(trace_file, out_file):
     except Exception:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
-            os.remove(trace_file)
+            os.remove(out_file)
         if os.path.isfile(tmp_file):
             cprint(f"Removing file '{tmp_file}'.", 'red')
             os.remove(tmp_file)
