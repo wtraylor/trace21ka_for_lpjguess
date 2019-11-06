@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 import xarray as xr
 from termcolor import cprint
@@ -115,11 +116,12 @@ def debias_fsds_file(fsdsc_file, fsdscl_file, cldtot_file, out_file):
         os.makedirs(out_dir)
     cprint(f"Creating debiased FSDS file in '{out_file}'...", 'yellow')
     try:
-        with xr.open_dataset(fsdsc_file, decode_times=False) as fsdsc,\
-                xr.open_dataset(fsdscl_file, decode_times=False) as fsdscl,\
-                xr.open_dataset(cldtot_file, decode_times=False) as cldtot:
-            output = (1 - cldtot) * fsdsc + cldtot * fsdscl
-            output.to_netcdf(out_file, mode='w', engine='netcdf4')
+        subprocess.run(['ncks', '--append', fsdsc_file, out_file], check=True)
+        subprocess.run(['ncks', '--append', fsdscl_file, out_file], check=True)
+        subprocess.run(['ncks', '--append', cldtot_file, out_file], check=True)
+        script = 'FSDS = (1 - CLDTOT) * FSDSC + CLDTOT * FSDSCL'
+        subprocess.run(['ncap2', '--append', '--script', script, out_file],
+                       check=True)
     except Exception:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')
