@@ -1,5 +1,24 @@
 # Chronological Lab Notebook
 
+## 2019-09-19 Chat with Antoine Champreux
+Antoine:
+> Hi Wolfgang, I will double check the equivalence between cld and CLDTOT asap, but I was pretty sure of it few months ago. 
+> I knew FSDSCL was missing, but it should not be a problem since we can calculate it from FSDS, CLDTOT and FSDSC.
+> The division-multiplication method looks good to me as well at first sight.
+
+Wolfgang:
+> Yes, we could calculate FSDSCL:
+> `FSDS = FSDSC * (CLDTOT-1) + FSDSCL * CLDTOT ⇒ FSDSCL = (FSDS - FSDSC * (CLDTOT-1)) / CLDTOT`
+
+## 2019-09-18 Chat with Antoine Champreux
+Wolfgang:
+> I have started to look at bias-correcting FSDS. Your formula for re-calculating FSDS from FSDSC,  FSDSCL, and bias-corrected CLDTOT looks okay to me. Did you double-check that the CCSM3 model does actually calculate it like that?
+> Since the cloud cover is a fraction, I would bias-correct it with division & multiplication rather than addition:
+> `CLDTOT_debiased(t) =  max(1.0, CLDTOT(t) * observed_clouds(modern) / CLDTOT(modern))`
+> Now I see a few issues here:
+> 1. I don’t find the FSDSCL dataset for download on www.earthsystemgrid.org/project/trace.html
+> 2. Is the cld variable in the CRU dataset equivalent to CLDTOT? The latter is the “vertically integrated total cloud fraction”.
+> Do you have any thoughts?
 
 ## 2019-09-18 Bias-correct TraCE cloud cover
 Antoine had written in Slack on June 10, 2019:
@@ -17,6 +36,7 @@ My conclusions for today:
 Now I see a few issues here:
 1. I don’t find the `FSDSCL` dataset for download on www.earthsystemgrid.org/project/trace.html
 2. Is the `cld` variable in the CRU dataset equivalent to `CLDTOT`? The latter is the “vertically integrated total cloud fraction”. Do you have any thoughts?
+
 ## 2019-09-18 Checking ISIMIP3 downscaling/debiasing
 I looked at the downscaling & bias-correcting scripts by Stefan Lange: <https://doi.org/10.5194/gmd-12-3055-2019> [@lange2019trendpreserving].
 - It requires observed and simulated input in NetCDF format and in the same temporal resolution and with the same variables.
