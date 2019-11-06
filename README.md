@@ -151,6 +151,37 @@ b = t / c \\
 x' = x / b
 ```
 
+#### Solar Radiation
+These are the CCSM3 variables:
+- `FSDS`: Downwelling solar flux at surface in W/m².
+- `CLDTOT`: Vertically-integrated total cloud fraction. This is equivalent to the `cld` variable in the CRU dataset.
+- `FSDSC`: Incoming radiation with a completely clear sky (zero cloud cover).
+- `FSDSCL`: Incoming radiation with a completely overcast sky (100% cloud cover). This variable is not available for download from <https://www.earthsystemgrid.org> so we calculate it manually.
+
+In the TraCE simulations, `FSDS` is calculated as the sum of weighted means of `FSDSC` (clear sky) and `FSDSCL` (cloudy sky) surface downwelling shortwave radiation flux, using `CLOUD`.
+`FSDSC` is the incoming radiation from space and is not biased.
+The fraction `FSDSCL` is biased and needs to be corrected in order to get a good `FSDS` variable.
+
+In the following equations the modern values (subscript “modern” and `cld`) are single values: the monthly means for modern years for each grid cell.
+In contrast, all other variables denote corresponding values for each monthly time step over the whole TraCE simulation.
+
+Reconstruct the original (i.e. biased) `FSDSCL` variable:
+```math
+FSDS = FSDSC * (CLDTOT-1) + FSDSCL * CLDTOT
+\\
+\implies FSDSCL = (FSDS - FSDSC * (CLDTOT-1)) / CLDTOT
+```
+
+Calculating debiased `CLDTOT` and from the debiased `FSDS`:
+```math
+CLDTOT_{debiased} = \begin{cases}
+    max(1, CLDTOT * cld / CLDTOT_{modern}), & \text{if } CLDTOT_{modern} > 0 \\
+    0                                     , & \text{if } CLDTOT_{modern} = 0
+\end{cases}
+\\
+FSDS_{debiased} = (1 - CLDTOT_{debiased}) * FSDSC  + CLDTOT_{debiased} * FSDSCL.
+```
+
 ### Limitations
 
 - Paleo-coastlines are currently not taken into account. The resulting valid grid cells cover only the land area from the CRU dataset.
