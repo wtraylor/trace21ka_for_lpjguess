@@ -151,6 +151,20 @@ b = t / c \\
 x' = x / b
 ```
 
+#### Cloud Cover
+For calculating the solar radiation we need to debias the total cloud cover `CLDTOT` (vertically-integrated total cloud fraction).
+`CLDTOT` is equivalent to the `cld` variable in the CRU dataset.
+
+Cloud cover is fractional and falls between 0 and 1.
+In order to preserve this 0 to 1 range, we follow the approach of [Lorenz et al (2016)](https://www.nature.com/articles/sdata201648).
+The bias $`b`$ is calculated as an exponent.
+
+```math
+b = log(t) / log(c)
+\\
+x' = x^b
+```
+
 #### Solar Radiation
 These are the CCSM3 variables:
 - `FSDS`: Downwelling solar flux at surface in W/m².
@@ -162,9 +176,6 @@ In the TraCE simulations, `FSDS` is calculated as the sum of weighted means of `
 `FSDSC` is the incoming radiation from space and is not biased.
 The fraction `FSDSCL` is biased and needs to be corrected in order to get a good `FSDS` variable.
 
-In the following equations the modern values (subscript “modern” and `cld`) are single values: the monthly means for modern years for each grid cell.
-In contrast, all other variables denote corresponding values for each monthly time step over the whole TraCE simulation.
-
 Reconstruct the original (i.e. biased) `FSDSCL` variable:
 ```math
 FSDS = FSDSC * (CLDTOT-1) + FSDSCL * CLDTOT
@@ -172,13 +183,8 @@ FSDS = FSDSC * (CLDTOT-1) + FSDSCL * CLDTOT
 \implies FSDSCL = (FSDS - FSDSC * (CLDTOT-1)) / CLDTOT
 ```
 
-Calculating debiased `CLDTOT` and from the debiased `FSDS`:
+Calculate debiased `FSDS`:
 ```math
-CLDTOT_{debiased} = \begin{cases}
-    max(1, CLDTOT * cld / CLDTOT_{modern}), & \text{if } CLDTOT_{modern} > 0 \\
-    0                                     , & \text{if } CLDTOT_{modern} = 0
-\end{cases}
-\\
 FSDS_{debiased} = (1 - CLDTOT_{debiased}) * FSDSC  + CLDTOT_{debiased} * FSDSCL.
 ```
 
@@ -321,6 +327,11 @@ Main author: [Wolfgang Traylor](mailto:wolfgang.pappa@senckenberg.de), Senckenbe
 
 Thanks to Christian Werner and Johan Liakka for their example script.
 Thanks to Matthew Forrest for a few tips.
+
+References
+----------
+
+TODO: Add full literature citations.
 
 License
 -------
