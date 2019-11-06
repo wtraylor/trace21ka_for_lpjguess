@@ -261,12 +261,13 @@ for var in trace_files:
             )
             set_metadata(wet_file)
             output_files['WET'] += [wet_file]
-        f = convert_months_to_days(f, os.path.join(final_time_dir, basename))
-        f = compress_and_chunk(f, os.path.join(out_dir, basename))
-        output_files[var] += [f]
         # All CCSM3 variables except CDTOT and FSDSC shall get LPJ-GUESS
-        # metadata.
+        # metadata and be put into output.
         if var != 'CLDTOT':
+            f = convert_months_to_days(f, os.path.join(final_time_dir,
+                                                       basename))
+            f = compress_and_chunk(f, os.path.join(out_dir, basename))
+            output_files[var] += [f]
             set_metadata(f)
 
 concat_files = dict()  # key=TraCE variable; value=file path
