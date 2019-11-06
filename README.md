@@ -176,7 +176,7 @@ In the TraCE simulations, `FSDS` is calculated as the sum of weighted means of `
 `FSDSC` is the incoming radiation from space and is not biased.
 The fraction `FSDSCL` is biased and needs to be corrected in order to get a good `FSDS` variable.
 
-Reconstruct the original (i.e. biased) `FSDSCL` variable:
+Reconstruct the original (i.e. biased) `FSDSCL` variable from the original `FSDS` and `CLDTOT`:
 ```math
 FSDS = FSDSC * (CLDTOT-1) + FSDSCL * CLDTOT
 \\
