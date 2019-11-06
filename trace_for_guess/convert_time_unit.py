@@ -82,18 +82,17 @@ def convert_kabp_to_months(trace_file, out_file):
         # We leave `trace_file` untouched and change the calendar in a
         # temporary file `tmp_file`.
         tmp_file = out_file + '.tmp'
-        shutil.copy2(trace_file, tmp_file)
-        assert os.path.isfile(tmp_file)
         # The in-built `date()` function in the TraCE files converts the time
         # to the format 'YYYYMMDD' since 22,000 years BP.
         time_script = 'time=date'
         # --append flag overwrites existing time dimension.
         subprocess.run(['ncap2', '--append', '--script', time_script,
-                        tmp_file], check=True)
+                        trace_file, tmp_file], check=True)
         units = 'day as %Y%m%d.%f'
         subprocess.run(['ncatted', '--overwrite',
                         '--attribute', f'units,time,o,c,{units}',
                         tmp_file], check=True)
+        assert os.path.isfile(tmp_file)
         # Now the calendar is set correctly to an absolute format. However,
         # LPJ-GUESS needs it relative. That’s why we copy the file with the CDO
         # flag '-r', which converts an absolute time axis to a relative one.
