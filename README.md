@@ -165,6 +165,17 @@ b = log(t) / log(c)
 x' = x^b
 ```
 
+In case that modern TraCE is not biased at all, $`t`$ (TraCE) will be equal to $`c`$ (CRU).
+In this case, $`b = 1`$, which means no change will be done ($`x' = x^1 = x`$).
+
+Now the logarithm of a number between 0 and 1 will always be negative or zero.
+The quotient of two negative numbers is positive, so we expect $`b`$ to always be positive.
+
+If modern TraCE is too cloudy ($`t > c`$), $`b`$ will be _less_ than 1 because the absolute value of $`log(t)`$ is smaller than the absolute value of $`log(c)`$ (the negative signs are canceled out).
+Then the paleo cloud cover will be _decreased_: $`x' = x^b < x `$
+
+If modern TraCE is biased towards clear sky ($`t < c`$), $`b`$ will be _greater_ than 1, and the paleo cloud cover will be _increased_: $`x' = x^b > x `$
+
 #### Solar Radiation
 These are the CCSM3 variables:
 - `FSDS`: Downwelling solar flux at surface in W/m².
