@@ -1,5 +1,13 @@
 # Chronological Lab Notebook
 
+## 2019-11-07
+I was struggling to understand the log-algorithm.
+But now it makes sense with the quotient and I wrote it in the README.
+
+I found a bug that the `cld` CRU variable was not converted from percentage to fraction.
+
+The `FSDS` output is in reasonable bounds, just a little bit changed to the original.
+
 ## 2019-11-06
 Download CRU `cld` files:
 ```bash
