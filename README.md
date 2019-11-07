@@ -156,7 +156,7 @@ For calculating the solar radiation we need to debias the total cloud cover `CLD
 `CLDTOT` is equivalent to the `cld` variable in the CRU dataset.
 
 Cloud cover is fractional and falls between 0 and 1.
-In order to preserve this 0 to 1 range, we follow the approach of [Lorenz et al (2016)](https://www.nature.com/articles/sdata201648).
+In order to preserve this 0 to 1 range, we follow the approach of [Lorenz et al (2016)](https://www.nature.com/articles/sdata201648) (Section “Shortwave Radiation” on page 5).
 The bias $`b`$ is calculated as an exponent.
 
 ```math
