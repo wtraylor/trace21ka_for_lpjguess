@@ -33,13 +33,8 @@ def get_metadata_from_trace_file(trace_file):
     time_range = [int(s) for s in stdout.split()]
     assert len(time_range) == 2, f'file={trace_file}, stdout={stdout}'
     del stdout
-    # Get variable name:
-    stdout = subprocess.run(['cdo', 'showname', trace_file],
-                            capture_output=True, encoding='utf-8').stdout
-    var = stdout.split()[0]  # Take the first variable.
     return {'first_year': int(time_range[0]),
-            'last_year': int(time_range[1]),
-            'variable': var}
+            'last_year': int(time_range[1])}
 
 
 def get_metadata_from_trace_files(trace_filelist):

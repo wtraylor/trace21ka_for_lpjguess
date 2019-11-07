@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 import xarray as xr
 from termcolor import cprint
@@ -43,6 +44,8 @@ def debias_trace_file(trace_file, bias_file, out_file):
                 var = 'TREFHT'
             elif 'PRECT' in trace.data_vars:
                 var = 'PRECT'
+            elif 'CLDTOT' in trace.data_vars:
+                var = 'CLDTOT'
             else:
                 raise NotImplementedError("Could not find known variable in "
                                           "TraCE file: '%s'." % trace_file)
@@ -51,7 +54,7 @@ def debias_trace_file(trace_file, bias_file, out_file):
             # How many years are in the monthly TraCE file?
             years = len(trace[var]) // 12
             # Repeat the monthly bias values for each year.
-            bias = xr.concat([bias]*years, dim='time')
+            bias = xr.concat([bias] * years, dim='time')
             # Overwrite the time dimension. If it does not match the TraCE
             # file, the arithmetic operation does not work.
             bias.time.values = trace.time.values
@@ -60,10 +63,65 @@ def debias_trace_file(trace_file, bias_file, out_file):
                 output = trace[var] - bias
             elif var == "PRECT":
                 output = trace[var] / bias
+            elif var == 'CLDTOT':
+                output = trace[var]**bias
             else:
                 raise NotImplementedError("No bias correction defined for "
                                           "variable '%s'." % var)
             output.to_netcdf(out_file, mode='w', engine='netcdf4')
+    except Exception:
+        if os.path.isfile(out_file):
+            cprint(f"Removing file '{out_file}'.", 'red')
+            os.remove(out_file)
+        raise
+    assert os.path.isfile(out_file), f"No output file created: '{out_file}'"
+    cprint(f"Successfully created '{out_file}'.", 'green')
+    return out_file
+
+
+def debias_fsds_file(fsdsc_file, fsdscl_file, cldtot_file, out_file):
+    """Apply bias-correction to an FSDS TraCE-21ka file.
+
+    Args:
+        cldtot_file: The bias-corrected TraCE CLDTOT file (total cloud
+            cover).
+        fsdsc_file: Name of the original (biased) TraCE FSDSC file (solar
+            radiation in clear sky)
+        fsdscl_file: Name of the original (biased) TraCE FSDSCL file (solar
+            radiation under fully clouded sky).
+        out_file: Bias-corrected output file name for FSDS variable (will not
+            be overwritten).
+
+    Returns:
+        The name of the new file (equal to `out_file`).
+
+    Raises:
+        FileNotFoundError: One of the input files doesn’t exist.
+        RuntimeError: If no output file was produced.
+    """
+    if not os.path.isfile(fsdsc_file):
+        raise FileNotFoundError("FSDSC file does not exist: '%s'" % fsdsc_file)
+    if not os.path.isfile(fsdscl_file):
+        raise FileNotFoundError("FSDSCL file does not exist: '%s'" %
+                                fsdscl_file)
+    if not os.path.isfile(cldtot_file):
+        raise FileNotFoundError("CLDTOT file does not exist: '%s'" %
+                                cldtot_file)
+    if skip([fsdsc_file, fsdscl_file, cldtot_file], out_file):
+        return out_file
+    out_dir = os.path.dirname(out_file)
+    if not os.path.isdir(out_dir):
+        cprint(f"Directory '{out_dir}' does not exist yet. I will create it.",
+               'yellow')
+        os.makedirs(out_dir)
+    cprint(f"Creating debiased FSDS file in '{out_file}'...", 'yellow')
+    try:
+        subprocess.run(['ncks', '--append', fsdsc_file, out_file], check=True)
+        subprocess.run(['ncks', '--append', fsdscl_file, out_file], check=True)
+        subprocess.run(['ncks', '--append', cldtot_file, out_file], check=True)
+        script = 'FSDS = (1 - CLDTOT) * FSDSC + CLDTOT * FSDSCL'
+        subprocess.run(['ncap2', '--append', '--script', script, out_file],
+                       check=True)
     except Exception:
         if os.path.isfile(out_file):
             cprint(f"Removing file '{out_file}'.", 'red')

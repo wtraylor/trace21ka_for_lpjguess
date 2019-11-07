@@ -8,7 +8,7 @@ from trace_for_guess.netcdf_metadata import (get_metadata_from_trace_file,
 def get_cru_filenames():
     """Create list of original CRU files between 1900 and 1990."""
     years = [(y+1, y+10) for y in range(1920, 1971, 10)]
-    vars = ['pre', 'wet', 'tmp']
+    vars = ['cld', 'pre', 'wet', 'tmp']
     # Combine every time segment (decade) with every variable.
     years_vars = tuple((y1, y2, v) for (y1, y2) in years for v in vars)
     return ["cru_ts4.01.%d.%d.%s.dat.nc" % (y1, y2, v) for (y1, y2, v) in
@@ -158,11 +158,12 @@ def get_trace_filenames(variables, time_range):
     return result
 
 
-def derive_new_trace_name(trace_file):
+def derive_new_trace_name(trace_file, var):
     """Compose a new basename for a TraCE file with already absolute calendar.
 
     Args:
         trace_file: An existing TraCE NetCDF file.
+        var: The CCSM3 variable in the NetCDF file.
 
     Returns:
         String with the new base filename.
@@ -175,7 +176,6 @@ def derive_new_trace_name(trace_file):
     metadata = get_metadata_from_trace_file(trace_file)
     first_year = metadata['first_year']
     last_year = metadata['last_year']
-    var = metadata['variable']
     name = f'trace_{first_year:05}-{last_year:05}_{var}.nc'
     return name
 

@@ -151,6 +151,54 @@ b = t / c \\
 x' = x / b
 ```
 
+#### Cloud Cover
+For calculating the solar radiation we need to debias the total cloud cover `CLDTOT` (vertically-integrated total cloud fraction).
+`CLDTOT` is equivalent to the `cld` variable in the CRU dataset.
+
+Cloud cover is fractional and falls between 0 and 1.
+In order to preserve this 0 to 1 range, we follow the approach of [Lorenz et al (2016)](https://www.nature.com/articles/sdata201648) (Section “Shortwave Radiation” on page 5).
+The bias $`b`$ is calculated as an exponent.
+
+```math
+b = log(t) / log(c)
+\\
+x' = x^b
+```
+
+In case that modern TraCE is not biased at all, $`t`$ (TraCE) will be equal to $`c`$ (CRU).
+In this case, $`b = 1`$, which means no change will be done ($`x' = x^1 = x`$).
+
+Now the logarithm of a number between 0 and 1 will always be negative or zero.
+The quotient of two negative numbers is positive, so we expect $`b`$ to always be positive.
+
+If modern TraCE is too cloudy ($`t > c`$), $`b`$ will be _less_ than 1 because the absolute value of $`log(t)`$ is smaller than the absolute value of $`log(c)`$ (the negative signs are canceled out).
+Then the paleo cloud cover will be _decreased_: $`x' = x^b < x `$
+
+If modern TraCE is biased towards clear sky ($`t < c`$), $`b`$ will be _greater_ than 1, and the paleo cloud cover will be _increased_: $`x' = x^b > x `$
+
+#### Solar Radiation
+These are the CCSM3 variables:
+- `FSDS`: Downwelling solar flux at surface in W/m².
+- `CLDTOT`: Vertically-integrated total cloud fraction. This is equivalent to the `cld` variable in the CRU dataset.
+- `FSDSC`: Incoming radiation with a completely clear sky (zero cloud cover).
+- `FSDSCL`: Incoming radiation with a completely overcast sky (100% cloud cover). This variable is not available for download from <https://www.earthsystemgrid.org> so we calculate it manually.
+
+In the TraCE simulations, `FSDS` is calculated as the sum of weighted means of `FSDSC` (clear sky) and `FSDSCL` (cloudy sky) surface downwelling shortwave radiation flux, using `CLOUD`.
+`FSDSC` is the incoming radiation from space and is not biased.
+The fraction `FSDSCL` is biased and needs to be corrected in order to get a good `FSDS` variable.
+
+Reconstruct the original (i.e. biased) `FSDSCL` variable from the original `FSDS` and `CLDTOT`:
+```math
+FSDS = FSDSC * (1 - CLDTOT) + FSDSCL * CLDTOT
+\\
+\implies FSDSCL = (FSDS - FSDSC * (1 - CLDTOT)) / CLDTOT
+```
+
+Calculate debiased `FSDS`:
+```math
+FSDS_{debiased} = (1 - CLDTOT_{debiased}) * FSDSC  + CLDTOT_{debiased} * FSDSCL.
+```
+
 ### Limitations
 
 - Paleo-coastlines are currently not taken into account. The resulting valid grid cells cover only the land area from the CRU dataset.
@@ -263,6 +311,7 @@ To Do
 - [ ] Mask oceans and glaciers? Perhaps based on ICE-5G?
 - [ ] How to handle changing coast lines?
 - [ ] Switch to more recent CRU 4.02?
+- [ ] Add the script `check_external_files` for more convenience.
 
 ### Open Design Questions
 
@@ -289,6 +338,11 @@ Main author: [Wolfgang Traylor](mailto:wolfgang.pappa@senckenberg.de), Senckenbe
 
 Thanks to Christian Werner and Johan Liakka for their example script.
 Thanks to Matthew Forrest for a few tips.
+
+References
+----------
+
+TODO: Add full literature citations.
 
 License
 -------

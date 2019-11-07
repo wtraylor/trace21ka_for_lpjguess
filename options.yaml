@@ -45,7 +45,9 @@ regrid_algorithm: 'bilinear'
 
 # Variables in the CRU NetCDF files as they correspond to the TraCE-21ka
 # variables. The CRU files are also named like their variables.
+# Note that FSDS needs to be treated separately.
 cru_vars:
+  CLDTOT: 'cld'
   PRECT: 'pre'
   TREFHT: 'tmp'
 

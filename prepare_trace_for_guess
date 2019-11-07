@@ -25,6 +25,7 @@ from trace_for_guess.add_precc_precl import add_precc_and_precl_to_prect
 from trace_for_guess.aggregate_modern_trace import aggregate_modern_trace
 from trace_for_guess.aggregate_monthly_means import aggregate_monthly_means
 from trace_for_guess.calculate_bias import calculate_bias
+from trace_for_guess.calculate_fsdscl import calculate_fsdscl
 from trace_for_guess.co2 import create_co2_files
 from trace_for_guess.compress import compress_and_chunk
 from trace_for_guess.concatenate import cat_files
@@ -32,7 +33,7 @@ from trace_for_guess.convert_time_unit import (convert_kabp_to_months,
                                                convert_months_to_days)
 from trace_for_guess.crop import (check_region, crop_file, crop_file_list,
                                   expand_extent)
-from trace_for_guess.debias import debias_trace_file
+from trace_for_guess.debias import (debias_fsds_file, debias_trace_file)
 from trace_for_guess.filenames import (derive_new_concat_trace_name,
                                        derive_new_trace_name,
                                        get_cru_filenames, get_crujra_filenames,
@@ -128,7 +129,7 @@ cru_files = unzip_files_if_needed(
     unzip_dir=heap_input)
 cru_mean_files = dict()  # Aggregated CRU files with variable as key.
 cprint(f'Going to aggregate CRU files.', 'magenta')
-for var in ['pre', 'tmp', 'wet']:
+for var in ['cld', 'pre', 'tmp', 'wet']:
     # Filter list of all CRU files to file names containing `var`.
     files_with_var = [f for f in cru_files if var in f]
     cat = cat_files(filelist=files_with_var,
@@ -148,7 +149,7 @@ for var in ['pre', 'tmp', 'wet']:
 # assumption that the order doesn’t make a difference.
 cprint(f'Going to calculate means of TraCE data from modern time.', 'magenta')
 modern_trace_files = dict()
-for var in ['FSDS', 'PRECC', 'PRECL', 'TREFHT']:
+for var in ['CLDTOT', 'PRECC', 'PRECL', 'TREFHT']:
     out_file = f'modern_trace_{var}.nc'
     modern_trace_files[var] = aggregate_modern_trace(
         trace_file=find_files(get_modern_trace_filename(var)),
@@ -200,10 +201,25 @@ for prect in get_trace_filenames('PRECT', time_range):
                                  precl_file=precl,
                                  prect_file=os.path.join(heap_input, prect))
 
+# Calculate FSDSCL from FSDS, FSDSC, and CLDTOT. Make them available for input
+# search just like the generated PRECT files.
+cprint(f'Going to calculate FSDSCL from FSDS, FSDSC, and CLDTOT.', 'magenta')
+for fsdscl in get_trace_filenames('FSDSCL', time_range):
+    cldtot = find_files(re.sub('FSDSCL', 'CLDTOT', fsdscl))
+    fsds = find_files(re.sub('FSDSCL', 'FSDS', fsdscl))
+    fsdsc = find_files(re.sub('FSDSCL', 'FSDSC', fsdscl))
+    calculate_fsdscl(cldtot_file=cldtot,
+                     fsds_file=fsds,
+                     fsdsc_file=fsdsc,
+                     out_file=os.path.join(heap_input, fsdscl))
+
 # All the original TraCE-21ka files. We assume they are not zipped because they
 # come as plain NetCDF files from earthsystemgrid.org.
+# It is important that "CLDTOT" comes first in the list because they need to be
+# debiased before FSDS files can be debiased. But both shall be processed in
+# the same loop.
 trace_files = dict()  # Key is the variable, value is a list of file paths.
-for var in ['FSDS', 'PRECT', 'TREFHT']:
+for var in ['CLDTOT', 'FSDSC', 'FSDSCL', 'FSDS', 'PRECT', 'TREFHT']:
     trace_files[var] = find_files(get_trace_filenames(var, time_range))
 
 # Prepare data structure to hold the final output files.
@@ -235,17 +251,33 @@ for var in trace_files:
     cprint(f"Going to rescale and debias TraCE files of variable '{var}'.",
            'magenta')
     for f in split_trace_files[var]:
-        basename = os.path.basename(derive_new_trace_name(f))
+        basename = os.path.basename(derive_new_trace_name(f, var))
         f = rescale_file(in_file=f,
                          out_file=os.path.join(rescaled_dir, basename),
                          template_file=regrid_template_file,
                          alg=opts['regrid_algorithm'])
+        # All variables except FSDS can be debiased with one common function.
         if var in bias_files:
             f = debias_trace_file(
                 trace_file=f,
                 bias_file=bias_files[var],
                 out_file=os.path.join(debiased_dir, basename)
             )
+        elif var == 'FSDS':
+            cldtot_basename = re.sub('FSDS', 'CLDTOT', basename)
+            fsdsc_basename = re.sub('FSDS', 'FSDSC', basename)
+            fsdscl_basename = re.sub('FSDS', 'FSDSCL', basename)
+            f = debias_fsds_file(
+                fsdsc_file=os.path.join(rescaled_dir, fsdsc_basename),
+                fsdscl_file=os.path.join(rescaled_dir, fsdscl_basename),
+                cldtot_file=os.path.join(debiased_dir, cldtot_basename),
+                out_file=os.path.join(debiased_dir, basename)
+            )
+        # We don’t do anything more with CLDTOT, FSDSC, and FSDSCL here.
+        # They will not go into the output.
+        if var in ['CLDTOT', 'FSDSC', 'FSDSCL']:
+            continue
+        # In addition to debiasing PRECT we generate the WET files.
         if var == 'PRECT':
             wet_basename = re.sub('PRECT', 'WET', basename)
             wet_file = create_wet_days_file(
@@ -259,7 +291,10 @@ for var in trace_files:
             )
             set_metadata(wet_file)
             output_files['WET'] += [wet_file]
-        f = convert_months_to_days(f, os.path.join(final_time_dir, basename))
+        # All files with the desired variables need to be prepared for
+        # LPJ-GUESS and put into the output directory.
+        f = convert_months_to_days(f, os.path.join(final_time_dir,
+                                                    basename))
         f = compress_and_chunk(f, os.path.join(out_dir, basename))
         output_files[var] += [f]
         set_metadata(f)
