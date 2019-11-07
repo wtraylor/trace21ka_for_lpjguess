@@ -79,7 +79,9 @@ def calculate_bias(trace_file, trace_var, cru_file, cru_var, bias_file):
             c = np.where(c == 0, almost_zero, c)
             bias = trace[trace_var] / c
         elif trace_var == "CLDTOT":
-            bias = np.log(trace[trace_var]) / np.log(cru[trace_var])
+            # The CRU data needs to be divided by 100 because it comes in
+            # percent, not fraction.
+            bias = np.log(trace[trace_var]) / np.log(cru[trace_var] / 100.0)
         else:
             raise NotImplementedError("Arithmetic operation not defined for"
                                       "variable '%s'." % trace_var)
