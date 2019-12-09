@@ -1,5 +1,8 @@
 # Chronological Lab Notebook
 
+## 2019-12-09
+Antoine Champreux sent me a bug report: See [figures/2019-12-05_debugging_by_Antoine.pdf](figures/2019-12-05_debugging_by_Antoine.pdf).
+
 ## 2019-11-07
 I was struggling to understand the log-algorithm.
 But now it makes sense with the quotient and I wrote it in the README.
