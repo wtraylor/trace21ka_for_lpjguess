@@ -49,10 +49,13 @@ def get_metadata_from_trace_files(trace_filelist):
 
     Raises:
         FileNotFoundError: If a file in `trace_filelist` doesn’t exist.
+        ValueError: If `trace_filelist` is empty.
     """
     var = str()
     first_year = 9999999999999999999
     last_year = -9999999999999999999
+    if len(trace_filelist) == 0:
+        raise ValueError('The argument "trace_filelist" is empty.')
     for f in trace_filelist:
         if not os.path.isfile(f):
             raise FileNotFoundError(f"Could not find TraCE file '{f}'.")
