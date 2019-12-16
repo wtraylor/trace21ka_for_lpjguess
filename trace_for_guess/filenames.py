@@ -180,17 +180,17 @@ def derive_new_trace_name(trace_file, var):
     return name
 
 
-def derive_new_concat_trace_name(trace_filelist):
+def derive_new_concat_trace_name(trace_filelist, var):
     """Compose a new basename for the concatenation of many TraCE files.
 
     Args:
         trace_filelist: List of TraCE file paths.
+        var: The CCSM3 variable in the NetCDF file.
 
     Returns:
         String with new base filename.
     """
     metadata = get_metadata_from_trace_files(trace_filelist)
-    var = metadata['variable']
     first_year = metadata['first_year']
     last_year = metadata['last_year']
     return f'trace_{first_year:05}-{last_year:05}_{var}.nc'

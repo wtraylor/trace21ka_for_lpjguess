@@ -45,11 +45,10 @@ def get_metadata_from_trace_files(trace_filelist):
 
     Returns:
         A dictionary with the header information of interest: first_year,
-        last_year, variable
+        last_year
 
     Raises:
         FileNotFoundError: If a file in `trace_filelist` doesn’t exist.
-        ValueError: If the variables of the files differ.
     """
     var = str()
     first_year = 9999999999999999999
@@ -60,17 +59,8 @@ def get_metadata_from_trace_files(trace_filelist):
         metadata = get_metadata_from_trace_file(f)
         first_year = min(first_year, metadata['first_year'])
         last_year = max(last_year, metadata['last_year'])
-        v = metadata['variable']
-        if not var:
-            var = v
-        elif var != v:
-            raise ValueError(
-                f"The variable in file '{f}' is '{v}'. This is different from "
-                f"the other files, which have variable '{var}'."
-            )
     return {'first_year': first_year,
-            'last_year': last_year,
-            'variable': var}
+            'last_year': last_year}
 
 
 def set_attributes(da, var):
