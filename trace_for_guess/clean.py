@@ -69,7 +69,7 @@ if heap_files:
                 d = os.path.join(root, d)
                 if not os.listdir(d):
                     cprint(f"Deleting empty directory '{d}'", 'yellow')
-                    os.rmdir(os.path.join(root, d))
+                    os.rmdir(root, d)
 else:
     cprint('No processed files to delete in the heap directory.', 'green')
 
