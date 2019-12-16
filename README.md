@@ -308,6 +308,7 @@ param "variable_max_temp"  (str "max_temp")
 To Do
 -----
 
+- [ ] Render LaTeX math in `README.md` as PNG files for GitHub: <https://quicklatex.com>
 - [ ] Mask oceans and glaciers? Perhaps based on ICE-5G?
 - [ ] How to handle changing coast lines?
 - [ ] Switch to more recent CRU 4.02?
