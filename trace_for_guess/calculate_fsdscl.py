@@ -48,7 +48,7 @@ def calculate_fsdscl(cldtot_file, fsds_file, fsdsc_file, out_file):
         subprocess.run(['ncks', '--append', fsds_file, out_file], check=True)
         subprocess.run(['ncks', '--append', fsdsc_file, out_file], check=True)
         subprocess.run(['ncks', '--append', cldtot_file, out_file], check=True)
-        script = 'FSDSCL = FSDS - FSDSC * (1 - CLDTOT) / CLDTOT'
+        script = 'FSDSCL = (FSDS - FSDSC * (1 - CLDTOT)) / CLDTOT'
         subprocess.run(['ncap2', '--append', '--script', script, out_file],
                        check=True)
     except Exception:
