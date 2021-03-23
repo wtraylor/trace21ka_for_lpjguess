@@ -350,7 +350,10 @@ Main author: [Wolfgang Traylor](mailto:wolfgang.pappa@senckenberg.de), Senckenbe
 References
 ----------
 
-TODO: Add full literature citations.
+- Geng, Shu, Frits W. T. Penning de Vries, and Iwan Supit. 1986. “A Simple Method for Generating Daily Rainfall Data.” Agricultural and Forest Meteorology 36 (4): 363–76. https://doi.org/https://doi.org/10.1016/0168--1923(86)90014-6.
+- He, Feng. 2011. “Simulating Transient Climate Evolution of the Last Deglaciation with CCSM 3.” PhD thesis, University of Wisconsin-Madison.
+- Lorenz, David J., Diego Nieto-Lugilde, Jessica L. Blois, Matthew C. Fitzpatrick, and John W. Williams. 2016. “Downscaled and Debiased Climate Simulations for North America from 21,000 Years Ago to 2100ad.” Scientific Data 3 (July). http://dx.doi.org/10.1038/sdata.2016.48.
+- Werner, C., M. Schmid, T. A. Ehlers, J. P. Fuentes-Espoz, J. Steinkamp, M. Forrest, J. Liakka, A. Maldonado, and T. Hickler. 2018. “Effect of Changing Vegetation and Precipitation on Denudation – Part 1: Predicted Vegetation Composition and Cover over the Last 21 Thousand Years Along the Coastal Cordillera of Chile.” Earth Surface Dynamics 6 (4): 829–58. https://doi.org/10.5194/esurf-6-829-2018.
 
 License
 -------
