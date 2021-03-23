@@ -343,8 +343,9 @@ Authors
 
 Main author: [Wolfgang Traylor](mailto:wolfgang.pappa@senckenberg.de), Senckenberg Biodiversity and Climate Research Institute, Frankfurt (BiK-F), Germany
 
-Thanks to Christian Werner and Johan Liakka for their example script.
-Thanks to Matthew Forrest for a few tips.
+- Thanks to Christian Werner and Johan Liakka for their example script.
+- Thanks to Matthew Forrest for a few tips.
+- Thanks to Antoine Champreux for testing the scripts along the way.
 
 References
 ----------
