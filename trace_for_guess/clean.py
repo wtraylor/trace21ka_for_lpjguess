@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+# SPDX-FileCopyrightText: 2021 Wolfgang Traylor <wolfgang.traylor@senckenberg.de>
+#
+# SPDX-License-Identifier: MIT
+
 # Remove all files in the `heap` and the `output` directory.
 
 import glob

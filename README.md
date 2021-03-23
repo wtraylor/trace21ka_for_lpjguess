@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2021 Wolfgang Traylor <wolfgang.traylor@senckenberg.de>
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 Prepare TraCE-21ka monthly data as LPJ-GUESS drivers
 ====================================================
 

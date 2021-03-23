@@ -1,5 +1,9 @@
 #!/bin/python
 
+# SPDX-FileCopyrightText: 2021 Wolfgang Traylor <wolfgang.traylor@senckenberg.de>
+#
+# SPDX-License-Identifier: MIT
+
 # This script will download all CRU JRA-55 files (version 1.1.5) into the
 # CRU-JRA directory specified in "options.yaml".
 
