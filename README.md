@@ -354,4 +354,12 @@ TODO: Add full literature citations.
 License
 -------
 
-To be defined
+This project follows the [REUSE][] licensing standard: Every file has its license and copyright holders in the header or in a separate file with a `.license` filename extension.
+
+All scripts are under the [MIT license][], and text and media under [CC-BY][].
+
+License texts can be found in the `LICENSES/` subdirectory inside this repository.
+
+[REUSE]: https://reuse.software
+[MIT license]: https://mit-license.org/
+[CC-BY]: https://creativecommons.org/licenses/by/4.0/
