@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+# SPDX-FileCopyrightText: 2021 Wolfgang Traylor <wolfgang.traylor@senckenberg.de>
+#
+# SPDX-License-Identifier: MIT
+
 """Downscale and debias TraCE-21ka NetCDF files for use in LPJ-GUESS.
 
 See README.md for more details.

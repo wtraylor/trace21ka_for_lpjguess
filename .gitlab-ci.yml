@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2021 Wolfgang Traylor <wolfgang.traylor@senckenberg.de>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+# Check if the project is compliant to the REUSE licensing standard:
+# <https://reuse.software>
+reuse:
+  image:
+    name: fsfe/reuse:latest
+    entrypoint: [""]
+  script:
+    - reuse lint

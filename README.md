@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2021 Wolfgang Traylor <wolfgang.traylor@senckenberg.de>
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 Prepare TraCE-21ka monthly data as LPJ-GUESS drivers
 ====================================================
 
@@ -337,15 +343,27 @@ Authors
 
 Main author: [Wolfgang Traylor](mailto:wolfgang.pappa@senckenberg.de), Senckenberg Biodiversity and Climate Research Institute, Frankfurt (BiK-F), Germany
 
-Thanks to Christian Werner and Johan Liakka for their example script.
-Thanks to Matthew Forrest for a few tips.
+- Thanks to Christian Werner and Johan Liakka for their example script.
+- Thanks to Matthew Forrest for a few tips.
+- Thanks to Antoine Champreux for testing the scripts along the way.
 
 References
 ----------
 
-TODO: Add full literature citations.
+- Geng, Shu, Frits W. T. Penning de Vries, and Iwan Supit. 1986. “A Simple Method for Generating Daily Rainfall Data.” Agricultural and Forest Meteorology 36 (4): 363–76. https://doi.org/https://doi.org/10.1016/0168--1923(86)90014-6.
+- He, Feng. 2011. “Simulating Transient Climate Evolution of the Last Deglaciation with CCSM 3.” PhD thesis, University of Wisconsin-Madison.
+- Lorenz, David J., Diego Nieto-Lugilde, Jessica L. Blois, Matthew C. Fitzpatrick, and John W. Williams. 2016. “Downscaled and Debiased Climate Simulations for North America from 21,000 Years Ago to 2100ad.” Scientific Data 3 (July). http://dx.doi.org/10.1038/sdata.2016.48.
+- Werner, C., M. Schmid, T. A. Ehlers, J. P. Fuentes-Espoz, J. Steinkamp, M. Forrest, J. Liakka, A. Maldonado, and T. Hickler. 2018. “Effect of Changing Vegetation and Precipitation on Denudation – Part 1: Predicted Vegetation Composition and Cover over the Last 21 Thousand Years Along the Coastal Cordillera of Chile.” Earth Surface Dynamics 6 (4): 829–58. https://doi.org/10.5194/esurf-6-829-2018.
 
 License
 -------
 
-To be defined
+This project follows the [REUSE][] licensing standard: Every file has its license and copyright holders in the header or in a separate file with a `.license` filename extension.
+
+All scripts are under the [MIT license][], and text and media under [CC-BY][].
+
+License texts can be found in the `LICENSES/` subdirectory inside this repository.
+
+[REUSE]: https://reuse.software
+[MIT license]: https://mit-license.org/
+[CC-BY]: https://creativecommons.org/licenses/by/4.0/

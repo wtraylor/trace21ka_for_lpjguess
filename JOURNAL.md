@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2021 Wolfgang Traylor <wolfgang.traylor@senckenberg.de>
+
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
 # Chronological Lab Notebook
 
 ## 2019-12-09
