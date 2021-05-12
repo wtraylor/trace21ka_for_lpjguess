@@ -307,7 +307,7 @@ for var in trace_files:
 concat_files = dict()  # key=TraCE variable; value=file path
 if opts['concatenate'] == 'yes':
     cprint(f'Joining output into monolithic files.', 'magenta')
-    for var in output_files:
+    for var in ['FSDS', 'PRECT', 'TREFHT', 'WET']:
         concat_filename = derive_new_concat_trace_name(output_files[var], var)
         concat_files[var] = cat_files(output_files[var],
                                       os.path.join(out_dir, concat_filename))
