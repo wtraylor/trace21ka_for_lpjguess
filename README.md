@@ -7,6 +7,8 @@ SPDX-License-Identifier: CC-BY-4.0
 Prepare TraCE-21ka monthly data as LPJ-GUESS drivers
 ====================================================
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5060114.svg)](https://doi.org/10.5281/zenodo.5060114)
+
 Motivation
 ----------
 
